@@ -2,30 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* IranYekanX (self-hosted) — drop licensed files into /public/fonts and uncomment */
-/*
+/* Fonts — add to /public/fonts then uncomment
 @font-face {
   font-family: "IRANYekanX";
   src: url("/fonts/IRANYekanX-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "IRANYekanX FaNum";
   src: url("/fonts/IRANYekanXFaNum-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
   font-display: swap;
-}
-*/
+} */
 
-html, body, #root {
-  height: 100%;
-}
-
+html, body, #root { height: 100%; }
 body {
   font-family: IRANYekanX FaNum, IRANYekanX, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  color: #0f172a;
   background: #ffffff;
-  color: #1A1F36;
 }
+
+.container-pro { @apply container mx-auto px-4 sm:px-6 lg:px-8; }
+.section-y { @apply py-10 sm:py-14 lg:py-20; }
