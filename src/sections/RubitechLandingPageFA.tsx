@@ -683,7 +683,7 @@ export default function RubitechLandingPageFA() {
           />
 
 
-          <div className="mt-4 grid gap-6 md:grid-cols-4">
+          <div className="mt-4 grid gap-6 md:grid-cols-2">
             <DifferentiationCard
               Icon={IconEye}
               iconClass="h-7 w-7 text-[var(--brand)]"
@@ -692,6 +692,13 @@ export default function RubitechLandingPageFA() {
               description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
             />
 
+            <DifferentiationCard
+              Icon={IconUsers}
+              iconClass="h-7 w-7 text-[#F59E0B]"
+              title="اجتماع‌محور"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--amber-tint)] ring-[var(--amber-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
+              description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
+            />
             <DifferentiationCard
               Icon={IconShield}
               iconClass="h-7 w-7 text-[#6D28D9]"
@@ -708,13 +715,6 @@ export default function RubitechLandingPageFA() {
               description="لپ‌تاپ‌ها به صورت چرخه‌ای به نفر بعدی می‌رسند. همچنین نوجوانان موفق وارد روبیکمپ میشن."
             />
 
-            <DifferentiationCard
-              Icon={IconUsers}
-              iconClass="h-7 w-7 text-[#F59E0B]"
-              title="اجتماع‌محور"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--amber-tint)] ring-[var(--amber-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
-              description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
-            />
           </div>
 
 
