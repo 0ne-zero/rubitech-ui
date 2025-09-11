@@ -459,7 +459,7 @@ export default function RubitechLandingPageFA() {
                 <ImpactStat
                   value={`${toFa(134)}+`}
                   label="نوجوانان تحت ثاثیر"
-                  Icon={IconLaptop}
+                  Icon={IconUsers}
                   bgColor="bg-[var(--mint)]"
                   iconColor="text-[var(--brand)]"
                 />
