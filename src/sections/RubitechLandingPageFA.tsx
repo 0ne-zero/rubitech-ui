@@ -168,12 +168,6 @@ const IconStampOfApproval = (p: SVGProps) => (
     <path d="m9 12 2 2 4-4" />
   </svg>
 );
-const IconSeedling = (p: SVGProps) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" {...p}>
-    <path d="M12 2v4M12 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
-    <path d="M12 14v8M8 22h8" />
-  </svg>
-);
 const IconCommunity = (p: SVGProps) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" {...p}>
     <circle cx="12" cy="7" r="3" />
@@ -231,7 +225,7 @@ const PrimaryCTA = ({ onClick, children, className = "" }: PrimaryCTAProps) => (
     type="button"
     onClick={onClick}
     className={`min-h-12 rounded-lg bg-[#00D09C] px-8 py-4 text-[18px] font-semibold text-white shadow-lg ring-1 ring-[#00D09C]/40 transition hover:-translate-y-0.5 hover:bg-[#00B88A] hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-[#00D09C] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${className}`}
-    aria-label="حمایت خود را ثبت کن"
+    aria-label="حمایت خود رو ثبت کن"
   >
     {children}
   </button>
@@ -247,15 +241,15 @@ const Stat = ({ value, label }: StatProps) => (
 
 type TestimonialCardProps = { quote: string; name: string; title: string; img: string };
 const TestimonialCard = ({ quote, name, title, img }: TestimonialCardProps) => (
-  <figure className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-    <blockquote className="text-[#1A1F36] opacity-90">“{quote}”</blockquote>
+  <figure className="flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-400">
     <figcaption className="flex items-center gap-3">
-      <img src={img} alt="تصویر" className="h-10 w-10 rounded-full object-cover" />
+      <img src={img} alt="تصویر" className="h-16 w-15 rounded-full object-cover" />
       <div>
-        <div className="text-sm font-semibold text-[#0A2540]">{name}</div>
-        <div className="text-xs text-[#1A1F36] opacity-70">{title}</div>
+        <div className="text-lg font-semibold text-[#0A2540]">{name}</div>
+        <div className="text-sm font-semibold text-[#1A1F36] opacity-70">{title}</div>
       </div>
     </figcaption>
+    <blockquote className="text-[19px] text-[#1A1F36] opacity-95 font-medium">“{quote}”</blockquote>
   </figure>
 );
 
@@ -271,30 +265,8 @@ const FAQItem = ({ q, a }: FAQItemProps) => (
 );
 
 // flow components
-type FlowStepProps = {
-  number: number | string;
-  title: string;
-  description: string;
-  IconComponent: IconLike;
-};
-const FlowStep = ({ number, title, description, IconComponent }: FlowStepProps) => (
-  <div className="relative flex flex-col items-center text-center">
-    <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full bg-white ring-8 ring-white md:bg-[#F6F9FC] md:ring-[#F6F9FC]">
-      <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F6F9FC] ring-1 ring-slate-200">
-        <span className="text-2xl font-bold text-[#0A2540]">{number}</span>
-      </div>
-    </div>
-    <div className="mt-[-2rem] flex w-full max-w-xs flex-col rounded-2xl bg-white px-4 pb-6 pt-10 shadow-sm ring-1 ring-slate-200">
-      <div className="flex h-12 items-center justify-center">
-        <IconComponent className="h-8 w-8 text-[#0A2540]" />
-      </div>
-      <h3 className="mt-3 text-lg font-bold text-[#0A2540]">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-[#1A1F36] opacity-80">{description}</p>
-    </div>
-  </div>
-);
 
-type ImprovedFlowStepProps = {
+type FlowStepProps = {
   number: number | string;
   title: string;
   description: string;
@@ -304,7 +276,7 @@ type ImprovedFlowStepProps = {
   stepColor: string;
   boxBgColor: string;
 };
-const ImprovedFlowStep = ({
+const FlowStep = ({
   number,
   title,
   description,
@@ -313,7 +285,7 @@ const ImprovedFlowStep = ({
   iconBgColor,
   stepColor,
   boxBgColor,
-}: ImprovedFlowStepProps) => (
+}: FlowStepProps) => (
   <div className="relative md:w-1/2 md:py-4" style={isOdd ? { alignSelf: "flex-start" } : { alignSelf: "flex-end" }}>
     <div
       className={`relative rounded-2xl p-6 shadow-md ring-1 ring-slate-200/80 transition-all duration-300 hover:shadow-xl hover:ring-slate-300 md:flex md:items-start md:gap-6 ${boxBgColor || "bg-white"
@@ -328,9 +300,9 @@ const ImprovedFlowStep = ({
       <div className="mt-4 md:mt-0">
         <div className="flex items-baseline gap-3">
           <span className={`text-xl font-extrabold ${stepColor || "text-[#00D09C]"}`}>{number}</span>
-          <h3 className="text-lg font-bold text-[#0A2540]">{title}</h3>
+          <h3 className="text-xl font-bold text-[#0A2540]">{title}</h3>
         </div>
-        <p className="mt-2 text-base leading-relaxed text-[#1A1F36] opacity-80">{description}</p>
+        <p className="mt-2 text-[20px] leading-relaxed text-[#1A1F36] opacity-80">{description}</p>
       </div>
     </div>
   </div>
@@ -350,11 +322,41 @@ const SectionHeader = ({ kicker, title, subtitle, Icon }: SectionHeaderProps) =>
       {Icon ? <Icon className="h-6 w-7" /> : null}
     </div>
 
-    <h2 className="mt-4 text-[32px] font-extrabold leading-[1.5] text-[#0A2540] md:text-[32px]">{title}</h2>
+    <h2 className="mt-4 text-[32px] font-extrabold leading-[1.5] text-[#0A2540] md:text-[28px]">{title}</h2>
     {subtitle ? (
       <p className="mt-4 max-w-3xl text-[20px] leading-[1.6] text-[#1A1F36] opacity-90">{subtitle}</p>
     ) : null}
     <div className="mt-6 h-1.5 w-28 rounded-full bg-gradient-to-l from-[#00D09C] to-[#0A2540]" />
+  </div>
+);
+
+
+
+type DifferentiationCardProps = {
+  Icon: IconLike;
+  iconClass: string;
+  title: string;
+  wrapperClass: string;
+  description: string | React.ReactNode;
+};
+
+const DifferentiationCard = ({
+  Icon,
+  iconClass,
+  title,
+  wrapperClass,
+  description,
+}: DifferentiationCardProps) => (
+  <div className={wrapperClass}>
+    <Icon className={iconClass} />
+    <div className="mt-3 font-semibold text-[#0A2540]">{title}</div>
+
+    {/* Keep styles identical to your original cards */}
+    {typeof description === "string" ? (
+      <p className="mt-1 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">{description}</p>
+    ) : (
+      description
+    )}
   </div>
 );
 
@@ -411,7 +413,7 @@ function DonationModal({ open, onClose }: { open: boolean; onClose: () => void }
         {step === 1 && (
           <div>
             <p className="mb-4 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">
-              مبلغ دلخواه را انتخاب کنید. هر تعهد بخشی از هزینهٔ لپ‌تاپ، اینترنت و منابع آموزشی را پوشش می‌دهد.
+              مبلغ دلخواه رو انتخاب کنید. هر تعهد بخشی از هزینهٔ لپ‌تاپ، اینترنت و منابع آموزشی رو پوشش می‌دهد.
             </p>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
               {amounts.map((amt) => (
@@ -497,7 +499,7 @@ function DonationModal({ open, onClose }: { open: boolean; onClose: () => void }
                   checked={agree}
                   onChange={(e) => setAgree(e.target.checked)}
                 />
-                با <a href="#" className="underline">سیاست حریم خصوصی</a> موافقم و دریافت رسید را می‌پذیرم.
+                با <a href="#" className="underline">سیاست حریم خصوصی</a> موافقم و دریافت رسید رو می‌پذیرم.
               </label>
             </div>
             <div className="mt-6 flex items-center justify-between">
@@ -593,11 +595,14 @@ export default function RubitechLandingPageFA() {
               </div>
             </div>
             <div className="md:order-1">
-              <h1 className="text-[30px] font-extrabold leading-[1.4] text-[#0A2540] md:text-[42px]">
-                با هم آیندهٔ ایران را بسازیم. امروز یک نوجوانِ بااستعداد را توانمند کن.
+              <h1 className="text-[30px] font-extrabold leading-[1.8] text-[#0A2540] md:text-[42px]">
+                با هم آینده ایران رو میسازیم
+              </h1>
+              <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
+                هر لپ‌تاپ، یک مدرسه هوشمند
               </h1>
               <p className="mt-4 text-[20px] leading-[1.6] opacity-90">
-                کنارِ شما، دستِ درخشان‌ترین نوجوانان ایران را به ابزار وصل می‌کنیم—با گذاشتن یک لپ‌تاپ در دستانشان. می‌توانید مسیرِ مشارکت‌تان را از صفحهٔ خودتان تا مدرسهٔ او به‌صورت زنده دنبال کنید.
+                کنارِ شما، دستِ درخشان‌ترین نوجوانان ایران رو به ابزار وصل می‌کنیم—با گذاشتن یک لپ‌تاپ در دستانشان. می‌توانید مسیرِ مشارکت‌تان رو از صفحهٔ خودتان تا مدرسهٔ او به‌صورت زنده دنبال کنید.
               </p>
               <div className="mt-8">
                 <PrimaryCTA onClick={() => openModal("hero")} className="w-full sm:w-auto">
@@ -612,8 +617,8 @@ export default function RubitechLandingPageFA() {
           <Container>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <ImpactStat
-                value={`${toFa(150)}+`}
-                label="لپ‌تاپ تأمین‌شده"
+                value={`${toFa(113)}+`}
+                label="مدرسه تامین شده"
                 Icon={IconLaptop}
                 bgColor="bg-[#E5F0FA]"
                 iconColor="text-[#0A2540]"
@@ -626,7 +631,7 @@ export default function RubitechLandingPageFA() {
                 iconColor="text-[#6D28D9]"
               />
               <ImpactStat
-                value={toFa(5)}
+                value={toFa(4)}
                 label="استان تحت پوشش"
                 Icon={IconGlobe}
                 bgColor="bg-[#E6FAF8]"
@@ -641,19 +646,19 @@ export default function RubitechLandingPageFA() {
       <Section id="solution" className="bg-[#FFFFFF]">
         <Container>
           <SectionHeader
-            kicker="چطور"
+            kicker="چطور ؟"
             Icon={IconNodePath}
-            title="مسیرِ کاملِ حمایت شما"
-            subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما را به فرصتی پایدار برای آیندهٔ یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ای است:"
+            title="مسیر کامل حمایت شما"
+            subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
           />
 
-          <div className="relative mt-20 flex flex-col gap-12 md:gap-0">
+          <div className="relative mt-10 flex flex-col gap-12 md:gap-0">
             <div className="absolute right-1/2 top-0 hidden h-full w-0.5 translate-x-1/2 bg-slate-200/80 md:block" />
 
-            <ImprovedFlowStep
+            <FlowStep
               number="۱"
-              title="شما زنجیره را آغاز می‌کنید"
-              description="تعهد شما به شکلی شفاف و امن، اولین حلقهٔ زنجیرهٔ توانمندسازی را می‌سازد."
+              title="شما زنجیره رو آغاز می‌کنید"
+              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازد."
               IconComponent={IconHeartHand}
               isOdd={true}
               boxBgColor="bg-[#E5F0FA]"
@@ -661,10 +666,10 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#0A2540]"
             />
 
-            <ImprovedFlowStep
+            <FlowStep
               number="۲"
-              title="پلتفرم ما شفافیت را تضمین می‌کند"
-              description="روبیتک هر کمک را کدگذاری کرده و مسیر آن را تا رسیدن به مقصد نهایی قابل رهگیری می‌کند."
+              title="روبیتک شفافیت رو تضمین می‌کند"
+              description="روبیتک هر حمایت رو تا رسیدن به مقصد نهایی، قابل رهگیری می‌کند."
               IconComponent={IconRubitechPlatform}
               isOdd={false}
               boxBgColor="bg-[#F2ECFF]"
@@ -672,10 +677,10 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#6D28D9]"
             />
 
-            <ImprovedFlowStep
+            <FlowStep
               number="۳"
-              title="سفیرِ معتمد آن را تحویل می‌دهد"
-              description="معلمان و مدیران دلسوز (سفیران ما) لپ‌تاپ را به دست دانش‌آموز شایسته می‌رسانند."
+              title="سفیر معتمد ما حمایت رو تحویل می‌دهد"
+              description="معلمان و مدیران متعهد (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسانند."
               IconComponent={IconShield}
               isOdd={true}
               boxBgColor="bg-[#E6FAF8]"
@@ -683,10 +688,10 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#0EA5A7]"
             />
 
-            <ImprovedFlowStep
+            <FlowStep
               number="۴"
-              title="یک آینده توانمند می‌شود"
-              description="یک نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آیندهٔ خود را به دست می‌آورد."
+              title="یک آینده ساخته می‌شود"
+              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خود رو به دست می‌آورد."
               IconComponent={IconUsers}
               isOdd={false}
               boxBgColor="bg-[#FFF4E5]"
@@ -694,10 +699,10 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#F59E0B]"
             />
 
-            <ImprovedFlowStep
+            <FlowStep
               number="۵"
               title="فرصت بورسیه روبیکمپ"
-              description="دانش‌آموزان موفق فرصت دارند برای بورسیهٔ کامل مدرسهٔ رهبری آنلاین روبیکمپ اقدام کنند."
+              description="نوجوانان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
               IconComponent={IconSparkles}
               isOdd={true}
               boxBgColor="bg-[#E9FBF6]"
@@ -714,8 +719,8 @@ export default function RubitechLandingPageFA() {
           <SectionHeader
             kicker="شفافیت"
             Icon={IconEye}
-            title="اثر خود را از صفحهٔ شما تا مدرسهٔ او دنبال کنید"
-            subtitle="شفافیت ۱۰۰٪؛ تردید ۰٪. هر گام روی پیشخوان شخصی شما ثبت می‌شود."
+            title="تاثیر خود رو رهگیری می‌کنید"
+            subtitle="شفافیت ۱۰۰٪؛ تردید ۰٪. هر پیشرفت نوجوان روی پنل شخصی شما قابل رهگیری‌ست."
           />
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div className="grid content-start gap-6">
@@ -734,7 +739,7 @@ export default function RubitechLandingPageFA() {
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
                 <div className="font-semibold text-[#0A2540]">۳. شما دنبال می‌کنید</div>
                 <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
-                  با نقشه و نقاط عطف، مسیر را زنده ببینید.
+                  با نقشه و نقاط عطف، مسیر رو زنده ببینید.
                 </p>
               </div>
               <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
@@ -753,7 +758,7 @@ export default function RubitechLandingPageFA() {
               </div>
               <div className="mt-4 flex items-center gap-3 text-sm opacity-90">
                 <IconMap className="h-5 w-5" />
-                <span>آخرین به‌روزرسانی: شیراز • سفیر دریافت را تأیید کرد</span>
+                <span>آخرین به‌روزرسانی: شیراز • سفیر دریافت رو تأیید کرد</span>
               </div>
               <div className="mt-6 h-56 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200" />
               <div className="mt-6 space-y-3 text-sm">
@@ -775,64 +780,82 @@ export default function RubitechLandingPageFA() {
             kicker="اعتماد"
             Icon={IconStampOfApproval}
             title="جنبشی که می‌توانید به آن تکیه کنید"
-            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها—همه در کنار هم برای ساختن آینده."
+            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
           />
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <TestimonialCard
-              quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم را در وطن می‌بینم. رهگیری مسیر لپ‌تاپ همه‌چیز را تغییر داد."
-              name="آرش ر."
-              title="مهندس • تورنتو"
-              img="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop"
+              quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
+              name="هستی طاعتی"
+              title="مارکتر"
+              img={`${import.meta.env.BASE_URL}/images/hasti-taati.jpg`}
             />
             <TestimonialCard
-              quote="روبیتک توان من را برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. این فقط یک ابزار نیست—کلید آیندهٔ آن‌هاست."
-              name="مریم ک."
-              title="مدیر دبیرستان • شیراز"
-              img="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format&fit=crop"
+              quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم رو در وطن می‌بینم. اگرچه من و تو متاثر از محیط هستیم اما محصور آن نیستیم!."
+              name="سعید حسین‌زاده"
+              title="مدیرعامل روبیکمپ"
+              img={`${import.meta.env.BASE_URL}/images/saeed-hoseinzadeh.jpg`}
+            />
+            <TestimonialCard
+              quote="ورودم به دنیای تکنولوژی مسیر زندگیم ‌رو تغییر داد و حالا میخوام همین فرصت رو برای نوجوانان دیگر هم فراهم کنم تا مسیرشون رو پیدا کنند و رشد کنند. این پروژه برام فراتر از یک تجربه کاری هست؛ رویایی هست که دوست دارم سال‌ها درش فعالیت کنم، چون دقیقا همون پروژه‌ای هست که همیشه می‌خواستم بخشی از زندگی و هویتم باشه."
+              name="نازنین مسرور"
+              title="دیزاینر"
+              img={`${import.meta.env.BASE_URL}/images/nazanin-masror.jpg`}
+            />
+            <TestimonialCard
+              quote="روبیتک توان من رو برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. در این مسیر روبیتک تنها یک پلتفرم نیست، کلید ساخت آینده آن هاست."
+              name="مازیار شفیعی"
+              title="مدرس زبان انگلیسی"
+              img={`${import.meta.env.BASE_URL}/images/maz.jpg`}
             />
           </div>
         </Container>
       </Section>
 
-      {/* چرا روبیتک */}
+      {/* چرو روبیتک */}
       <Section id="differentiation" className="bg-[#F6F9FC]">
         <Container>
           <SectionHeader
-            kicker="چرا روبیتک"
+            kicker="چرو روبیتک ؟"
             Icon={IconSparkles}
-            title="چه چیز روبیتک را متمایز می‌کند؟"
-            subtitle="ترکیب شفافیت، شبکهٔ مورداعتماد و مسیرِ پایدار یادگیری، روبیتک را به انتخابی مطمئن تبدیل می‌کند."
+            title="چه چیز روبیتک رو متمایز می‌کنه ؟"
+            subtitle="ترکیب شفافیت، شبکه مورداعتماد و مسیرِ پایدار، روبیتک رو به انتخابی مطمئن تبدیل می‌کنه."
           />
+
+
           <div className="mt-4 grid gap-6 md:grid-cols-4">
-            <div className="group rounded-2xl p-6 ring-1 bg-[#E5F0FA] ring-[#D5E4F7] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0A2540]/30">
-              <IconEye className="h-7 w-7 text-[#0A2540]" />
-              <div className="mt-3 font-semibold text-[#0A2540]">شفافیت رادیکال</div>
-              <p className="mt-1 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">
-                پیشخوان شخصی شما تخصیص، تحویل و فعال‌سازی را نشان می‌دهد.
-              </p>
-            </div>
-            <div className="group rounded-2xl p-6 ring-1 bg-[#F2ECFF] ring-[#E6DBFF] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30">
-              <IconShield className="h-7 w-7 text-[#6D28D9]" />
-              <div className="mt-3 font-semibold text-[#0A2540]">شبکهٔ مورد اعتماد</div>
-              <p className="mt-1 text:[18px] leading-[1.7] text-[#1A1F36] opacity-90">
-                با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا دانش‌آموزان شایسته انتخاب شوند.
-              </p>
-            </div>
-            <div className="group rounded-2xl p-6 ring-1 bg-[#E6FAF8] ring-[#CFF6F1] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30">
-              <IconLoop className="h-7 w-7 text-[#0EA5A7]" />
-              <div className="mt-3 font-semibold text-[#0A2540]">مسیرِ پایدار</div>
-              <p className="mt-1 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">
-                آموزش + مسیر روبیکمپ؛ لپ‌تاپ‌ها چرخه‌ای به نفر بعدی می‌رسند.
-              </p>
-            </div>
-            <div className="group rounded-2xl p-6 ring-1 bg-[#FFF4E5] ring-[#FFE3C2] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30">
-              <IconUsers className="h-7 w-7 text-[#F59E0B]" />
-              <div className="mt-3 font-semibold text-[#0A2540]">اجتماع‌محور</div>
-              <p className="mt-1 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">
-                به‌دستِ جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران.
-              </p>
-            </div>
+            <DifferentiationCard
+              Icon={IconEye}
+              iconClass="h-7 w-7 text-[#0A2540]"
+              title="شفافیت رادیکال"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#E5F0FA] ring-[#D5E4F7] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0A2540]/30"
+              description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
+            />
+
+            <DifferentiationCard
+              Icon={IconShield}
+              iconClass="h-7 w-7 text-[#6D28D9]"
+              title="شبکهٔ مورد اعتماد"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#F2ECFF] ring-[#E6DBFF] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
+              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشند."
+            />
+
+            <DifferentiationCard
+              Icon={IconLoop}
+              iconClass="h-7 w-7 text-[#0EA5A7]"
+              title="مسیرِ پایدار"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#E6FAF8] ring-[#CFF6F1] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30"
+              description="لپ‌تاپ‌ها به صورت چرخه‌ای به نفر بعدی می‌رسند. همچنین نوجوانان موفق وارد روبیکمپ میشن."
+            />
+
+            <DifferentiationCard
+              Icon={IconUsers}
+              iconClass="h-7 w-7 text-[#F59E0B]"
+              title="اجتماع‌محور"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#FFF4E5] ring-[#FFE3C2] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
+              description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
+            />
           </div>
+
         </Container>
       </Section>
 
@@ -843,15 +866,15 @@ export default function RubitechLandingPageFA() {
             kicker="پرسش‌های پرتکرار"
             Icon={IconQuestion}
             title="سؤالات شما، پاسخ داده شده‌اند"
-            subtitle="اگر جواب پرسش‌تان را نمی‌بینید، برایمان بنویسید."
+            subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
           />
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <FAQItem
               q="دانش‌آموزان چطور انتخاب می‌شوند؟"
-              a={<p>سفیران—معلمان و مدیران مورد اعتماد—دانش‌آموزان واجد شرایط را بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
+              a={<p>سفیران—معلمان و مدیران مورد اعتماد—دانش‌آموزان واجد شرایط رو بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
             />
             <FAQItem
-              q="حمایت من چه چیزهایی را پوشش می‌دهد؟"
+              q="حمایت من چه چیزهایی رو پوشش می‌دهد؟"
               a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف دانش‌آموز می‌شود.</p>}
             />
             <FAQItem
@@ -873,7 +896,7 @@ export default function RubitechLandingPageFA() {
             به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-[20px] leading-[1.6] opacity-90">
-            یک لپ‌تاپ آغازِ راه است؛ یک جامعهٔ پشتیبان، انقلابِ واقعی. همین امروز نسلِ بعدی نوآوران ایرانی را توانمند کنید.
+            یک لپ‌تاپ آغازِ راه است؛ یک جامعهٔ پشتیبان، انقلابِ واقعی. همین امروز نسلِ بعدی نوآوران ایرانی رو توانمند کنید.
           </p>
           <div className="mt-8">
             <PrimaryCTA onClick={() => openModal("final")}>همین حالا همراه می‌شوم</PrimaryCTA>
