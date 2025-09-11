@@ -574,10 +574,9 @@ export default function RubitechLandingPageFA() {
     <main
       dir="rtl"
       lang="fa"
-      className="text-right text-[#1A1F36]"
       style={{
         fontFamily:
-          'IRANYekanX FaNum, IRANYekanX, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
+          'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
       }}
     >
 

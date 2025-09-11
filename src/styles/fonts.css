@@ -1,0 +1,16 @@
+@font-face {
+    font-family: "IRANYekanX";
+    src: url("/fonts/iranyekanx/IRANYekanXVF.woff2") format("woff2-variations");
+    font-weight: 100 900;
+    /* continuous range */
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "IRANYekanX FaNum";
+    src: url("/fonts/iranyekanx/IRANYekanXVFaNumVF.woff2") format("woff2-variations");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
