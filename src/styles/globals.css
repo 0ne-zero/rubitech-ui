@@ -35,33 +35,56 @@ body {
 }
 
 
-
 :root {
   --brand: #0A2540;
-  /* Deep Trust Blue */
   --brand-strong: #081A2E;
-  /* slightly deeper for solids */
+
   --text: #1A1F36;
-  /* Charcoal */
   --text-weak: #243041;
-  /* a touch darker than charcoal */
+
   --green: #00D09C;
-  /* Impact Green */
   --green-strong: #00B88A;
-  /* hover/darker */
+
   --sky: #E9F2FF;
-  /* stronger than #F6F9FC */
-  --sky-ring: #BFD6FF;
+  --sky-ring: #BFD5FF;
+
   --mint: #DDF8F1;
-  /* stronger than #E6FAF8/#E9FBF6 */
-  --mint-ring: #B5F0E3;
+  --mint-ring: #B2F2E4;
+
   --violet-tint: #E9DEFF;
-  /* stronger than #F2ECFF */
   --violet-ring: #CFB8FF;
-  --amber-tint: #FFE7C7;
-  /* stronger than #FFF4E5 */
+
+  --amber-tint: #FFE6C6;
   --amber-ring: #FFD9A3;
+
+  --rose-tint: #FFE1E7;
+  --rose-ring: #FFB8C4;
+
+  --indigo-tint: #E0E7FF;
+  --indigo-ring: #B3C2FF;
+
+  --teal-tint: #D5F7F6;
+  --teal-ring: #99E9E5;
+
+  --lime-tint: #F0FDD5;
+  --lime-ring: #D4FB99;
+
+  --gray-tint: #F3F6F8;
+  --gray-ring: #D8DDE5;
+
+
+  --rose-step: #E11D48;
+  /* Rose 600 → pairs with --rose-ring */
+  --violet-step: #6D28D9;
+  /* Violet 700 → pairs with --violet-tint */
+  --amber-step: #F59E0B;
+  /* Amber 500 → pairs with --amber-tint */
+  --lime-step: #4D7C0F;
+  /* Lime 700 → pairs with --lime-tint */
+  --mint-step: #008A6E;
+  /* Teal/green strong → pairs with --mint-ring */
 }
+
 
 /* optional utility if you use Tailwind's arbitrary values often */
 .strong-shadow {

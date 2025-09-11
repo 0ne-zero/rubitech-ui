@@ -435,7 +435,7 @@ export default function RubitechLandingPageFA() {
             </div>
             <div className="md:order-1">
               <h1 className="text-[30px] font-extrabold leading-[1.8] text-[#0A2540] md:text-[42px]">
-                با هم آینده ایران رو میسازیم
+                با هم آینده ایران رو می‌سازیم
               </h1>
               <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
                 هر لپ‌تاپ، یک مدرسه هوشمند
@@ -513,9 +513,9 @@ export default function RubitechLandingPageFA() {
               description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازه."
               IconComponent={IconHeartHand}
               isOdd={true}
-              boxBgColor="bg-[var(--sky)]"
+              boxBgColor="bg-[var(--rose-ring)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[var(--brand)]"
+              stepColor="text-[var(--rose-step)]"
             />
 
             <FlowStep
@@ -526,7 +526,7 @@ export default function RubitechLandingPageFA() {
               isOdd={false}
               boxBgColor="bg-[var(--violet-tint)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#6D28D9]"
+              stepColor="text-[var(--violet-step)]"
             />
 
             <FlowStep
@@ -537,7 +537,7 @@ export default function RubitechLandingPageFA() {
               isOdd={true}
               boxBgColor="bg-[var(--amber-tint)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#F59E0B]"
+              stepColor="text-[var(--amber-step)]"
             />
 
             <FlowStep
@@ -546,9 +546,9 @@ export default function RubitechLandingPageFA() {
               description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خودش و جامعه رو به دست میاره."
               IconComponent={IconUsers}
               isOdd={false}
-              boxBgColor="bg-[var(--mint)]"
+              boxBgColor="bg-[var(--lime-tint)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#0EA5A7]"
+              stepColor="text-[var(--lime-step)]"
             />
 
             <FlowStep
@@ -557,9 +557,9 @@ export default function RubitechLandingPageFA() {
               description="نوجوانان موفق، بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
               IconComponent={IconSparkles}
               isOdd={true}
-              boxBgColor="bg-[#E9FBF6]"
+              boxBgColor="bg-[var(--mint-ring)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#008A6E]"
+              stepColor="text-[var(--mint-step)]]"
             />
           </div>
         </Container>
