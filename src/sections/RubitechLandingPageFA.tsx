@@ -604,6 +604,9 @@ export default function RubitechLandingPageFA() {
               <p className="mt-4 text-[20px] leading-[1.6] opacity-90">
                 کنارِ شما، دستِ درخشان‌ترین نوجوانان ایران رو به ابزار وصل می‌کنیم—با گذاشتن یک لپ‌تاپ در دستانشان. می‌توانید مسیرِ مشارکت‌تان رو از صفحهٔ خودتان تا مدرسهٔ او به‌صورت زنده دنبال کنید.
               </p>
+              <p className="font-bold text-[20px]">
+                (باید تغییر کنه)
+              </p>
               <div className="mt-8">
                 <PrimaryCTA onClick={() => openModal("hero")} className="w-full sm:w-auto">
                   همین حالا همراه می‌شوم
@@ -892,11 +895,13 @@ export default function RubitechLandingPageFA() {
       {/* final CTA */}
       <Section id="final-cta" className="bg-[#0A2540]">
         <Container className="text-center text-white">
-          <h2 className="text-[32px] font-extrabold md:text-[32px]">
+          <h2 className="text-[32px] font-extrabold md:text-[38px]">
             به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-[20px] leading-[1.6] opacity-90">
-            یک لپ‌تاپ آغازِ راه است؛ یک جامعهٔ پشتیبان، انقلابِ واقعی. همین امروز نسلِ بعدی نوآوران ایرانی رو توانمند کنید.
+          <p className="mx-auto mt-4 max-w-2xl font-bold text-[20px] leading-[1.6] opacity-90">
+            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلابِ واقعی‌ست.
+            <br></br>
+            امروز، آینده ایران رو بساز.
           </p>
           <div className="mt-8">
             <PrimaryCTA onClick={() => openModal("final")}>همین حالا همراه می‌شوم</PrimaryCTA>
