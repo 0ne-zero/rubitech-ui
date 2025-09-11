@@ -643,7 +643,7 @@ export default function RubitechLandingPageFA() {
       </Section>
 
       {/* چطور */}
-      <Section id="solution" className="bg-[#FFFFFF]">
+      <Section id="solution" className="bg-[#F6F9FC]">
         <Container>
           <SectionHeader
             kicker="چطور ؟"
@@ -714,7 +714,7 @@ export default function RubitechLandingPageFA() {
       </Section>
 
       {/* شفافیت */}
-      <Section id="transparency" className="bg-[#F6F9FC]">
+      {/* <Section id="transparency" className="bg-[#F6F9FC]">
         <Container>
           <SectionHeader
             kicker="شفافیت"
@@ -771,7 +771,7 @@ export default function RubitechLandingPageFA() {
             </div>
           </div>
         </Container>
-      </Section>
+      </Section> */}
 
       {/* اعتماد */}
       <Section id="social-proof" className="bg-[#FFFFFF]">
@@ -811,11 +811,11 @@ export default function RubitechLandingPageFA() {
         </Container>
       </Section>
 
-      {/* چرو روبیتک */}
+      {/* چرا روبیتک */}
       <Section id="differentiation" className="bg-[#F6F9FC]">
         <Container>
           <SectionHeader
-            kicker="چرو روبیتک ؟"
+            kicker="چرا روبیتک ؟"
             Icon={IconSparkles}
             title="چه چیز روبیتک رو متمایز می‌کنه ؟"
             subtitle="ترکیب شفافیت، شبکه مورداعتماد و مسیرِ پایدار، روبیتک رو به انتخابی مطمئن تبدیل می‌کنه."
