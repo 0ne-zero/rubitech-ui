@@ -23,7 +23,7 @@ type DivProps = React.HTMLAttributes<HTMLDivElement>;
 function logEvent(name: string, payload: Record<string, unknown> = {}) {
   console.debug(`[event] ${name}`, payload);
 }
-const toFa = (n: number | string) => Number(n || 0).toLocaleString("fa-IR");
+export const toFa = (n: number | string) => Number(n || 0).toLocaleString("fa-IR");
 const toEnDigits = (str: string) =>
   (str || "")
     .replace(/[۰-۹]/g, (d: string) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString())
@@ -881,15 +881,6 @@ export default function RubitechLandingPageFA() {
         </Container>
       </Section>
 
-      <footer className="border-t border-slate-800 bg-[#0A2540] py-6">
-        <Container className="flex flex-col items-center justify-between gap-4 text-sm text-white/70 md:flex-row">
-          <div>© {toFa(new Date().getFullYear())} روبیتک. کلیهٔ حقوق محفوظ است.</div>
-          <div className="flex items-center gap-4">
-            <a href="#" className="transition hover:text-white">حریم خصوصی</a>
-            <a href="#" className="transition hover:text-white">ارتباط با ما</a>
-          </div>
-        </Container>
-      </footer>
 
       {/* sticky mobile CTA */}
       <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
