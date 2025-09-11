@@ -210,13 +210,27 @@ const ImpactStat = ({ value, label, Icon, bgColor, iconColor }: ImpactStatProps)
 
 // --- primitives
 type SectionProps = { id?: string; className?: string; children: React.ReactNode };
+
 const Section = ({ id, className = "", children }: SectionProps) => (
-  <section id={id} className={`py-20 md:py-20 ${className}`}>{children}</section>
+  <section id={id} className={className}>{children}</section>
 );
 
-type ContainerProps = { className?: string; children: React.ReactNode };
-const Container = ({ className = "", children }: ContainerProps) => (
-  <div className={`mx-auto w-full max-w-7xl px-4  ${className}`}>{children}</div>
+type ContainerProps = {
+  className?: string;
+  children: React.ReactNode;
+  y?: "none" | "xs" | "sm" | "md" | "lg";
+};
+
+const CONTAINER_Y: Record<NonNullable<ContainerProps["y"]>, string> = {
+  none: "py-0",
+  xs: "py-4 md:py-6",
+  sm: "py-6 md:py-8",
+  md: "py-8 md:py-10",
+  lg: "py-24 md:py-24",
+};
+
+const Container = ({ className = "", children, y = "sm" }: ContainerProps) => (
+  <div className={`mx-auto w-full max-w-7xl px-4 ${CONTAINER_Y[y]} ${className}`}>{children}</div>
 );
 
 type PrimaryCTAProps = { onClick?: () => void; className?: string; children: React.ReactNode };
@@ -351,7 +365,7 @@ const DifferentiationCard = ({
 }: DifferentiationCardProps) => (
   <div className={wrapperClass}>
     <Icon className={iconClass} />
-    <div className="mt-3 mb-3 font-semibold text-xl text-[#0A2540]">{title}</div>
+    <div className="mt-3 mb-3 font-bold text-xl text-[#0A2540]">{title}</div>
 
     {/* Keep styles identical to your original cards */}
     {typeof description === "string" ? (
@@ -361,6 +375,30 @@ const DifferentiationCard = ({
     )}
   </div>
 );
+
+
+
+type DividerProps = {
+  variant?: "brand" | "subtle" | "dotted";
+  className?: string;
+};
+
+const SectionDivider = ({ variant = "brand", className = "" }: DividerProps) => {
+  if (variant === "dotted") {
+    return <hr className={`mx-auto my-6 h-0 border-0 border-t-2 border-dotted border-slate-300/80 w-full max-w-7xl ${className}`} />;
+  }
+  if (variant === "subtle") {
+    return <hr className={`mx-auto my-6 h-px w/full max-w-7xl bg-gradient-to-l from-transparent via-slate-200 to-transparent ${className}`} />;
+  }
+  return (
+    <div
+      aria-hidden="true"
+      className={`mx-auto my-6 h-[2px] w-full max-w-7xl rounded-full bg-gradient-to-l from-[var(--green)] via-slate-200 to-[var(--brand)] ${className}`}
+    />
+  );
+};
+
+
 
 export default function RubitechLandingPageFA() {
   const [open, setOpen] = useState(false);
@@ -382,10 +420,10 @@ export default function RubitechLandingPageFA() {
     >
 
       {/* hero */}
-      <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white pb-0 md:pb-50">
+      <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
 
         <Container>
-          <div className="grid items-center gap-10 py-10 md:py-10 md:grid-cols-2 ">
+          <div className="grid items-center gap-10 md:grid-cols-2 mt-[100px] ">
             <div className="relative md:order-2">
               <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 ring-slate-300 shadow-xl ring-1 ">
                 <img
@@ -415,7 +453,7 @@ export default function RubitechLandingPageFA() {
               </div>
             </div>
           </div>
-          <div className="py-5 backdrop-blur-sm">
+          <div className="mt-8 backdrop-blur-sm">
             <Container>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <ImpactStat
@@ -449,14 +487,16 @@ export default function RubitechLandingPageFA() {
               </div>
             </Container>
           </div>
+          <div className="">
+            <SectionDivider />
+          </div>
         </Container>
-
       </Section>
-      <hr></hr>
+
 
       {/* چطور */}
       <Section id="solution" className="overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
-        <Container>
+        <Container y="none">
           <SectionHeader
             kicker="چطور ؟"
             Icon={IconNodePath}
@@ -470,7 +510,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۱"
               title="شما زنجیره رو آغاز می‌کنید"
-              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازد."
+              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازه."
               IconComponent={IconHeartHand}
               isOdd={true}
               boxBgColor="bg-[var(--sky)]"
@@ -481,7 +521,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۲"
               title="روبیتک شفافیت رو تضمین می‌کند"
-              description="روبیتک هر حمایت رو تا رسیدن به مقصد نهایی، قابل رهگیری می‌کند."
+              description="روبیتک هر حمایت رو ثبت می‌کنه، تحویل سفیرهاش می‌ده و قابل رهگیری می‌کنه."
               IconComponent={IconRubitechPlatform}
               isOdd={false}
               boxBgColor="bg-[var(--violet-tint)]"
@@ -491,11 +531,11 @@ export default function RubitechLandingPageFA() {
 
             <FlowStep
               number="۳"
-              title="سفیر معتمد ما حمایت رو تحویل می‌دهد"
-              description="معلمان و مدیران متعهد (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسانند."
+              title="سفیر معتمد و متعهد ما حمایت رو تحویل می‌ده"
+              description="معلمان و مدیران (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسونند."
               IconComponent={IconShield}
               isOdd={true}
-              boxBgColor="bg-[var(--mint)]"
+              boxBgColor="bg-[var(--amber-tint)]"
               iconBgColor="bg-white/50"
               stepColor="text-[#0EA5A7]"
             />
@@ -503,10 +543,10 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۴"
               title="یک آینده ساخته می‌شود"
-              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خود رو به دست می‌آورد."
+              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خودش و جامعه رو به دست میاره."
               IconComponent={IconUsers}
               isOdd={false}
-              boxBgColor="bg-[var(--amber-tint)]"
+              boxBgColor="bg-[var(--mint)]"
               iconBgColor="bg-white/50"
               stepColor="text-[#F59E0B]"
             />
@@ -514,7 +554,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۵"
               title="فرصت بورسیه روبیکمپ"
-              description="نوجوانان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
+              description="نوجوانان موفق، بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
               IconComponent={IconSparkles}
               isOdd={true}
               boxBgColor="bg-[#E9FBF6]"
@@ -522,8 +562,13 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#008A6E]"
             />
           </div>
+          <div className="mt-12 mb-12">
+            <SectionDivider />
+          </div>
         </Container>
       </Section>
+
+
 
       {/* شفافیت */}
       {/* <Section id="transparency" className="bg-[#F6F9FC]">
@@ -587,14 +632,14 @@ export default function RubitechLandingPageFA() {
 
       {/* اعتماد */}
       <Section id="social-proof" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
-        <Container>
+        <Container y="none">
           <SectionHeader
             kicker="اعتماد"
             Icon={IconStampOfApproval}
             title="جنبشی که می‌توانید به آن تکیه کنید"
             subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
           />
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <div className="mt-6 grid gap-6 md:grid-cols-2">
             <TestimonialCard
               quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
               name="هستی طاعتی"
@@ -621,7 +666,11 @@ export default function RubitechLandingPageFA() {
             />
           </div>
         </Container>
+        <div className="mt-14">
+          <SectionDivider />
+        </div>
       </Section>
+
 
       {/* چرا روبیتک */}
       <Section id="differentiation" className="overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
@@ -670,15 +719,19 @@ export default function RubitechLandingPageFA() {
 
 
         </Container>
+        <div className="mt-8">
+          <SectionDivider />
+        </div>
       </Section>
 
+
       {/* FAQ */}
-      <Section id="faq" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
+      <Section id="faq" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white mb-8">
         <Container>
           <SectionHeader
             kicker="پرسش‌های پرتکرار"
             Icon={IconQuestion}
-            title="سؤالات شما، پاسخ داده شده‌اند"
+            title="سوالات شما، پاسخ‌های ما"
             subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
           />
           <div className="mt-8 grid gap-4">
@@ -691,12 +744,8 @@ export default function RubitechLandingPageFA() {
               a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شود.</p>}
             />
             <FAQItem
-              q="آیا پرداخت امن و قابل کسر مالیاتی است؟"
-              a={<p>پرداخت‌ها از طریق ارائه‌دهندگان دارای گواهی PCI سطح ۱ انجام می‌شود. روبیتک زیر چتر یک نهاد غیرانتفاعیِ ثبت‌شده فعالیت می‌کند؛ در صورت امکان رسید رسمی صادر می‌شود.</p>}
-            />
-            <FAQItem
               q="امکان اهدای سخت‌افزارِ کارکرده هست؟"
-              a={<p>برای تضمین کیفیت و امنیت، فعلاً دستگاه‌ها به‌صورت نو و عمده تهیه می‌شوند تا هزینهٔ هر واحد کاهش یابد.</p>}
+              a={<p>برای تضمین کیفیت و امنیت، فعلاً دستگاه‌ها به‌صورت نو و عمده تهیه می‌شوند.</p>}
             />
           </div>
         </Container>
@@ -704,7 +753,7 @@ export default function RubitechLandingPageFA() {
 
       {/* final CTA */}
       <Section id="final-cta" className="bg-[var(--brand-strong)]">
-        <Container className="text-center text-white">
+        <Container className="text-center text-white" y="lg">
           <h2 className="text-[32px] font-extrabold md:text-[38px]">
             به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
           </h2>
