@@ -216,7 +216,7 @@ const Section = ({ id, className = "", children }: SectionProps) => (
 
 type ContainerProps = { className?: string; children: React.ReactNode };
 const Container = ({ className = "", children }: ContainerProps) => (
-  <div className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
+  <div className={`mx-auto w-full max-w-7xl px-4  ${className}`}>{children}</div>
 );
 
 type PrimaryCTAProps = { onClick?: () => void; className?: string; children: React.ReactNode };
@@ -224,7 +224,7 @@ const PrimaryCTA = ({ onClick, children, className = "" }: PrimaryCTAProps) => (
   <button
     type="button"
     onClick={onClick}
-    className={`min-h-12 rounded-lg bg-[#00D09C] px-8 py-4 text-[18px] font-semibold text-white shadow-lg ring-1 ring-[#00D09C]/40 transition hover:-translate-y-0.5 hover:bg-[#00B88A] hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-[#00D09C] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${className}`}
+    className={`min-h-12 rounded-lg bg-[var(--green)] px-8 py-4 text-[18px] font-extrabold text-white strong-shadow ring-1 ring-[var(--green)]/35 transition hover:-translate-y-0.5 hover:bg-[var(--green-strong)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--green)]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${className}`}
     aria-label="حمایت خود رو ثبت کن"
   >
     {children}
@@ -233,7 +233,7 @@ const PrimaryCTA = ({ onClick, children, className = "" }: PrimaryCTAProps) => (
 
 type StatProps = { value: string | number; label: string };
 const Stat = ({ value, label }: StatProps) => (
-  <div className="rounded-2xl bg-white/80 p-6 text-center shadow-sm ring-1 ring-slate-200 backdrop-blur">
+  <div className="rounded-2xl bg-white p-6 text-center shadow-sm ring-1 ring-[var(--sky-ring)]">
     <div className="text-3xl font-extrabold text-[#0A2540]">{value}</div>
     <div className="mt-1 text-sm text-[#1A1F36] opacity-80">{label}</div>
   </div>
@@ -241,7 +241,7 @@ const Stat = ({ value, label }: StatProps) => (
 
 type TestimonialCardProps = { quote: string; name: string; title: string; img: string };
 const TestimonialCard = ({ quote, name, title, img }: TestimonialCardProps) => (
-  <figure className="flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-400">
+  <figure className="flex flex-col gap-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-[var(--sky-ring)]">
     <figcaption className="flex items-center gap-3">
       <img src={img} alt="تصویر" className="h-16 w-15 rounded-full object-cover" />
       <div>
@@ -317,7 +317,8 @@ type SectionHeaderProps = {
 };
 const SectionHeader = ({ kicker, title, subtitle, Icon }: SectionHeaderProps) => (
   <div className="relative mb-10">
-    <div className="inline-flex items-center gap-2 rounded-full bg-[#F6F9FC] px-3 py-1 text-[#0A2540] ring-1 ring-[#0A2540]/15">
+    <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring-1 ring-[var(--sky-ring)]">
+
       <span className="text-[24px] font-bold">{kicker}</span>
       {Icon ? <Icon className="h-6 w-7" /> : null}
     </div>
@@ -326,7 +327,8 @@ const SectionHeader = ({ kicker, title, subtitle, Icon }: SectionHeaderProps) =>
     {subtitle ? (
       <p className="mt-4 max-w-3xl text-[20px] leading-[1.6] text-[#1A1F36] opacity-90">{subtitle}</p>
     ) : null}
-    <div className="mt-6 h-1.5 w-28 rounded-full bg-gradient-to-l from-[#00D09C] to-[#0A2540]" />
+    <div className="mt-6 h-1.5 w-28 rounded-full bg-gradient-to-l from-[var(--green)] to-[var(--brand)]" />
+
   </div>
 );
 
@@ -349,16 +351,387 @@ const DifferentiationCard = ({
 }: DifferentiationCardProps) => (
   <div className={wrapperClass}>
     <Icon className={iconClass} />
-    <div className="mt-3 font-semibold text-[#0A2540]">{title}</div>
+    <div className="mt-3 mb-3 font-semibold text-xl text-[#0A2540]">{title}</div>
 
     {/* Keep styles identical to your original cards */}
     {typeof description === "string" ? (
-      <p className="mt-1 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">{description}</p>
+      <p className="mt-1 text-[18px] font-medium leading-[1.7] text-[#1A1F36] opacity-90">{description}</p>
     ) : (
       description
     )}
   </div>
 );
+
+export default function RubitechLandingPageFA() {
+  const [open, setOpen] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
+
+  function openModal(location: string) {
+    logEvent("cta_click", { location });
+    setOpen(true);
+  }
+
+  return (
+    <main
+      dir="rtl"
+      lang="fa"
+      style={{
+        fontFamily:
+          'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
+      }}
+    >
+
+      {/* hero */}
+      <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white pb-0 md:pb-50">
+
+        <Container>
+          <div className="grid items-center gap-10 py-10 md:py-10 md:grid-cols-2 ">
+            <div className="relative md:order-2">
+              <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 ring-slate-300 shadow-xl ring-1 ">
+                <img
+                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop"
+                  alt="نوجوان امیدوار با لپ‌تاپ"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+            <div className="md:order-1">
+              <h1 className="text-[30px] font-extrabold leading-[1.8] text-[#0A2540] md:text-[42px]">
+                با هم آینده ایران رو میسازیم
+              </h1>
+              <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
+                هر لپ‌تاپ، یک مدرسه هوشمند
+              </h1>
+              <p className="mt-4 text-[20px] leading-[1.7] text-[var(--text-weak)]">
+                کنارِ شما، دستِ درخشان‌ترین نوجوانان ایران رو به ابزار وصل می‌کنیم—با گذاشتن یک لپ‌تاپ در دستانشان. می‌توانید مسیرِ مشارکت‌تان رو از صفحهٔ خودتان تا مدرسهٔ او به‌صورت زنده دنبال کنید.
+              </p>
+              <p className="font-bold text-[20px]">
+                (باید تغییر کنه)
+              </p>
+              <div className="mt-10">
+                <PrimaryCTA onClick={() => openModal("hero")} className="w-full sm:w-auto">
+                  همین حالا همراه می‌شوم
+                </PrimaryCTA>
+              </div>
+            </div>
+          </div>
+          <div className="py-5 backdrop-blur-sm">
+            <Container>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <ImpactStat
+                  value={`${toFa(134)}+`}
+                  label="نوجوانان تحت ثاثیر"
+                  Icon={IconLaptop}
+                  bgColor="bg-[var(--mint)]"
+                  iconColor="text-[var(--brand)]"
+                />
+                <ImpactStat
+                  value={`${toFa(113)}+`}
+                  label="مدرسه تامین شده"
+                  Icon={IconLaptop}
+                  bgColor="bg-[var(--sky)]"
+                  iconColor="text-[var(--brand)]"
+                />
+                <ImpactStat
+                  value={toFa(35)}
+                  label="سفیر فعال"
+                  Icon={IconShield}
+                  bgColor="bg-[var(--violet-tint)]"
+                  iconColor="text-[#6D28D9]"
+                />
+                <ImpactStat
+                  value={toFa(4)}
+                  label="استان تحت پوشش"
+                  Icon={IconGlobe}
+                  bgColor="bg-[var(--amber-tint)]"
+                  iconColor="text-[#0EA5A7]"
+                />
+              </div>
+            </Container>
+          </div>
+        </Container>
+
+      </Section>
+      <hr></hr>
+
+      {/* چطور */}
+      <Section id="solution" className="overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
+        <Container>
+          <SectionHeader
+            kicker="چطور ؟"
+            Icon={IconNodePath}
+            title="مسیر کامل حمایت شما"
+            subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
+          />
+
+          <div className="relative mt-10 flex flex-col gap-12 md:gap-0">
+            <div className="absolute right-1/2 top-0 hidden h-full w-0.5 translate-x-1/2 bg-slate-200/80 md:block" />
+
+            <FlowStep
+              number="۱"
+              title="شما زنجیره رو آغاز می‌کنید"
+              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازد."
+              IconComponent={IconHeartHand}
+              isOdd={true}
+              boxBgColor="bg-[var(--sky)]"
+              iconBgColor="bg-white/50"
+              stepColor="text-[var(--brand)]"
+            />
+
+            <FlowStep
+              number="۲"
+              title="روبیتک شفافیت رو تضمین می‌کند"
+              description="روبیتک هر حمایت رو تا رسیدن به مقصد نهایی، قابل رهگیری می‌کند."
+              IconComponent={IconRubitechPlatform}
+              isOdd={false}
+              boxBgColor="bg-[var(--violet-tint)]"
+              iconBgColor="bg-white/50"
+              stepColor="text-[#6D28D9]"
+            />
+
+            <FlowStep
+              number="۳"
+              title="سفیر معتمد ما حمایت رو تحویل می‌دهد"
+              description="معلمان و مدیران متعهد (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسانند."
+              IconComponent={IconShield}
+              isOdd={true}
+              boxBgColor="bg-[var(--mint)]"
+              iconBgColor="bg-white/50"
+              stepColor="text-[#0EA5A7]"
+            />
+
+            <FlowStep
+              number="۴"
+              title="یک آینده ساخته می‌شود"
+              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خود رو به دست می‌آورد."
+              IconComponent={IconUsers}
+              isOdd={false}
+              boxBgColor="bg-[var(--amber-tint)]"
+              iconBgColor="bg-white/50"
+              stepColor="text-[#F59E0B]"
+            />
+
+            <FlowStep
+              number="۵"
+              title="فرصت بورسیه روبیکمپ"
+              description="نوجوانان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
+              IconComponent={IconSparkles}
+              isOdd={true}
+              boxBgColor="bg-[#E9FBF6]"
+              iconBgColor="bg-white/50"
+              stepColor="text-[#008A6E]"
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* شفافیت */}
+      {/* <Section id="transparency" className="bg-[#F6F9FC]">
+        <Container>
+          <SectionHeader
+            kicker="شفافیت"
+            Icon={IconEye}
+            title="تاثیر خود رو رهگیری می‌کنید"
+            subtitle="شفافیت ۱۰۰٪؛ تردید ۰٪. هر پیشرفت نوجوان روی پنل شخصی شما قابل رهگیری‌ست."
+          />
+          <div className="mt-6 grid gap-8 md:grid-cols-2">
+            <div className="grid content-start gap-6">
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
+                <div className="font-semibold text-[#0A2540]">۱. شما تعهد می‌دهید</div>
+                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
+                  فرآیند ساده و امن برای انتخاب سطح اثرگذاری.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
+                <div className="font-semibold text-[#0A2540]">۲. ما تخصیص می‌دهیم</div>
+                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
+                  به هر تعهد یک شناسهٔ یکتا داده می‌شود و با دانش‌آموز واجد شرایط تطبیق می‌یابد.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
+                <div className="font-semibold text-[#0A2540]">۳. شما دنبال می‌کنید</div>
+                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
+                  با نقشه و نقاط عطف، مسیر رو زنده ببینید.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
+                <div className="font-semibold text-[#0A2540]">۴. شما شاهد می‌شوید</div>
+                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
+                  به‌روزرسانی‌های پیشرفت برایتان ارسال می‌شود.
+                </p>
+              </div>
+            </div>
+            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-[#F6F9FC]">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-semibold text-[#0A2540]">حمایت #RT-2487 • در حال انتقال</div>
+                <span className="rounded-full bg-[#E9FBF6] px-2 py-1 text-xs font-semibold text-[#0A2540]">
+                  زنده
+                </span>
+              </div>
+              <div className="mt-4 flex items-center gap-3 text-sm opacity-90">
+                <IconMap className="h-5 w-5" />
+                <span>آخرین به‌روزرسانی: شیراز • سفیر دریافت رو تأیید کرد</span>
+              </div>
+              <div className="mt-6 h-56 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200" />
+              <div className="mt-6 space-y-3 text-sm">
+                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> تعهد ثبت شد</div>
+                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> دستگاه تهیه شد</div>
+                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> سفیر تخصیص یافت</div>
+                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> در مسیرِ تحویل</div>
+                <div className="flex items-center gap-3 opacity-50"><span className="h-2 w-2 rounded-full bg-slate-300" /> فعال‌سازی توسط دانش‌آموز</div>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section> */}
+
+      {/* اعتماد */}
+      <Section id="social-proof" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
+        <Container>
+          <SectionHeader
+            kicker="اعتماد"
+            Icon={IconStampOfApproval}
+            title="جنبشی که می‌توانید به آن تکیه کنید"
+            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
+          />
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            <TestimonialCard
+              quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
+              name="هستی طاعتی"
+              title="مارکتر"
+              img={`${import.meta.env.BASE_URL}/images/hasti-taati.jpg`}
+            />
+            <TestimonialCard
+              quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم رو در وطن می‌بینم. اگرچه من و تو متاثر از محیط هستیم اما محصور آن نیستیم!."
+              name="سعید حسین‌زاده"
+              title="مدیرعامل روبیکمپ"
+              img={`${import.meta.env.BASE_URL}/images/saeed-hoseinzadeh.jpg`}
+            />
+            <TestimonialCard
+              quote="ورودم به دنیای تکنولوژی مسیر زندگیم ‌رو تغییر داد و حالا میخوام همین فرصت رو برای نوجوانان دیگر هم فراهم کنم تا مسیرشون رو پیدا کنند و رشد کنند. این پروژه برام فراتر از یک تجربه کاری هست؛ رویایی هست که دوست دارم سال‌ها درش فعالیت کنم، چون دقیقا همون پروژه‌ای هست که همیشه می‌خواستم بخشی از زندگی و هویتم باشه."
+              name="نازنین مسرور"
+              title="دیزاینر"
+              img={`${import.meta.env.BASE_URL}/images/nazanin-masror.jpg`}
+            />
+            <TestimonialCard
+              quote="روبیتک توان من رو برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. در این مسیر روبیتک تنها یک پلتفرم نیست، کلید ساخت آینده آن هاست."
+              name="مازیار شفیعی"
+              title="مدرس زبان انگلیسی"
+              img={`${import.meta.env.BASE_URL}/images/maz.jpg`}
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* چرا روبیتک */}
+      <Section id="differentiation" className="overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
+        <Container>
+          <SectionHeader
+            kicker="چرا روبیتک ؟"
+            Icon={IconSparkles}
+            title="چه چیز روبیتک رو متمایز می‌کنه ؟"
+            subtitle="ترکیب شفافیت، شبکه مورداعتماد و مسیرِ پایدار، روبیتک رو به انتخابی مطمئن تبدیل می‌کنه."
+          />
+
+
+          <div className="mt-4 grid gap-6 md:grid-cols-4">
+            <DifferentiationCard
+              Icon={IconEye}
+              iconClass="h-7 w-7 text-[var(--brand)]"
+              title="شفافیت رادیکال"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--sky)] ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/30"
+              description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
+            />
+
+            <DifferentiationCard
+              Icon={IconShield}
+              iconClass="h-7 w-7 text-[#6D28D9]"
+              title="شبکهٔ مورد اعتماد"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--violet-tint)] ring-[var(--violet-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
+              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشند."
+            />
+
+            <DifferentiationCard
+              Icon={IconLoop}
+              iconClass="h-7 w-7 text-[#0EA5A7]"
+              title="مسیرِ پایدار"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--mint)] ring-[var(--mint-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30"
+              description="لپ‌تاپ‌ها به صورت چرخه‌ای به نفر بعدی می‌رسند. همچنین نوجوانان موفق وارد روبیکمپ میشن."
+            />
+
+            <DifferentiationCard
+              Icon={IconUsers}
+              iconClass="h-7 w-7 text-[#F59E0B]"
+              title="اجتماع‌محور"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--amber-tint)] ring-[var(--amber-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
+              description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
+            />
+          </div>
+
+
+        </Container>
+      </Section>
+
+      {/* FAQ */}
+      <Section id="faq" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
+        <Container>
+          <SectionHeader
+            kicker="پرسش‌های پرتکرار"
+            Icon={IconQuestion}
+            title="سؤالات شما، پاسخ داده شده‌اند"
+            subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
+          />
+          <div className="mt-8 grid gap-4">
+            <FAQItem
+              q="نوجوانان چطور انتخاب می‌شوند؟"
+              a={<p>سفیران—معلمان و مدیران مورد نوجوان واجد شرایط رو بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
+            />
+            <FAQItem
+              q="حمایت من چه چیزهایی رو پوشش می‌دهد؟"
+              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شود.</p>}
+            />
+            <FAQItem
+              q="آیا پرداخت امن و قابل کسر مالیاتی است؟"
+              a={<p>پرداخت‌ها از طریق ارائه‌دهندگان دارای گواهی PCI سطح ۱ انجام می‌شود. روبیتک زیر چتر یک نهاد غیرانتفاعیِ ثبت‌شده فعالیت می‌کند؛ در صورت امکان رسید رسمی صادر می‌شود.</p>}
+            />
+            <FAQItem
+              q="امکان اهدای سخت‌افزارِ کارکرده هست؟"
+              a={<p>برای تضمین کیفیت و امنیت، فعلاً دستگاه‌ها به‌صورت نو و عمده تهیه می‌شوند تا هزینهٔ هر واحد کاهش یابد.</p>}
+            />
+          </div>
+        </Container>
+      </Section>
+
+      {/* final CTA */}
+      <Section id="final-cta" className="bg-[var(--brand-strong)]">
+        <Container className="text-center text-white">
+          <h2 className="text-[32px] font-extrabold md:text-[38px]">
+            به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl font-bold text-[20px] leading-[1.6] opacity-90">
+            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلابِ واقعی‌ست.
+            <br></br>
+            امروز، آینده ایران رو بساز.
+          </p>
+          <div className="mt-8">
+            <PrimaryCTA onClick={() => openModal("final")}>همین حالا همراه می‌شوم</PrimaryCTA>
+          </div>
+        </Container>
+      </Section>
+
+
+      {/* sticky mobile CTA */}
+      <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
+        <div className="rounded-xl border border-[#00D09C] bg-white p-2 shadow-xl">
+          <PrimaryCTA className="w-full">همین حالا همراه می‌شوم</PrimaryCTA>
+        </div>
+      </div>
+
+      <DonationModal open={open} onClose={() => setOpen(false)} />
+    </main>
+  );
+}
+
 
 // donation modal
 const amounts = [50, 100, 250, 500, 1000] as const;
@@ -558,365 +931,5 @@ function DonationModal({ open, onClose }: { open: boolean; onClose: () => void }
         )}
       </div>
     </div>
-  );
-}
-
-export default function RubitechLandingPageFA() {
-  const [open, setOpen] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
-
-  function openModal(location: string) {
-    logEvent("cta_click", { location });
-    setOpen(true);
-  }
-
-  return (
-    <main
-      dir="rtl"
-      lang="fa"
-      style={{
-        fontFamily:
-          'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
-      }}
-    >
-
-      {/* hero */}
-      <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[#F6F9FC] to-white pb-0 md:pb-0">
-        <Container>
-          <div className="grid items-center gap-10 py-20 md:grid-cols-2 md:py-20">
-            <div className="relative md:order-2">
-              <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 shadow-xl ring-1 ring-slate-300">
-                <img
-                  src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop"
-                  alt="نوجوان امیدوار با لپ‌تاپ"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            </div>
-            <div className="md:order-1">
-              <h1 className="text-[30px] font-extrabold leading-[1.8] text-[#0A2540] md:text-[42px]">
-                با هم آینده ایران رو میسازیم
-              </h1>
-              <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
-                هر لپ‌تاپ، یک مدرسه هوشمند
-              </h1>
-              <p className="mt-4 text-[20px] leading-[1.6] opacity-90">
-                کنارِ شما، دستِ درخشان‌ترین نوجوانان ایران رو به ابزار وصل می‌کنیم—با گذاشتن یک لپ‌تاپ در دستانشان. می‌توانید مسیرِ مشارکت‌تان رو از صفحهٔ خودتان تا مدرسهٔ او به‌صورت زنده دنبال کنید.
-              </p>
-              <p className="font-bold text-[20px]">
-                (باید تغییر کنه)
-              </p>
-              <div className="mt-8">
-                <PrimaryCTA onClick={() => openModal("hero")} className="w-full sm:w-auto">
-                  همین حالا همراه می‌شوم
-                </PrimaryCTA>
-              </div>
-            </div>
-          </div>
-        </Container>
-
-        <div className="bg-white/50 py-10 backdrop-blur-sm">
-          <Container>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              <ImpactStat
-                value={`${toFa(113)}+`}
-                label="مدرسه تامین شده"
-                Icon={IconLaptop}
-                bgColor="bg-[#E5F0FA]"
-                iconColor="text-[#0A2540]"
-              />
-              <ImpactStat
-                value={toFa(35)}
-                label="سفیر فعال"
-                Icon={IconShield}
-                bgColor="bg-[#F2ECFF]"
-                iconColor="text-[#6D28D9]"
-              />
-              <ImpactStat
-                value={toFa(4)}
-                label="استان تحت پوشش"
-                Icon={IconGlobe}
-                bgColor="bg-[#E6FAF8]"
-                iconColor="text-[#0EA5A7]"
-              />
-            </div>
-          </Container>
-        </div>
-      </Section>
-
-      {/* چطور */}
-      <Section id="solution" className="bg-[#F6F9FC]">
-        <Container>
-          <SectionHeader
-            kicker="چطور ؟"
-            Icon={IconNodePath}
-            title="مسیر کامل حمایت شما"
-            subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
-          />
-
-          <div className="relative mt-10 flex flex-col gap-12 md:gap-0">
-            <div className="absolute right-1/2 top-0 hidden h-full w-0.5 translate-x-1/2 bg-slate-200/80 md:block" />
-
-            <FlowStep
-              number="۱"
-              title="شما زنجیره رو آغاز می‌کنید"
-              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازد."
-              IconComponent={IconHeartHand}
-              isOdd={true}
-              boxBgColor="bg-[#E5F0FA]"
-              iconBgColor="bg:white/50"
-              stepColor="text-[#0A2540]"
-            />
-
-            <FlowStep
-              number="۲"
-              title="روبیتک شفافیت رو تضمین می‌کند"
-              description="روبیتک هر حمایت رو تا رسیدن به مقصد نهایی، قابل رهگیری می‌کند."
-              IconComponent={IconRubitechPlatform}
-              isOdd={false}
-              boxBgColor="bg-[#F2ECFF]"
-              iconBgColor="bg:white/50"
-              stepColor="text-[#6D28D9]"
-            />
-
-            <FlowStep
-              number="۳"
-              title="سفیر معتمد ما حمایت رو تحویل می‌دهد"
-              description="معلمان و مدیران متعهد (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسانند."
-              IconComponent={IconShield}
-              isOdd={true}
-              boxBgColor="bg-[#E6FAF8]"
-              iconBgColor="bg:white/50"
-              stepColor="text-[#0EA5A7]"
-            />
-
-            <FlowStep
-              number="۴"
-              title="یک آینده ساخته می‌شود"
-              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خود رو به دست می‌آورد."
-              IconComponent={IconUsers}
-              isOdd={false}
-              boxBgColor="bg-[#FFF4E5]"
-              iconBgColor="bg:white/50"
-              stepColor="text-[#F59E0B]"
-            />
-
-            <FlowStep
-              number="۵"
-              title="فرصت بورسیه روبیکمپ"
-              description="نوجوانان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
-              IconComponent={IconSparkles}
-              isOdd={true}
-              boxBgColor="bg-[#E9FBF6]"
-              iconBgColor="bg:white/50"
-              stepColor="text-[#008A6E]"
-            />
-          </div>
-        </Container>
-      </Section>
-
-      {/* شفافیت */}
-      {/* <Section id="transparency" className="bg-[#F6F9FC]">
-        <Container>
-          <SectionHeader
-            kicker="شفافیت"
-            Icon={IconEye}
-            title="تاثیر خود رو رهگیری می‌کنید"
-            subtitle="شفافیت ۱۰۰٪؛ تردید ۰٪. هر پیشرفت نوجوان روی پنل شخصی شما قابل رهگیری‌ست."
-          />
-          <div className="mt-6 grid gap-8 md:grid-cols-2">
-            <div className="grid content-start gap-6">
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
-                <div className="font-semibold text-[#0A2540]">۱. شما تعهد می‌دهید</div>
-                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
-                  فرآیند ساده و امن برای انتخاب سطح اثرگذاری.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
-                <div className="font-semibold text-[#0A2540]">۲. ما تخصیص می‌دهیم</div>
-                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
-                  به هر تعهد یک شناسهٔ یکتا داده می‌شود و با دانش‌آموز واجد شرایط تطبیق می‌یابد.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
-                <div className="font-semibold text-[#0A2540]">۳. شما دنبال می‌کنید</div>
-                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
-                  با نقشه و نقاط عطف، مسیر رو زنده ببینید.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[#F6F9FC]">
-                <div className="font-semibold text-[#0A2540]">۴. شما شاهد می‌شوید</div>
-                <p className="mt-1 text-[18px] leading-[1.7] opacity-90">
-                  به‌روزرسانی‌های پیشرفت برایتان ارسال می‌شود.
-                </p>
-              </div>
-            </div>
-            <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-[#F6F9FC]">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-semibold text-[#0A2540]">حمایت #RT-2487 • در حال انتقال</div>
-                <span className="rounded-full bg-[#E9FBF6] px-2 py-1 text-xs font-semibold text-[#0A2540]">
-                  زنده
-                </span>
-              </div>
-              <div className="mt-4 flex items-center gap-3 text-sm opacity-90">
-                <IconMap className="h-5 w-5" />
-                <span>آخرین به‌روزرسانی: شیراز • سفیر دریافت رو تأیید کرد</span>
-              </div>
-              <div className="mt-6 h-56 w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200" />
-              <div className="mt-6 space-y-3 text-sm">
-                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> تعهد ثبت شد</div>
-                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> دستگاه تهیه شد</div>
-                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> سفیر تخصیص یافت</div>
-                <div className="flex items-center gap-3"><span className="h-2 w-2 rounded-full bg-[#00D09C]" /> در مسیرِ تحویل</div>
-                <div className="flex items-center gap-3 opacity-50"><span className="h-2 w-2 rounded-full bg-slate-300" /> فعال‌سازی توسط دانش‌آموز</div>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </Section> */}
-
-      {/* اعتماد */}
-      <Section id="social-proof" className="bg-[#FFFFFF]">
-        <Container>
-          <SectionHeader
-            kicker="اعتماد"
-            Icon={IconStampOfApproval}
-            title="جنبشی که می‌توانید به آن تکیه کنید"
-            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
-          />
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <TestimonialCard
-              quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
-              name="هستی طاعتی"
-              title="مارکتر"
-              img={`${import.meta.env.BASE_URL}/images/hasti-taati.jpg`}
-            />
-            <TestimonialCard
-              quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم رو در وطن می‌بینم. اگرچه من و تو متاثر از محیط هستیم اما محصور آن نیستیم!."
-              name="سعید حسین‌زاده"
-              title="مدیرعامل روبیکمپ"
-              img={`${import.meta.env.BASE_URL}/images/saeed-hoseinzadeh.jpg`}
-            />
-            <TestimonialCard
-              quote="ورودم به دنیای تکنولوژی مسیر زندگیم ‌رو تغییر داد و حالا میخوام همین فرصت رو برای نوجوانان دیگر هم فراهم کنم تا مسیرشون رو پیدا کنند و رشد کنند. این پروژه برام فراتر از یک تجربه کاری هست؛ رویایی هست که دوست دارم سال‌ها درش فعالیت کنم، چون دقیقا همون پروژه‌ای هست که همیشه می‌خواستم بخشی از زندگی و هویتم باشه."
-              name="نازنین مسرور"
-              title="دیزاینر"
-              img={`${import.meta.env.BASE_URL}/images/nazanin-masror.jpg`}
-            />
-            <TestimonialCard
-              quote="روبیتک توان من رو برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. در این مسیر روبیتک تنها یک پلتفرم نیست، کلید ساخت آینده آن هاست."
-              name="مازیار شفیعی"
-              title="مدرس زبان انگلیسی"
-              img={`${import.meta.env.BASE_URL}/images/maz.jpg`}
-            />
-          </div>
-        </Container>
-      </Section>
-
-      {/* چرا روبیتک */}
-      <Section id="differentiation" className="bg-[#F6F9FC]">
-        <Container>
-          <SectionHeader
-            kicker="چرا روبیتک ؟"
-            Icon={IconSparkles}
-            title="چه چیز روبیتک رو متمایز می‌کنه ؟"
-            subtitle="ترکیب شفافیت، شبکه مورداعتماد و مسیرِ پایدار، روبیتک رو به انتخابی مطمئن تبدیل می‌کنه."
-          />
-
-
-          <div className="mt-4 grid gap-6 md:grid-cols-4">
-            <DifferentiationCard
-              Icon={IconEye}
-              iconClass="h-7 w-7 text-[#0A2540]"
-              title="شفافیت رادیکال"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#E5F0FA] ring-[#D5E4F7] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0A2540]/30"
-              description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
-            />
-
-            <DifferentiationCard
-              Icon={IconShield}
-              iconClass="h-7 w-7 text-[#6D28D9]"
-              title="شبکهٔ مورد اعتماد"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#F2ECFF] ring-[#E6DBFF] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
-              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشند."
-            />
-
-            <DifferentiationCard
-              Icon={IconLoop}
-              iconClass="h-7 w-7 text-[#0EA5A7]"
-              title="مسیرِ پایدار"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#E6FAF8] ring-[#CFF6F1] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30"
-              description="لپ‌تاپ‌ها به صورت چرخه‌ای به نفر بعدی می‌رسند. همچنین نوجوانان موفق وارد روبیکمپ میشن."
-            />
-
-            <DifferentiationCard
-              Icon={IconUsers}
-              iconClass="h-7 w-7 text-[#F59E0B]"
-              title="اجتماع‌محور"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[#FFF4E5] ring-[#FFE3C2] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
-              description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
-            />
-          </div>
-
-        </Container>
-      </Section>
-
-      {/* FAQ */}
-      <Section id="faq" className="bg-[#FFFFFF]">
-        <Container>
-          <SectionHeader
-            kicker="پرسش‌های پرتکرار"
-            Icon={IconQuestion}
-            title="سؤالات شما، پاسخ داده شده‌اند"
-            subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
-          />
-          <div className="mt-8 grid gap-4">
-            <FAQItem
-              q="نوجوانان چطور انتخاب می‌شوند؟"
-              a={<p>سفیران—معلمان و مدیران مورد نوجوان واجد شرایط رو بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
-            />
-            <FAQItem
-              q="حمایت من چه چیزهایی رو پوشش می‌دهد؟"
-              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شود.</p>}
-            />
-            <FAQItem
-              q="آیا پرداخت امن و قابل کسر مالیاتی است؟"
-              a={<p>پرداخت‌ها از طریق ارائه‌دهندگان دارای گواهی PCI سطح ۱ انجام می‌شود. روبیتک زیر چتر یک نهاد غیرانتفاعیِ ثبت‌شده فعالیت می‌کند؛ در صورت امکان رسید رسمی صادر می‌شود.</p>}
-            />
-            <FAQItem
-              q="امکان اهدای سخت‌افزارِ کارکرده هست؟"
-              a={<p>برای تضمین کیفیت و امنیت، فعلاً دستگاه‌ها به‌صورت نو و عمده تهیه می‌شوند تا هزینهٔ هر واحد کاهش یابد.</p>}
-            />
-          </div>
-        </Container>
-      </Section>
-
-      {/* final CTA */}
-      <Section id="final-cta" className="bg-[#0A2540]">
-        <Container className="text-center text-white">
-          <h2 className="text-[32px] font-extrabold md:text-[38px]">
-            به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl font-bold text-[20px] leading-[1.6] opacity-90">
-            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلابِ واقعی‌ست.
-            <br></br>
-            امروز، آینده ایران رو بساز.
-          </p>
-          <div className="mt-8">
-            <PrimaryCTA onClick={() => openModal("final")}>همین حالا همراه می‌شوم</PrimaryCTA>
-          </div>
-        </Container>
-      </Section>
-
-
-      {/* sticky mobile CTA */}
-      <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
-        <div className="rounded-xl border border-[#00D09C] bg-white p-2 shadow-xl">
-          <PrimaryCTA className="w-full">همین حالا همراه می‌شوم</PrimaryCTA>
-        </div>
-      </div>
-
-      <DonationModal open={open} onClose={() => setOpen(false)} />
-    </main>
   );
 }
