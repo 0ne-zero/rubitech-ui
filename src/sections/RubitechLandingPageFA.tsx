@@ -331,7 +331,7 @@ type SectionHeaderProps = {
 };
 const SectionHeader = ({ kicker, title, subtitle, Icon }: SectionHeaderProps) => (
   <div className="relative mb-10">
-    <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring-1 ring-[var(--sky-ring)]">
+    <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring ring-[var(--sky-ring)]">
 
       <span className="text-[24px] font-bold">{kicker}</span>
       {Icon ? <Icon className="h-6 w-7" /> : null}
@@ -423,7 +423,7 @@ export default function RubitechLandingPageFA() {
       <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
 
         <Container>
-          <div className="grid items-center gap-10 md:grid-cols-2 mt-[100px] ">
+          <div className="grid items-center gap-10 md:grid-cols-2 mt-[100px]">
             <div className="relative md:order-2">
               <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 ring-slate-300 shadow-xl ring-1 ">
                 <img
@@ -453,8 +453,8 @@ export default function RubitechLandingPageFA() {
               </div>
             </div>
           </div>
-          <div className="mt-8 backdrop-blur-sm">
-            <Container>
+          <div className="mt-16 mb-2 backdrop-blur-sm">
+            <Container y="none">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <ImpactStat
                   value={`${toFa(134)}+`}
@@ -487,18 +487,18 @@ export default function RubitechLandingPageFA() {
               </div>
             </Container>
           </div>
-          <div className="">
-            <SectionDivider />
-          </div>
         </Container>
+        <div className="">
+          <SectionDivider />
+        </div>
       </Section>
 
 
       {/* چطور */}
       <Section id="solution" className="overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
-        <Container y="none">
+        <Container>
           <SectionHeader
-            kicker="چطور ؟"
+            kicker="چطور"
             Icon={IconNodePath}
             title="مسیر کامل حمایت شما"
             subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
@@ -562,10 +562,10 @@ export default function RubitechLandingPageFA() {
               stepColor="text-[#008A6E]"
             />
           </div>
-          <div className="mt-12 mb-12">
-            <SectionDivider />
-          </div>
         </Container>
+        <div className="mt-12">
+          <SectionDivider />
+        </div>
       </Section>
 
 
@@ -632,7 +632,7 @@ export default function RubitechLandingPageFA() {
 
       {/* اعتماد */}
       <Section id="social-proof" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
-        <Container y="none">
+        <Container >
           <SectionHeader
             kicker="اعتماد"
             Icon={IconStampOfApproval}
