@@ -257,10 +257,10 @@ type FAQItemProps = { q: string; a: React.ReactNode };
 const FAQItem = ({ q, a }: FAQItemProps) => (
   <details className="group rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 open:shadow-md">
     <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-      <span className="text-base font-semibold text-[#0A2540]">{q}</span>
+      <span className="text-lg font-semibold text-[#0A2540]">{q}</span>
       <span className="shrink-0 rounded-full border border-slate-300 px-2 py-1 text-xs text-slate-500 transition group-open:rotate-180">▾</span>
     </summary>
-    <div className="mt-3 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">{a}</div>
+    <div className="mt-3 text-[18px] font-medium leading-[1.7] text-[#1A1F36] opacity-90">{a}</div>
   </details>
 );
 
@@ -589,7 +589,7 @@ export default function RubitechLandingPageFA() {
               <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 shadow-xl ring-1 ring-slate-300">
                 <img
                   src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1400&auto=format&fit=crop"
-                  alt="دانش‌آموز امیدوار با لپ‌تاپ"
+                  alt="نوجوان امیدوار با لپ‌تاپ"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -871,14 +871,14 @@ export default function RubitechLandingPageFA() {
             title="سؤالات شما، پاسخ داده شده‌اند"
             subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
           />
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-4">
             <FAQItem
-              q="دانش‌آموزان چطور انتخاب می‌شوند؟"
-              a={<p>سفیران—معلمان و مدیران مورد اعتماد—دانش‌آموزان واجد شرایط رو بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
+              q="نوجوانان چطور انتخاب می‌شوند؟"
+              a={<p>سفیران—معلمان و مدیران مورد نوجوان واجد شرایط رو بر اساس شایستگی، علاقه به فناوری و نیاز مالی معرفی می‌کنند.</p>}
             />
             <FAQItem
               q="حمایت من چه چیزهایی رو پوشش می‌دهد؟"
-              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف دانش‌آموز می‌شود.</p>}
+              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شود.</p>}
             />
             <FAQItem
               q="آیا پرداخت امن و قابل کسر مالیاتی است؟"
