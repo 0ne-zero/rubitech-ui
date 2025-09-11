@@ -300,7 +300,7 @@ const FlowStep = ({
   stepColor,
   boxBgColor,
 }: FlowStepProps) => (
-  <div className="relative md:w-1/2 md:py-4" style={isOdd ? { alignSelf: "flex-start" } : { alignSelf: "flex-end" }}>
+  <div className="relative md:w-1/2 md:py-1" style={isOdd ? { alignSelf: "flex-start" } : { alignSelf: "flex-end" }}>
     <div
       className={`relative rounded-2xl p-6 shadow-md ring-1 ring-slate-200/80 transition-all duration-300 hover:shadow-xl hover:ring-slate-300 md:flex md:items-start md:gap-6 ${boxBgColor || "bg-white"
         } ${isOdd ? "md:mr-8" : "md:ml-8"}`}
@@ -309,7 +309,7 @@ const FlowStep = ({
         className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${iconBgColor || "bg-[#E5F0FA]"
           } text-[#0A2540]`}
       >
-        <IconComponent className="h-7 w-7" />
+        <IconComponent className="h-8 w-8" />
       </div>
       <div className="mt-4 md:mt-0">
         <div className="flex items-baseline gap-3">
@@ -537,7 +537,7 @@ export default function RubitechLandingPageFA() {
               isOdd={true}
               boxBgColor="bg-[var(--amber-tint)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#0EA5A7]"
+              stepColor="text-[#F59E0B]"
             />
 
             <FlowStep
@@ -548,7 +548,7 @@ export default function RubitechLandingPageFA() {
               isOdd={false}
               boxBgColor="bg-[var(--mint)]"
               iconBgColor="bg-white/50"
-              stepColor="text-[#F59E0B]"
+              stepColor="text-[#0EA5A7]"
             />
 
             <FlowStep
@@ -563,7 +563,7 @@ export default function RubitechLandingPageFA() {
             />
           </div>
         </Container>
-        <div className="mt-12">
+        <div className="">
           <SectionDivider />
         </div>
       </Section>
@@ -666,7 +666,7 @@ export default function RubitechLandingPageFA() {
             />
           </div>
         </Container>
-        <div className="mt-14">
+        <div className="">
           <SectionDivider />
         </div>
       </Section>
@@ -719,7 +719,7 @@ export default function RubitechLandingPageFA() {
 
 
         </Container>
-        <div className="mt-8">
+        <div className="">
           <SectionDivider />
         </div>
       </Section>
