@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Container } from "@/components/ui/Container";
+import { HeaderContainer } from "@/components/ui/Container";
 
 export function Header() {
   const [active, setActive] = useState("hero");
@@ -41,8 +41,8 @@ export function Header() {
       id="site-header" // ← needed for measuring offset
       className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[70%] rounded-2xl bg-gradient-to-r from-[#0A2540] to-[#00D09C] text-white shadow-xl"
     >
-      <Container>
-        <div className="flex h-14 items-center justify-between">
+      <HeaderContainer>
+        <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 bg-white text-[#0A2540] grid place-items-center rounded-md">R</div>
             <span className="font-bold text-white text-sm">روبیتک</span>
@@ -67,7 +67,7 @@ export function Header() {
             ))}
           </nav>
         </div>
-      </Container>
+      </HeaderContainer>
     </header>
   );
 }
