@@ -269,14 +269,14 @@ export default function RubitechLandingPageFA() {
       <Section id="final-cta" className="bg-[var(--brand-strong)]">
         <Container className="text-center text-white" y="lg">
           <h2 className="text-[32px] font-extrabold md:text-[38px]">
-            به جنبشِ {toFa(10000)} حامیِ سالانه بپیوندید.
+            به جنبش {toFa(10000)} مدرسه سالانه بپیوند
           </h2>
           <p className="mx-auto mt-4 max-w-2xl font-bold text-[20px] leading-[1.6] opacity-90">
-            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلابِ واقعی‌ست.
+            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
             <br></br>
             امروز، آینده ایران رو بساز.
           </p>
-          <div className="mt-8">
+          <div className="mt-12">
             <PrimaryCTA href={site.paypalUrl}>همین حالا همراه می‌شوم</PrimaryCTA>
           </div>
         </Container>
