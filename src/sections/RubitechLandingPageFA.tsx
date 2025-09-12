@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import { Container } from "@/components/ui/Container";
 
 /**
  * Rubitech Landing (FA / RTL)
@@ -215,23 +216,6 @@ const Section = ({ id, className = "", children }: SectionProps) => (
   <section id={id} className={className}>{children}</section>
 );
 
-type ContainerProps = {
-  className?: string;
-  children: React.ReactNode;
-  y?: "none" | "xs" | "sm" | "md" | "lg";
-};
-
-const CONTAINER_Y: Record<NonNullable<ContainerProps["y"]>, string> = {
-  none: "py-0",
-  xs: "py-4 md:py-6",
-  sm: "py-6 md:py-8",
-  md: "py-8 md:py-10",
-  lg: "py-24 md:py-24",
-};
-
-const Container = ({ className = "", children, y = "sm" }: ContainerProps) => (
-  <div className={`mx-auto w-full max-w-7xl px-4 ${CONTAINER_Y[y]} ${className}`}>{children}</div>
-);
 
 type PrimaryCTAProps = { onClick?: () => void; className?: string; children: React.ReactNode };
 const PrimaryCTA = ({ onClick, children, className = "" }: PrimaryCTAProps) => (
