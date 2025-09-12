@@ -84,15 +84,44 @@ export const IconHeartHand = (p: SVGProps) => (
 
 // Carousel chevrons
 export const IconChevronRight = (p: SVGProps) => (
-  <svg viewBox="0 0 24 24" fill="none" {...p}><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" {...p}><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
 export const IconChevronLeft = (p: SVGProps) => (
-  <svg viewBox="0 0 24 24" fill="none" {...p}><path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" {...p}><path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
 
 export const IconQuestion = (p: SVGProps) => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
     <path d="M12 18h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     <path d="M9.09 9a3 3 0 1 1 5.82 1c0 1.5-1 2-2 2-1 0-2 .5-2 2v1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+
+export const IconBuilding = (p: SVGProps) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
+    {/* Roof */}
+    <path d="M3 9l9-5 9 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    {/* Columns */}
+    <path d="M6.5 10.5v6M12 10.5v6M17.5 10.5v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Base + floor */}
+    <path d="M4 19.5h16M3.5 21h17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Stylized entry (subtle) */}
+    <path d="M11 13h2v4h-2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+  </svg>
+);
+
+export const IconUserGroup = (p: SVGProps) => (
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
+    {/* Central head */}
+    <circle cx="12" cy="8.5" r="3" stroke="currentColor" strokeWidth="1.5" />
+    {/* Central shoulders */}
+    <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Left peer */}
+    <circle cx="6.5" cy="10.5" r="2" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M2.5 20a5.5 5.5 0 0 1 7-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Right peer */}
+    <circle cx="17.5" cy="10.5" r="2" stroke="currentColor" strokeWidth="1.5" />
+    <path d="M21.5 20a5.5 5.5 0 0 0-7-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Section, Container } from "../components/ui/Section";
-import { SectionHeader } from "../components/ui/SectionHeader";
+import { SectionHeader, IconBadge } from "../components/ui/SectionHeader";
 import { SectionDivider } from "../components/ui/SectionDivider";
 import { PrimaryCTA } from "../components/ui/Button";
 import { ImpactStat } from "../components/cards/ImpactStat";
@@ -17,7 +17,8 @@ import { DonationModal } from "../widgets/DonationModal"
 import { site } from "../config/site"
 import {
   IconUsers, IconLaptop, IconShield, IconGlobe, IconNodePath, IconSparkles,
-  IconStampOfApproval, IconRubitechPlatform, IconEye, IconLoop, IconQuestion, IconHeartHand
+  IconStampOfApproval, IconRubitechPlatform, IconEye, IconLoop, IconQuestion, IconHeartHand,
+  IconBuilding, IconUserGroup
 } from "../icons";
 
 export default function RubitechLandingPageFA() {
@@ -156,10 +157,15 @@ export default function RubitechLandingPageFA() {
           />
 
           <div className="mt-10">
+
+
+
             <div className="mb-5 flex items-center justify-between">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring ring-[var(--sky-ring)]">
-                <span className="text-[20px] font-bold text-[var(--brand)]">حامیان سازمانی</span>
-              </div>
+              <IconBadge
+                kicker="سازمان‌های آینده‌ساز"
+                Icon={IconBuilding}
+                size="sm"
+              />
 
               {/* <a
                 href="#"
@@ -180,9 +186,23 @@ export default function RubitechLandingPageFA() {
           </div>
 
           <div className="mt-10">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring ring-[var(--sky-ring)]">
-              <span className="text-[20px] font-bold text-[var(--brand)]">حامیان فردی</span>
+            <div className="mb-5 flex items-center justify-between">
+              <IconBadge
+                kicker="افراد آینده‌ساز"
+                Icon={IconUserGroup}
+                size="sm"
+              />
+
+              {/* <a
+                href="#"
+                className="hidden text-sm font-bold text-[var(--brand)] underline-offset-4 hover:underline md:inline"
+                onClick={() => logEvent("partners_view_all")}
+              >
+                مشاهدهٔ همه
+              </a> */}
             </div>
+
+
             <div className=" grid gap-6 md:grid-cols-2">
               {testimonials.map((t) => (
                 <TestimonialCard key={t.name} {...t} />
