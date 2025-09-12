@@ -84,7 +84,7 @@ export default function RubitechLandingPageFA() {
             subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
           />
 
-          <div className="relative mt-10 flex flex-col gap-6 md:gap-12 md:gap-0">
+          <div className="relative mt-10 flex flex-col gap-6 md:gap-5 md:gap-0">
             <div className="absolute right-1/2 top-0 hidden h-full w-0.5 translate-x-1/2 bg-slate-200/80 md:block" />
 
             <FlowStep
