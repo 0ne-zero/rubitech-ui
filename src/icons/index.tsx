@@ -2,6 +2,9 @@ import React from "react";
 type SVGProps = React.SVGProps<SVGSVGElement>;
 type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
+import logoWebp from "@/assets/logo/rubitech-logo.webp";
+import logoPng from "@/assets/logo/rubitech-logo.png";
+
 export const IconShield = (p: SVGProps) => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...p}>
     <path d="M12 3l7 3v6a9 9 0 0 1-7 8.75A9 9 0 0 1 5 12V6l7-3Z" stroke="currentColor" strokeWidth="1.5" />
@@ -125,3 +128,31 @@ export const IconUserGroup = (p: SVGProps) => (
     <path d="M21.5 20a5.5 5.5 0 0 0-7-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
+
+
+type IconProps = {
+  className?: string;   // FlowStep will pass sizing here
+  scale?: number;       // 1.0 = normal, 1.1 = 10% bigger, etc.
+};
+
+export const LogoGlyphIcon: React.FC<IconProps> = ({ className = "", scale = 1 }) => {
+  return (
+    <div className={["relative", className].join(" ")}>
+      <picture>
+        <source srcSet={logoWebp} type="image/webp" />
+        <img
+          src={logoPng}
+          alt="" // decorative
+          width={512}
+          height={512}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-contain block select-none pointer-events-none"
+          style={{
+            transform: scale !== 1 ? `scale(${scale})` : undefined,
+          }}
+        />
+      </picture>
+    </div>
+  );
+};

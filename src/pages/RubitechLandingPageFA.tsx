@@ -18,7 +18,7 @@ import { site } from "../config/site"
 import {
   IconUsers, IconLaptop, IconShield, IconGlobe, IconNodePath, IconSparkles,
   IconStampOfApproval, IconRubitechPlatform, IconEye, IconLoop, IconQuestion, IconHeartHand,
-  IconBuilding, IconUserGroup
+  IconBuilding, IconUserGroup, LogoGlyphIcon
 } from "../icons";
 
 export default function RubitechLandingPageFA() {
@@ -102,7 +102,7 @@ export default function RubitechLandingPageFA() {
               number="۲"
               title="روبیتک شفافیت رو تضمین می‌کند"
               description="روبیتک هر حمایت رو ثبت می‌کنه، تحویل سفیرهاش می‌ده و قابل رهگیری می‌کنه."
-              IconComponent={IconRubitechPlatform}
+              IconComponent={(props) => <LogoGlyphIcon {...props} scale={2} />}
               isOdd={false}
               boxBgColor="bg-[var(--violet-tint)]"
               iconBgColor="bg-white/50"

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { HeaderContainer } from "@/components/ui/Container";
+import { BrandLogo } from "../ui/BrandLogo";
 
 type NavItem = { id: string; label: string; onClick?: () => void };
 
@@ -133,14 +134,16 @@ export function Header() {
           md:top-4 md:left-1/2 md:-translate-x-1/2 md:inset-x-auto md:w-[70%]
         "
       >
+
+
         <div className="rounded-xl md:rounded-2xl bg-gradient-to-r from-[#0A2540] to-[#00D09C] text-white shadow-xl">
           <HeaderContainer>
             {/* —— Mobile Bar (<md) —— */}
             <div className="flex h-14 items-center justify-between md:hidden">
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 bg-white text-[#0A2540] grid place-items-center rounded-md">R</div>
-                <span className="font-bold text-white text-sm">روبیتک</span>
-              </div>
+              <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
+                <BrandLogo size="sm" alt="" scale={1.4} priority />
+                <span className="font-bold mr-0.5 text-white text-normal">روبیتک</span>
+              </a>
 
               {/* Hamburger */}
               <button
@@ -163,10 +166,12 @@ export function Header() {
             {/* —— Desktop (md+) — unchanged markup, now with active styles —— */}
             <DesktopNav>
               <div className="flex h-16 items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 bg-white text-[#0A2540] grid place-items-center rounded-md">R</div>
-                  <span className="font-bold text-white text-sm">روبیتک</span>
-                </div>
+                <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
+                  <BrandLogo size="md" alt="" scale={1.4} />
+                  <span className="font-bold mr-1 text-white text-lg">روبیتک</span>
+                </a>
+
+
                 <nav className="flex gap-3" aria-label="Primary">
                   {navItems.map(({ id, label }) => {
                     const isActive = active === id;
@@ -206,10 +211,10 @@ export function Header() {
         onClose={() => setOpen(false)}
         drawerRef={drawerRef}
         brand={
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 bg-[#0A2540] text-white grid place-items-center rounded-md">R</div>
-            <span className="font-bold text-[#0A2540] text-sm">روبیتک</span>
-          </div>
+          <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
+            <BrandLogo size="md" alt="" scale={1.4} priority={false} />
+            <span className="font-bold text-[#0A2540] text-normal">روبیتک</span>
+          </a>
         }
       >
         <nav className="mt-4 space-y-1" aria-label="Mobile primary">
