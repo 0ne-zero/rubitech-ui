@@ -29,4 +29,5 @@ export const site = {
       // ...
     ],
   },
+  paypalUrl: "https://www.paypal.com/donate/?hosted_button_id=6R4YWYQBAG6KA"
 } as const;

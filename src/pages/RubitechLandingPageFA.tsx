@@ -13,14 +13,16 @@ import { partners } from "../data/partners";
 import { testimonials } from "../data/testimonials";
 import { toFa } from "../utils/format";
 import { logEvent } from "../utils/analytics";
+import { DonationModal } from "../widgets/DonationModal"
+import { site } from "../config/site"
 import {
   IconUsers, IconLaptop, IconShield, IconGlobe, IconNodePath, IconSparkles,
   IconStampOfApproval, IconRubitechPlatform, IconEye, IconLoop, IconQuestion, IconHeartHand
 } from "../icons";
 
 export default function RubitechLandingPageFA() {
-  const [open, setOpen] = useState(false);
-  const openModal = (location: string) => { logEvent("cta_click", { location }); setOpen(true); };
+  // const [open, setOpen] = useState(false);
+  // const openModal = (location: string) => { logEvent("cta_click", { location }); setOpen(true); };
 
   return (
     <main dir="rtl" lang="fa" style={{ fontFamily: 'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif' }}>
@@ -51,7 +53,7 @@ export default function RubitechLandingPageFA() {
                 (باید تغییر کنه)
               </p>
               <div className="mt-10">
-                <PrimaryCTA onClick={() => openModal("hero")} className="w-full sm:w-auto">
+                <PrimaryCTA href={site.paypalUrl} className="w-full sm:w-auto">
                   همین حالا همراه می‌شوم
                 </PrimaryCTA>
               </div>
@@ -275,7 +277,7 @@ export default function RubitechLandingPageFA() {
             امروز، آینده ایران رو بساز.
           </p>
           <div className="mt-8">
-            <PrimaryCTA onClick={() => openModal("final")}>همین حالا همراه می‌شوم</PrimaryCTA>
+            <PrimaryCTA href={site.paypalUrl}>همین حالا همراه می‌شوم</PrimaryCTA>
           </div>
         </Container>
       </Section>
@@ -283,7 +285,7 @@ export default function RubitechLandingPageFA() {
       {/* sticky mobile CTA */}
       <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
         <div className="rounded-xl border border-[#00D09C] bg-white p-2 shadow-xl">
-          <PrimaryCTA className="w-full">همین حالا همراه می‌شوم</PrimaryCTA>
+          <PrimaryCTA href={site.paypalUrl} className="w-full">همین حالا همراه می‌شوم</PrimaryCTA>
         </div>
       </div>
     </main>
