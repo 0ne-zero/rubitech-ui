@@ -403,22 +403,25 @@ type PartnerCardProps = {
   logoUrl: string;
   name: string;
   description: string;
+  url: string;
 };
-const PartnerCard = ({ logoUrl, name, description }: PartnerCardProps) => (
-  <div className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/25">
-    <div className="grid h-20 w-20 flex-shrink-0 place-items-center overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200/70">
-      <img
-        src={logoUrl}
-        alt={`لوگوی ${name}`}
-        className=" w-auto object-contain opacity-95 transition"
-        loading="lazy"
-      />
-    </div>
-    <div className="min-w-0 mr-2">
-      <div className="truncate text-[22px] font-bold text-[#0A2540]">{name}</div>
-      <p className="mt-1 line-clamp-2 text-[20px] font-normal leading-6 text-[#1A1F36] opacity-80">{description}</p>
-    </div>
-  </div >
+const PartnerCard = ({ logoUrl, name, description, url }: PartnerCardProps) => (
+  <a href={url} target="_blank">
+    <div className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/25">
+      <div className="grid h-20 w-20 flex-shrink-0 place-items-center overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200/70">
+        <img
+          src={logoUrl}
+          alt={`لوگوی ${name}`}
+          className=" w-auto object-contain opacity-95 transition"
+          loading="lazy"
+        />
+      </div>
+      <div className="min-w-0 mr-2">
+        <div className="truncate text-[22px] font-bold text-[#0A2540]">{name}</div>
+        <p className="mt-1 line-clamp-2 text-[20px] font-normal leading-6 text-[#1A1F36] opacity-80">{description}</p>
+      </div>
+    </div >
+  </a>
 );
 
 
@@ -427,16 +430,19 @@ const partners = [
     logoUrl: `${import.meta.env.BASE_URL}/images/logos/rubikamp.jpg`,
     name: "روبیکمپ",
     description: "بورسیه و فراهم‌سازی مسیر رشد برای نوجوانان شایسته.",
+    url: "https://rubikamp.org",
   },
   {
     logoUrl: `${import.meta.env.BASE_URL}/images/logos/maktabkhoneh.jpg`,
     name: "مکتب‌خونه",
     description: "تامین محتوای آموزشی و رهگیری مسیر رشد نوجوانان",
+    url: "https://maktabkhooneh.org/",
   },
   {
     logoUrl: `${import.meta.env.BASE_URL}/images/logos/snapp-pay.jpg`,
     name: "اسنپ‌پی",
-    description: "حامی مالی نوجوانان برای خرید لپتاپ",
+    description: "حامی مالی نوجوانان برای خرید لپ‌تاپ",
+    url: "https://snapppay.ir",
   },
 ] as const;
 
@@ -704,7 +710,7 @@ export default function RubitechLandingPageFA() {
             {/* Cards */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {partners.map((p) => (
-                <PartnerCard key={p.name} logoUrl={p.logoUrl} name={p.name} description={p.description} />
+                <PartnerCard key={p.name} logoUrl={p.logoUrl} name={p.name} description={p.description} url={p.url} />
               ))}
             </div>
 
