@@ -40,7 +40,7 @@ export function BrandLogo({
     // clamp fill to [0.6, 1.0]
     const fill = Math.min(1, Math.max(0.6, fillPct ?? FILL_DEFAULT[size]));
     const sc = typeof scale === "number" ? scale : 1; // 1.00 = no extra scale
-
+    const shiftY = -1;
     return (
         <div
             className={[
@@ -58,11 +58,12 @@ export function BrandLogo({
                     height={512}
                     loading={priority ? "eager" : "lazy"}
                     decoding="async"
-                    className="block object-contain select-none pointer-events-none"
+                    className="block object-contain select-none pointer-events-none -translate-y-10"
                     style={{
                         width: `${fill * 100}%`,
                         height: `${fill * 100}%`,
-                        transform: sc !== 1 ? `scale(${sc})` : undefined,
+                        // Order matters: scale THEN translate so the shift is in real pixels
+                        transform: `${sc !== 1 ? `scale(${sc})` : ""} ${shiftY ? `translateY(${shiftY}px)` : ""}`.trim() || undefined,
                     }}
                 />
             </picture>
