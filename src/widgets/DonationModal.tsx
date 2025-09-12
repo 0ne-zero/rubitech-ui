@@ -48,7 +48,7 @@ export function DonationModal({ open, onClose }: { open: boolean; onClose: () =>
             <p className="mb-4 text-[18px] leading-[1.7] text-[#1A1F36] opacity-90">
               مبلغ دلخواه رو انتخاب کنید. هر تعهد بخشی از هزینهٔ لپ‌تاپ، اینترنت و منابع آموزشی رو پوشش می‌دهد.
             </p>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:grid-cols-5">
               {AMOUNTS.map((amt) => (
                 <button
                   key={amt}
@@ -109,7 +109,7 @@ export function DonationModal({ open, onClose }: { open: boolean; onClose: () =>
               <div className="grid gap-3">
                 <label className="text-xs font-medium text-[#1A1F36] opacity-80">شماره کارت</label>
                 <input placeholder="۴۲۴۲ ۴۲۴۲ ۴۲۴۲ ۴۲۴۲" dir="ltr" className="rounded-lg border border-slate-200 px-3 py-2 text-left outline-none ring-[#00D09C]/40 focus:ring-4" />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs font-medium text-[#1A1F36] opacity-80">تاریخ انقضا</label>
                     <input placeholder="MM/YY" dir="ltr" className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-left outline-none ring-[#00D09C]/40 focus:ring-4" />

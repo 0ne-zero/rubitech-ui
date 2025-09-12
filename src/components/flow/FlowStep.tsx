@@ -14,7 +14,7 @@ type Props = {
 export const FlowStep = ({
   number, title, description, IconComponent, isOdd, iconBgColor, stepColor, boxBgColor,
 }: Props) => (
-  <div className="relative md:w-1/2 md:py-1" style={isOdd ? { alignSelf: "flex-start" } : { alignSelf: "flex-end" }}>
+  <div className="relative md:w-1/2 md:py-0" style={isOdd ? { alignSelf: "flex-start" } : { alignSelf: "flex-end" }}>
     <div className={`relative rounded-2xl p-6 shadow-md ring-1 ring-slate-200/80 transition-all duration-300 hover:shadow-xl hover:ring-slate-300 md:flex md:items-start md:gap-6 ${boxBgColor || "bg-white"} ${isOdd ? "md:mr-8" : "md:ml-8"}`}>
       <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${iconBgColor || "bg-[#E5F0FA]"} text-[#0A2540]`}>
         <IconComponent className="h-8 w-8" />

@@ -30,7 +30,7 @@ export default function RubitechLandingPageFA() {
       {/* hero */}
       <Section id="hero" className="overflow-hidden bg-gradient-to-b from-[var(--sky)] to-white">
         <Container>
-          <div className="grid items-center gap-10 md:grid-cols-2 mt-[100px]">
+          <div className="grid items-center gap-6 md:gap-10 md:grid-cols-2 mt-4 md:mt-[100px]">
             <div className="relative md:order-2">
               <div className="aspect-[4/3] overflow-hidden rounded-3xl bg-slate-200 ring-slate-300 shadow-xl ring-1 ">
                 <img
@@ -84,7 +84,7 @@ export default function RubitechLandingPageFA() {
             subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
           />
 
-          <div className="relative mt-10 flex flex-col gap-12 md:gap-0">
+          <div className="relative mt-10 flex flex-col gap-6 md:gap-12 md:gap-0">
             <div className="absolute right-1/2 top-0 hidden h-full w-0.5 translate-x-1/2 bg-slate-200/80 md:block" />
 
             <FlowStep
@@ -303,11 +303,13 @@ export default function RubitechLandingPageFA() {
       </Section>
 
       {/* sticky mobile CTA */}
-      <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
+      {/* <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
         <div className="rounded-xl border border-[#00D09C] bg-white p-2 shadow-xl">
           <PrimaryCTA href={site.paypalUrl} className="w-full">همین حالا همراه می‌شوم</PrimaryCTA>
         </div>
-      </div>
+      </div> */}
+
+
     </main>
   );
 }
