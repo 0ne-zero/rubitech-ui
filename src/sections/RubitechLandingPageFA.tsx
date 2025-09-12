@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 
 /**
  * Rubitech Landing (FA / RTL)
@@ -399,6 +399,51 @@ const SectionDivider = ({ variant = "brand", className = "" }: DividerProps) => 
 };
 
 
+type PartnerCardProps = {
+  logoUrl: string;
+  name: string;
+  description: string;
+};
+const PartnerCard = ({ logoUrl, name, description }: PartnerCardProps) => (
+  <div className="group flex items-center gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/25">
+    <div className="grid h-20 w-20 flex-shrink-0 place-items-center overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200/70">
+      <img
+        src={logoUrl}
+        alt={`لوگوی ${name}`}
+        className=" w-auto object-contain opacity-95 transition"
+        loading="lazy"
+      />
+    </div>
+    <div className="min-w-0 mr-2">
+      <div className="truncate text-[22px] font-bold text-[#0A2540]">{name}</div>
+      <p className="mt-1 line-clamp-2 text-[20px] font-normal leading-6 text-[#1A1F36] opacity-80">{description}</p>
+    </div>
+  </div >
+);
+
+
+const partners = [
+  {
+    logoUrl: `${import.meta.env.BASE_URL}/images/logos/rubikamp.jpg`,
+    name: "روبیکمپ",
+    description: "بورسیه و فراهم‌سازی مسیر رشد برای نوجوانان شایسته.",
+  },
+  {
+    logoUrl: `${import.meta.env.BASE_URL}/images/logos/maktabkhoneh.jpg`,
+    name: "مکتب‌خونه",
+    description: "تامین محتوای آموزشی و رهگیری مسیر رشد نوجوانان",
+  },
+  {
+    logoUrl: `${import.meta.env.BASE_URL}/images/logos/snapp-pay.jpg`,
+    name: "اسنپ‌پی",
+    description: "حامی مالی نوجوانان برای خرید لپتاپ",
+  },
+] as const;
+
+
+
+
+
 
 export default function RubitechLandingPageFA() {
   const [open, setOpen] = useState(false);
@@ -639,32 +684,81 @@ export default function RubitechLandingPageFA() {
             title="جنبشی که می‌توانید به آن تکیه کنید"
             subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
           />
-          <div className="mt-6 grid gap-6 md:grid-cols-2">
-            <TestimonialCard
-              quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
-              name="هستی طاعتی"
-              title="مارکتر"
-              img={`${import.meta.env.BASE_URL}/images/hasti-taati.jpg`}
-            />
-            <TestimonialCard
-              quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم رو در وطن می‌بینم. اگرچه من و تو متاثر از محیط هستیم اما محصور آن نیستیم!."
-              name="سعید حسین‌زاده"
-              title="مدیرعامل روبیکمپ"
-              img={`${import.meta.env.BASE_URL}/images/saeed-hoseinzadeh.jpg`}
-            />
-            <TestimonialCard
-              quote="ورودم به دنیای تکنولوژی مسیر زندگیم ‌رو تغییر داد و حالا میخوام همین فرصت رو برای نوجوانان دیگر هم فراهم کنم تا مسیرشون رو پیدا کنند و رشد کنند. این پروژه برام فراتر از یک تجربه کاری هست؛ رویایی هست که دوست دارم سال‌ها درش فعالیت کنم، چون دقیقا همون پروژه‌ای هست که همیشه می‌خواستم بخشی از زندگی و هویتم باشه."
-              name="نازنین مسرور"
-              title="دیزاینر"
-              img={`${import.meta.env.BASE_URL}/images/nazanin-masror.jpg`}
-            />
-            <TestimonialCard
-              quote="روبیتک توان من رو برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. در این مسیر روبیتک تنها یک پلتفرم نیست، کلید ساخت آینده آن هاست."
-              name="مازیار شفیعی"
-              title="مدرس زبان انگلیسی"
-              img={`${import.meta.env.BASE_URL}/images/maz.jpg`}
-            />
+
+
+          <div className="mt-10">
+            <div className="mb-5 flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring ring-[var(--sky-ring)]">
+                <span className="text-[20px] font-bold text-[var(--brand)]">حامیان سازمانی</span>
+              </div>
+
+              {/* <a
+                href="#"
+                className="hidden text-sm font-bold text-[var(--brand)] underline-offset-4 hover:underline md:inline"
+                onClick={() => logEvent("partners_view_all")}
+              >
+                مشاهدهٔ همه
+              </a> */}
+            </div>
+
+            {/* Cards */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {partners.map((p) => (
+                <PartnerCard key={p.name} logoUrl={p.logoUrl} name={p.name} description={p.description} />
+              ))}
+            </div>
+
           </div>
+
+
+
+          <div className="mt-10">
+            <div className="mb-5 flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[var(--sky)] px-3 py-1 text-[var(--brand)] ring ring-[var(--sky-ring)]">
+                <span className="text-[20px] font-bold text-[var(--brand)]">حامیان فردی</span>
+              </div>
+
+              {/* <a
+                href="#"
+                className="hidden text-sm font-bold text-[var(--brand)] underline-offset-4 hover:underline md:inline"
+                onClick={() => logEvent("partners_view_all")}
+              >
+                مشاهدهٔ همه
+              </a> */}
+            </div>
+
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <TestimonialCard
+                quote="این پروژه برام مهمه چون حتی اگر هستی هم نباشه باز ادامه پیدا میکنه و این روند پایدار کمک به ادم‌ها برام مقدسه!"
+                name="هستی طاعتی"
+                title="مارکتر"
+                img={`${import.meta.env.BASE_URL}/images/hasti-taati.jpg`}
+              />
+              <TestimonialCard
+                quote="به‌عنوان ایرانی مقیم خارج، بالاخره اثر واقعی حمایتم رو در وطن می‌بینم. اگرچه من و تو متاثر از محیط هستیم اما محصور آن نیستیم!."
+                name="سعید حسین‌زاده"
+                title="مدیرعامل روبیکمپ"
+                img={`${import.meta.env.BASE_URL}/images/saeed-hoseinzadeh.jpg`}
+              />
+              <TestimonialCard
+                quote="ورودم به دنیای تکنولوژی مسیر زندگیم ‌رو تغییر داد و حالا میخوام همین فرصت رو برای نوجوانان دیگر هم فراهم کنم تا مسیرشون رو پیدا کنند و رشد کنند. این پروژه برام فراتر از یک تجربه کاری هست؛ رویایی هست که دوست دارم سال‌ها درش فعالیت کنم، چون دقیقا همون پروژه‌ای هست که همیشه می‌خواستم بخشی از زندگی و هویتم باشه."
+                name="نازنین مسرور"
+                title="دیزاینر"
+                img={`${import.meta.env.BASE_URL}/images/nazanin-masror.jpg`}
+              />
+              <TestimonialCard
+                quote="روبیتک توان من رو برای حمایت از بااستعدادترین شاگردانم چند برابر کرد. در این مسیر روبیتک تنها یک پلتفرم نیست، کلید ساخت آینده آن هاست."
+                name="مازیار شفیعی"
+                title="مدرس زبان انگلیسی"
+                img={`${import.meta.env.BASE_URL}/images/maz.jpg`}
+              />
+            </div>
+          </div>
+
+
+
+
         </Container>
         <div className="">
           <SectionDivider />
