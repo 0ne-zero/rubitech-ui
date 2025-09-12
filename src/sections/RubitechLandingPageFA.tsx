@@ -417,6 +417,12 @@ const partners = [
     url: "https://rubikamp.org",
   },
   {
+    logoUrl: `${import.meta.env.BASE_URL}/images/logos/irancell.webp`,
+    name: "ایرانسل",
+    description: "تامین دسترسی به اینترنت نوجوانان",
+    url: "https://irancell.ir/",
+  },
+  {
     logoUrl: `${import.meta.env.BASE_URL}/images/logos/maktabkhoneh.jpg`,
     name: "مکتب‌خونه",
     description: "تامین محتوای آموزشی و رهگیری مسیر رشد نوجوانان",
@@ -692,7 +698,7 @@ export default function RubitechLandingPageFA() {
             </div>
 
             {/* Cards */}
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
               {partners.map((p) => (
                 <PartnerCard key={p.name} logoUrl={p.logoUrl} name={p.name} description={p.description} url={p.url} />
               ))}
