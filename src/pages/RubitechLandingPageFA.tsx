@@ -44,7 +44,7 @@ export default function RubitechLandingPageFA() {
             </div>
             <div className="md:order-1">
               <h1 className="text-[30px] font-extrabold leading-[1.8] text-[#0A2540] md:text-[42px]">
-                با هم آینده ایران رو می‌سازیم
+                با هم آینده ایران رو می‌سازیم!
               </h1>
               <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
                 هر لپ‌تاپ، یک مدرسه هوشمند
