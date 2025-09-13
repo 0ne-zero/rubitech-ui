@@ -99,7 +99,8 @@ export default function RubitechLandingPageFA() {
                 <ImpactStat value={`${toFa(134)}+`} label="نوجوانان تحت ثاثیر" Icon={IconUsers} bgColor="bg-[var(--mint-ring)]" iconColor="text-[var(--brand)]" />
                 <ImpactStat value={`${toFa(113)}+`} label="مدرسه تامین شده" Icon={IconLaptop} bgColor="bg-[var(--sky-ring)]" iconColor="text-[var(--brand)]" />
                 <ImpactStat value={toFa(35)} label="سفیر فعال" Icon={IconShield} bgColor="bg-[var(--violet-ring)]" iconColor="text-[#6D28D9]" />
-                <ImpactStat value={toFa(4)} label="استان تحت پوشش" Icon={IconGlobe} bgColor="bg-[var(--amber-ring)]" iconColor="text-[#0EA5A7]" />
+                {/* <ImpactStat value={toFa(4)} label="استان تحت پوشش" Icon={IconGlobe} bgColor="bg-[var(--amber-ring)]" iconColor="text-[#0EA5A7]" /> */}
+                <ImpactStat value={toFa(128)} label="حامیان فعال" Icon={IconStampOfApproval} bgColor="bg-[var(--amber-ring)]" iconColor="text-[#0EA5A7]" />
               </div>
             </Container>
           </div>
