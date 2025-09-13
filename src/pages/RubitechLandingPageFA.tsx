@@ -374,15 +374,34 @@ export default function RubitechLandingPageFA() {
               یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
               <br />امروز، آینده ایران رو بساز.
             </p>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 flex justify-center flex-col gap-4 sm:flex-row">
               <CTAButton
                 href={site.paypalUrl}
-                className="w-full sm:w-auto whitespace-nowrap py-5 text-[18px] md:text-[20px]"
+                className="w-full sm:w-auto text-center whitespace-nowrap text-[20px]" // 👈 no wrap + bigger
                 colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
                 iconLeft={<IconHeartHand className="h-7 w-7" />}
                 ariaLabel="ساخت مدرسه"
               >
                 ساخت مدرسه
+              </CTAButton>
+              <CTAButton
+                href={site.ambassadorRegistrationUrl}
+                className="w-full sm:w-auto text-center whitespace-nowrap"
+                colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35"
+                iconLeft={<IconShield className="h-7 w-7" />}
+                ariaLabel="ثبت‌نام سفیر"
+              >
+                ثبت‌نام سفیر
+              </CTAButton>
+
+              <CTAButton
+                href={site.teenagerRegistrationUrl}
+                className="w-full sm:w-auto text-center whitespace-nowrap"
+                colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35"
+                iconLeft={<IconUsers className="h-7 w-7" />}
+                ariaLabel="ثبت‌نام نوجوان"
+              >
+                ثبت‌نام نوجوان
               </CTAButton>
             </div>
 
