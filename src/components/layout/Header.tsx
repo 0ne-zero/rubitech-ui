@@ -141,7 +141,7 @@ export function Header() {
             {/* —— Mobile Bar (<md) —— */}
             <div className="flex h-14 items-center justify-between md:hidden">
               <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
-                <BrandLogo size="sm" alt="" scale={1.4} priority />
+                <BrandLogo size="sm" alt="" scale={1.3} priority />
                 <span className="font-bold mr-0.5 text-white text-normal">روبیتک</span>
               </a>
 
@@ -167,7 +167,7 @@ export function Header() {
             <DesktopNav>
               <div className="flex h-16 items-center justify-between">
                 <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
-                  <BrandLogo size="md" alt="" scale={1.4} />
+                  <BrandLogo size="md" alt="" scale={1.3} />
                   <span className="font-bold mr-1 text-white text-lg">روبیتک</span>
                 </a>
 
@@ -212,7 +212,7 @@ export function Header() {
         drawerRef={drawerRef}
         brand={
           <a href="/" aria-label="Rubitech Home" className="flex items-center gap-2">
-            <BrandLogo size="md" alt="" scale={1.4} priority={false} />
+            <BrandLogo size="md" alt="" scale={1.3} priority={false} />
             <span className="font-bold text-[#0A2540] text-normal">روبیتک</span>
           </a>
         }
