@@ -146,7 +146,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۳"
               title="سفیر معتمد و متعهد ما لپ‌تاپ رو تحویل می‌ده"
-              description="معلم‌ها و مدیران (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسونند."
+              description="معلم‌ها و مدیران (سفیران ما) لپ‌تاپ رو به دست نوجوان مستعد می‌رسونند."
               IconComponent={IconShield}
               isOdd={true}
               boxBgColor="bg-[var(--amber-tint)]"
@@ -157,7 +157,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۴"
               title="یک آینده ساخته می‌شه"
-              description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خودش و جامعه رو به دست میاره."
+              description="نوجوان مستعد بستر مناسب برای رشد، ساخت و تغییر آینده خودش و ایران رو داره."
               IconComponent={IconUsers}
               isOdd={false}
               boxBgColor="bg-[var(--lime-tint)]"
@@ -168,7 +168,8 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۵"
               title="فرصت بورسیه روبیکمپ"
-              description="نوجوان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنه."
+              // description="نوجوان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنه."
+              description="نوجوانی که با موفقیت مسیر رشد خودش رو پشت سر گذاشته، بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنه!"
               IconComponent={IconSparkles}
               isOdd={true}
               boxBgColor="bg-[var(--mint-ring)]"
@@ -270,7 +271,7 @@ export default function RubitechLandingPageFA() {
               iconClass="h-7 w-7 text-[var(--brand)]"
               title="شفافیت رادیکال"
               wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--sky-ring)] ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/30"
-              description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
+              description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری مدرسه(لپ‌تاپ)ها رو داره."
             />
 
             <DifferentiationCard
@@ -278,7 +279,7 @@ export default function RubitechLandingPageFA() {
               iconClass="h-7 w-7 text-[#6D28D9]"
               title="شبکهٔ مورد اعتماد"
               wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--violet-ring)] ring-[var(--violet-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
-              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشن."
+              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان مستعد انتخاب بشن."
             />
             <DifferentiationCard
               Icon={IconUsers}
