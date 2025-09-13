@@ -72,11 +72,6 @@ export const IconStampOfApproval = (p: SVGProps) => (
   </svg>
 );
 
-// Brand square used in flow
-export const IconRubitechPlatform = (p: DivProps) => (
-  <div className="grid h-8 w-8 place-items-center rounded-lg bg-[#0A2540] text-lg font-bold text-white" {...p}>ر</div>
-);
-
 // Heart-in-hand icon
 export const IconHeartHand = (p: SVGProps) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" {...p}>
