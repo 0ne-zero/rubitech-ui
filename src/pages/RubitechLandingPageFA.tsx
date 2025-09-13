@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Section, Container } from "../components/ui/Section";
 import { SectionHeader, IconBadge } from "../components/ui/SectionHeader";
 import { SectionDivider } from "../components/ui/SectionDivider";
-import { PrimaryCTA } from "../components/ui/Button";
+import { CTAButton } from "../components/ui/Button";
 import { ImpactStat } from "../components/cards/ImpactStat";
 import { TestimonialCard } from "../components/cards/TestimonialCard";
 import { DifferentiationCard } from "../components/cards/DifferentiationCard";
@@ -17,9 +17,11 @@ import { DonationModal } from "../widgets/DonationModal"
 import { site } from "../config/site"
 import {
   IconUsers, IconLaptop, IconShield, IconGlobe, IconNodePath, IconSparkles,
-  IconStampOfApproval, IconRubitechPlatform, IconEye, IconLoop, IconQuestion, IconHeartHand,
+  IconStampOfApproval, IconEye, IconLoop, IconQuestion, IconHeartHand,
   IconBuilding, IconUserGroup, LogoGlyphIcon
 } from "../icons";
+
+
 
 export default function RubitechLandingPageFA() {
   // const [open, setOpen] = useState(false);
@@ -53,11 +55,42 @@ export default function RubitechLandingPageFA() {
               <p className="font-bold text-[20px]">
                 (باید تغییر کنه)
               </p>
-              <div className="mt-10">
-                <PrimaryCTA href={site.paypalUrl} className="w-full sm:w-auto">
-                  همین حالا همراه می‌شوم
-                </PrimaryCTA>
+
+
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <CTAButton
+                  href={site.paypalUrl}
+                  className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-5 text-[20px]" // 👈 no wrap + bigger
+                  colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
+                  iconLeft={<IconHeartHand className="h-7 w-7" />}
+                  ariaLabel="ساخت مدرسه"
+                >
+                  ساخت مدرسه
+                </CTAButton>
+
+                <CTAButton
+                  href={site.ambassadorRegistrationUrl}
+                  className="w-full sm:w-auto flex-1 text-center whitespace-nowrap"
+                  colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35"
+                  iconLeft={<IconShield className="h-7 w-7" />}
+                  ariaLabel="ثبت‌نام سفیر"
+                >
+                  ثبت‌نام سفیر
+                </CTAButton>
+
+                <CTAButton
+                  href={site.teenagerRegistrationUrl}
+                  className="w-full sm:w-auto flex-1 text-center whitespace-nowrap"
+                  colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35"
+                  iconLeft={<IconUsers className="h-7 w-7" />}
+                  ariaLabel="ثبت‌نام نوجوان"
+                >
+                  ثبت‌نام نوجوان
+                </CTAButton>
               </div>
+
+
+
             </div>
           </div>
           <div className="mt-16 mb-2 backdrop-blur-sm">
@@ -228,14 +261,14 @@ export default function RubitechLandingPageFA() {
               Icon={IconLoop}
               iconClass="ه-7 w-7 text-[#0EA5A7]"
               title="مسیرِ پایدار"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--mint)] ring-[var(--mint-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--mint-ring)] ring-[var(--mint-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#0EA5A7]/30"
               description="لپ‌تاپ‌ها به صورت چرخه‌ای به نفر بعدی می‌رسند. همچنین نوجوانان موفق وارد روبیکمپ میشن."
             />
             <DifferentiationCard
               Icon={IconEye}
               iconClass="h-7 w-7 text-[var(--brand)]"
               title="شفافیت رادیکال"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--sky)] ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/30"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--sky-ring)] ring-[var(--sky-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[var(--brand)]/30"
               description="پنل شخصی شما قابلیت‌های تخصیص، تحویل و رهگیری رو داره."
             />
 
@@ -243,14 +276,14 @@ export default function RubitechLandingPageFA() {
               Icon={IconShield}
               iconClass="h-7 w-7 text-[#6D28D9]"
               title="شبکهٔ مورد اعتماد"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--violet-tint)] ring-[var(--violet-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--violet-ring)] ring-[var(--violet-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
               description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشند."
             />
             <DifferentiationCard
               Icon={IconUsers}
               iconClass="h-7 w-7 text-[#F59E0B]"
               title="اجتماع‌محور"
-              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--amber-tint)] ring-[var(--amber-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
+              wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--amber-ring)] ring-[var(--amber-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#F59E0B]/30"
               description="به‌دست جامعه و برایِ جامعه؛ برای پیشرفتی پایدار در ایران."
             />
 
@@ -297,7 +330,9 @@ export default function RubitechLandingPageFA() {
             امروز، آینده ایران رو بساز.
           </p>
           <div className="mt-12">
-            <PrimaryCTA href={site.paypalUrl}>همین حالا همراه می‌شوم</PrimaryCTA>
+            <CTAButton href={site.paypalUrl} colorClass="bg-[var(--brand)] ring-[var(--brand)]/35 hover:bg-[var(--brand-strong)] focus-visible:ring-[var(--brand)]/35">
+              همین حالا همراه می‌شوم
+            </CTAButton>
           </div>
         </Container>
       </Section>

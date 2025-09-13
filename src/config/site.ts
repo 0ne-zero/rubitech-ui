@@ -29,5 +29,7 @@ export const site = {
       // ...
     ],
   },
-  paypalUrl: "https://www.paypal.com/donate/?hosted_button_id=6R4YWYQBAG6KA"
+  paypalUrl: "https://www.paypal.com/donate/?hosted_button_id=6R4YWYQBAG6KA",
+  ambassadorRegistrationUrl: "https://t.me/Operation_team_RK",
+  teenagerRegistrationUrl: "https://t.me/Operation_team_RK",
 } as const;
