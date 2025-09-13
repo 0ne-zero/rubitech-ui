@@ -1,4 +1,3 @@
-// components/ui/Button.tsx
 type CTAButtonProps = {
   onClick?: () => void;
   href?: string;

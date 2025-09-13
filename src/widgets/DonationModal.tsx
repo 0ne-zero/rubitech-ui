@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { PrimaryCTA } from "../components/ui/Button";
+import { CTAButton } from "../components/ui/Button";
 import { toEnDigits, toFa } from "../utils/format";
 import { logEvent } from "../utils/analytics";
 
@@ -68,7 +68,7 @@ export function DonationModal({ open, onClose }: { open: boolean; onClose: () =>
             </div>
             <div className="mt-6 flex items-center justify-between">
               <div className="text-sm text-[#1A1F36] opacity-80">مبلغ انتخاب‌شده: <span className="font-semibold text-[#0A2540]">{toFa(resolvedAmount)}</span></div>
-              <PrimaryCTA onClick={goNext}>ادامه</PrimaryCTA>
+              <CTAButton onClick={goNext}>ادامه</CTAButton>
             </div>
           </div>
         )}
@@ -95,7 +95,7 @@ export function DonationModal({ open, onClose }: { open: boolean; onClose: () =>
             </div>
             <div className="mt-6 flex items-center justify-between">
               <button type="button" onClick={goBack} className="text-sm text-[#1A1F36] opacity-80 hover:opacity-100">بازگشت</button>
-              <PrimaryCTA onClick={goNext}>ادامه</PrimaryCTA>
+              <CTAButton onClick={goNext}>ادامه</CTAButton>
             </div>
           </form>
         )}
@@ -124,7 +124,7 @@ export function DonationModal({ open, onClose }: { open: boolean; onClose: () =>
             </div>
             <div className="mt-6 flex items-center justify-between">
               <button type="button" onClick={goBack} className="text-sm text-[#1A1F36] opacity-80 hover:opacity-100">بازگشت</button>
-              <PrimaryCTA>ثبت تعهد</PrimaryCTA>
+              <CTAButton>ثبت تعهد</CTAButton>
             </div>
           </form>
         )}
