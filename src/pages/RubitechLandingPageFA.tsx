@@ -49,11 +49,11 @@ export default function RubitechLandingPageFA() {
               <h1 className="text-[30px] font-extrabold leading-[1.9] text-[#0A2540] md:text-[32px]">
                 هر لپ‌تاپ، یک مدرسه هوشمند
               </h1>
-              <p className="mt-4 text-[20px] leading-[1.7] text-[var(--text-weak)]">
-                در کنار هم مسیری نو برای نوجوانان کمتر بهره مند از سر تا سر ایران میسازیم؛ در پنل کاربری خودتون میتونید از جزئیات تاثیر خودتون در این  مسیر به طور شفاف مطلع بشید.
+              <p className="mt-4 font-medium text-[20px] leading-[1.7] text-[var(--brand)]">
+                ایران آینده‌ای روشن‌تر می‌خواد، این آینده به دست نوجوانانش ساخته می‌شه؛ نوجوانانی که سرمایه و سازندگان واقعی ایران‌اند.
               </p>
-              <p className="font-bold text-[20px]">
-                (باید تغییر کنه)
+              <p className="font-medium text-[20px]">
+                روبیتک اینجاست تا اثرگذاری شما رو به فرصتی روشن برای نوجوانان فردای ایران تبدیل کنه.
               </p>
 
 
@@ -115,7 +115,7 @@ export default function RubitechLandingPageFA() {
             kicker="چطور"
             Icon={IconNodePath}
             title="مسیر کامل تاثیر شما"
-            subtitle="ما یک اکوسیستم کامل طراحی کردیم که اثرگذاری شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کنه. این مسیر ۵ مرحله‌ست:"
+            subtitle="ما یک اکوسیستم شفاف و قابل‌اعتماد طراحی کردیم که اثرگذاری شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کنه. این همیاری در ۵ مرحله اتفاق میوفته:"
           />
 
           <div className="relative mt-10 flex flex-col gap-6 md:gap-5 md:gap-0">
