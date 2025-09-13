@@ -21,7 +21,7 @@ body,
 }
 
 body {
-  font-family: IRANYekanX FaNum, IRANYekanX, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: IRANYekanX, IRANYekanX FaNum, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   color: #0f172a;
   background: #ffffff;
 }
@@ -34,6 +34,10 @@ body {
   @apply py-10 sm:py-14 lg:py-20;
 }
 
+/* optional utility if you use Tailwind's arbitrary values often */
+.strong-shadow {
+  box-shadow: 0 8px 24px rgba(10, 37, 64, .18), 0 2px 6px rgba(10, 37, 64, .12);
+}
 
 :root {
   --brand: #0A2540;
@@ -42,13 +46,40 @@ body {
   --text: #1A1F36;
   --text-weak: #243041;
 
+  /* ✅ CTA base palettes */
   --green: #00D09C;
   --green-strong: #00B88A;
 
+  --rose: #FF4D6D;
+  /* CTA rose base */
+  --rose-strong: #E11D48;
+  /* CTA rose hover/focus (same as --rose-step) */
+
+  --violet: #8B5CF6;
+  /* CTA violet base */
+  --violet-strong: #6D28D9;
+  /* CTA violet hover/focus (same as --violet-step) */
+
+  --amber: #F59E0B;
+  /* CTA amber base */
+  --amber-strong: #D97706;
+  /* CTA amber hover/focus */
+
+  --lime: #84CC16;
+  /* CTA lime base */
+  --lime-strong: #4D7C0F;
+  /* CTA lime hover/focus (same as --lime-step) */
+
+  --mint: #10B981;
+  /* CTA mint base */
+  --mint-strong: #008A6E;
+  /* CTA mint hover/focus (same as --mint-step) */
+
+  /* Existing tints/rings for cards/steps */
   --sky: #E9F2FF;
   --sky-ring: #BFD5FF;
 
-  --mint: #DDF8F1;
+  --mint-tint: #DDF8F1;
   --mint-ring: #B2F2E4;
 
   --violet-tint: #E9DEFF;
@@ -72,21 +103,10 @@ body {
   --gray-tint: #F3F6F8;
   --gray-ring: #D8DDE5;
 
-
+  /* Step colors (for flow timeline) */
   --rose-step: #E11D48;
-  /* Rose 600 → pairs with --rose-ring */
   --violet-step: #6D28D9;
-  /* Violet 700 → pairs with --violet-tint */
   --amber-step: #F59E0B;
-  /* Amber 500 → pairs with --amber-tint */
   --lime-step: #4D7C0F;
-  /* Lime 700 → pairs with --lime-tint */
   --mint-step: #008A6E;
-  /* Teal/green strong → pairs with --mint-ring */
-}
-
-
-/* optional utility if you use Tailwind's arbitrary values often */
-.strong-shadow {
-  box-shadow: 0 8px 24px rgba(10, 37, 64, .18), 0 2px 6px rgba(10, 37, 64, .12);
 }
