@@ -113,8 +113,8 @@ export default function RubitechLandingPageFA() {
           <SectionHeader
             kicker="چطور"
             Icon={IconNodePath}
-            title="مسیر کامل حمایت شما"
-            subtitle="ما یک اکوسیستم کامل طراحی کرده‌ایم که کمک شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کند. این مسیر ۵ مرحله‌ست:"
+            title="مسیر کامل تاثیر شما"
+            subtitle="ما یک اکوسیستم کامل طراحی کردیم که اثرگذاری شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کنه. این مسیر ۵ مرحله‌ست:"
           />
 
           <div className="relative mt-10 flex flex-col gap-6 md:gap-5 md:gap-0">
@@ -123,7 +123,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۱"
               title="شما زنجیره رو آغاز می‌کنید"
-              description="حمایت شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازه."
+              description="حمایت/لپ‌تاپ شما به شکلی شفاف و امن، اولین حلقه زنجیره آینده‌سازی رو می‌سازه."
               IconComponent={IconHeartHand}
               isOdd={true}
               boxBgColor="bg-[var(--rose-ring)]"
@@ -133,8 +133,8 @@ export default function RubitechLandingPageFA() {
 
             <FlowStep
               number="۲"
-              title="روبیتک شفافیت رو تضمین می‌کند"
-              description="روبیتک هر حمایت رو ثبت می‌کنه، تحویل سفیرهاش می‌ده و قابل رهگیری می‌کنه."
+              title="روبیتک شفافیت رو تضمین می‌کنه"
+              description="روبیتک هر لپ‌تاپ رو ثبت و قابل رهگیری می‌کنه، در نهایت تحویل سفیرهاش می‌ده."
               IconComponent={(props) => <LogoGlyphIcon {...props} scale={2} />}
               isOdd={false}
               boxBgColor="bg-[var(--violet-tint)]"
@@ -144,8 +144,8 @@ export default function RubitechLandingPageFA() {
 
             <FlowStep
               number="۳"
-              title="سفیر معتمد و متعهد ما حمایت رو تحویل می‌ده"
-              description="معلمان و مدیران (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسونند."
+              title="سفیر معتمد و متعهد ما لپ‌تاپ رو تحویل می‌ده"
+              description="معلم‌ها و مدیران (سفیران ما) لپ‌تاپ رو به دست نوجوان شایسته می‌رسونند."
               IconComponent={IconShield}
               isOdd={true}
               boxBgColor="bg-[var(--amber-tint)]"
@@ -155,7 +155,7 @@ export default function RubitechLandingPageFA() {
 
             <FlowStep
               number="۴"
-              title="یک آینده ساخته می‌شود"
+              title="یک آینده ساخته می‌شه"
               description="نوجوان بااستعداد ابزار لازم برای یادگیری، ساختن و تغییر آینده خودش و جامعه رو به دست میاره."
               IconComponent={IconUsers}
               isOdd={false}
@@ -167,7 +167,7 @@ export default function RubitechLandingPageFA() {
             <FlowStep
               number="۵"
               title="فرصت بورسیه روبیکمپ"
-              description="نوجوانان موفق، بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنند."
+              description="نوجوان موفق بورسیه کامل مدرسه رهبری روبیکمپ رو دریافت می‌کنه."
               IconComponent={IconSparkles}
               isOdd={true}
               boxBgColor="bg-[var(--mint-ring)]"
@@ -185,8 +185,8 @@ export default function RubitechLandingPageFA() {
           <SectionHeader
             kicker="اعتماد"
             Icon={IconStampOfApproval}
-            title="جنبشی که می‌توانید به آن تکیه کنید"
-            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده."
+            title="جنبشی که می‌تونید بهش تکیه کنید"
+            subtitle="از اعتماد فردی تا مسئولیت اجتماعی شرکت‌ها، همه در کنار هم برای ساخت آینده ایران."
           />
 
           <div className="mt-10">
@@ -277,7 +277,7 @@ export default function RubitechLandingPageFA() {
               iconClass="h-7 w-7 text-[#6D28D9]"
               title="شبکهٔ مورد اعتماد"
               wrapperClass="group rounded-2xl p-6 ring-1 bg-[var(--violet-ring)] ring-[var(--violet-ring)] transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#6D28D9]/30"
-              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشند."
+              description="با معلمان و مدیرانِ مورد اعتماد کار می‌کنیم تا نوجوانان شایسته انتخاب بشن."
             />
             <DifferentiationCard
               Icon={IconUsers}
@@ -299,7 +299,7 @@ export default function RubitechLandingPageFA() {
             kicker="پرسش‌های پرتکرار"
             Icon={IconQuestion}
             title="سوالات شما، پاسخ‌های ما"
-            subtitle="اگر جواب پرسش‌تان رو نمی‌بینید، برایمان بنویسید."
+            subtitle="اگر جواب سوال‌تون رو نمی‌بینید، بهمون اطلاع بدید."
           />
           <div className="mt-8 grid gap-4">
             <FAQItem
@@ -308,7 +308,7 @@ export default function RubitechLandingPageFA() {
             />
             <FAQItem
               q="حمایت من چه چیزهایی رو پوشش می‌دهد؟"
-              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شود.</p>}
+              a={<p>هزینهٔ یک لپ‌تاپ مقاوم، یک سال اینترنت و منابع آموزشی برگزیده. ۱۰۰٪ مبلغ تعیین‌شده صرف نوجوان می‌شه.</p>}
             />
             <FAQItem
               q="امکان اهدای سخت‌افزارِ کارکرده هست؟"
@@ -318,24 +318,175 @@ export default function RubitechLandingPageFA() {
         </Container>
       </Section>
 
-      {/* final CTA */}
-      <Section id="final-cta" className="bg-[var(--brand-strong)]">
-        <Container className="text-center text-white" y="lg">
-          <h2 className="text-[32px] font-extrabold md:text-[38px]">
-            به جنبش {toFa(10000)} مدرسه سالانه بپیوند
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl font-bold text-[20px] leading-[1.6] opacity-90">
-            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
-            <br></br>
-            امروز، آینده ایران رو بساز.
-          </p>
-          <div className="mt-12">
-            <CTAButton href={site.paypalUrl} colorClass="bg-[var(--brand)] ring-[var(--brand)]/35 hover:bg-[var(--brand-strong)] focus-visible:ring-[var(--brand)]/35">
-              همین حالا همراه می‌شوم
-            </CTAButton>
+
+
+
+
+
+
+
+      <Section id="final-cta" className="relative overflow-hidden bg-gradient-to-b from-white to-[var(--sky)]">
+        <div className="absolute inset-0 opacity-60"
+          style={{ backgroundImage: "radial-gradient(1px 1px at 20% 30%, rgba(14,165,167,.35) 1px, transparent 1px), radial-gradient(1px 1px at 80% 70%, rgba(109,40,217,.25) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+        <Container className="relative">
+          <div
+            className="mx-auto max-w-5xl rounded-3xl border border-white/40 p-8 backdrop-blur-xl ring-1 ring-slate-300/60 shadow-2xl relative overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(14,165,167,0.08), rgba(255,255,255,0.70) 35%, rgba(255,255,255,0.70) 65%, rgba(109,40,217,0.08))",
+            }}
+          >
+
+            {/* Do not remove this */}
+            {/* <div
+            className="mx-auto relative max-w-3xl rounded-3xl p-8 shadow-2xl overflow-hidden"
+            style={{
+              background: "rgba(255,255,255,0.70)",
+              backdropFilter: "blur(28px)",
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  "radial-gradient(80% 120% at 50% 0%, rgba(14,165,167,0.30), transparent), radial-gradient(120% 100% at 50% 100%, rgba(109,40,217,0.25), transparent)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 rounded-3xl opacity-25"
+              style={{
+                boxShadow: "0 0 80px rgba(245,158,11,0.35) inset",
+              }}
+            /> */}
+
+
+
+
+
+
+            <h2 className="text-center text-[28px] md:text-[36px] font-extrabold text-[#0A2540]">
+              به جنبش {toFa(10000)} مدرسه سالانه بپیوند
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-[18px] md:text-[20px] leading-[1.7] text-[var(--text-weak)]">
+              یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
+              <br />امروز، آینده ایران رو بساز.
+            </p>
+            <div className="mt-8 flex justify-center">
+              <CTAButton
+                href={site.paypalUrl}
+                className="w-full sm:w-auto whitespace-nowrap py-5 text-[18px] md:text-[20px]"
+                colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
+                iconLeft={<IconHeartHand className="h-7 w-7" />}
+                ariaLabel="ساخت مدرسه"
+              >
+                ساخت مدرسه
+              </CTAButton>
+            </div>
+
+
+            <div className="mt-10 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+              {[
+                ["۱", "آغاز شما", "bg-[var(--rose-ring)]", "text-[var(--rose-step)]"],
+                ["۲", "روبیتک", "bg-[var(--violet-tint)]", "text-[var(--violet-step)]"],
+                ["۳", "دریافت نوجوان", "bg-[var(--amber-tint)]", "text-[var(--amber-step)]"],
+                ["۴", "ساخت آینده", "bg-[var(--lime-tint)]", "text-[var(--lime-step)]"],
+                ["۵", "بورسیه روبیکمپ", "bg-[var(--mint-ring)]", "text-[var(--mint-step)]"],
+              ].map(([n, t, bg, tc], i) => (
+                <div
+                  key={n}
+                  // FIX 1: The col-span logic is now correctly scoped to mobile only
+                  className={`flex w-full items-center rounded-full px-4 py-2 ring-1 ring-slate-200/70 ${bg} ${i === 4 ? "col-span-2 sm:col-span-1 justify-center" : ""
+                    }`}
+                >
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-[15px] font-extrabold text-[#0A2540]">
+                    {n}
+                  </span>
+                  <span
+                    className={`mr-2 text-[1۵px] font-bold leading-none sm:text-[14px] md:text-[16px] ${tc}`}
+                  >
+                    {t}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+
+
+
+
+
+
+
+            {/* Flow Recap — Beads */}
+            {/* <div className="mt-7">
+              <div className="relative mx-auto max-w-2xl">
+                <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-[2px] bg-gradient-to-l from-[var(--mint-step)] via-[var(--violet-step)] to-[var(--rose-step)] opacity-70" />
+                <div className="relative z-10 grid grid-cols-5">
+                  {[
+                    ["۱", "آغاز شما", "bg-white text-[#0A2540] ring-[var(--rose-step)]"],
+                    ["۲", "شفافیت روبیتک", "bg-white text-[#0A2540] ring-[var(--violet-step)]"],
+                    ["۳", "تحویل به نوجوان", "bg-white text-[#0A2540] ring-[var(--amber-step)]"],
+                    ["۴", "ساخت آینده", "bg-white text-[#0A2540] ring-[var(--lime-step)]"],
+                    ["۵", "بورسیه روبیکمپ", "bg-white text-[#0A2540] ring-[var(--mint-step)]"],
+                  ].map(([n, t, cls]) => (
+                    <div key={n} className="flex flex-col items-center gap-2">
+                      <span className={`grid h-8 w-8 place-items-center rounded-full ring-2 ${cls} text-xs font-extrabold`}>{n}</span>
+                      <span className="text-[11px] text-[var(--text-weak)]">{t}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div> */}
+
+
+            {/* Sponsors — Logo Row */}
+            {/* <div className="mt-6">
+
+              <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-7">
+                {(partners?.slice?.(0, 6) ?? []).map((p) => (
+                  <a
+                    key={p.name}
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="opacity-80 hover:opacity-100 transition"
+                    aria-label={p.name}
+                    title={p.name}
+                  >
+                    <img
+                      src={p.logoUrl}
+                      alt={p.name}
+                      loading="lazy"
+                      className="h-7 sm:h-8 object-contain  hover:grayscale-0"
+                    />
+                  </a>
+                ))}
+                
+                {(!partners || partners.length === 0) && (
+                  <div className="text-[12px] text-[var(--text-weak)]">— به‌زودی —</div>
+                )}
+              </div>
+            </div> */}
+
+
+
           </div>
+
+
+
         </Container>
       </Section>
+
+
+
+
+
+
+
+
+
 
       {/* sticky mobile CTA */}
       {/* <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 sm:hidden">
@@ -345,6 +496,6 @@ export default function RubitechLandingPageFA() {
       </div> */}
 
 
-    </main>
+    </main >
   );
 }
