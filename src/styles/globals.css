@@ -109,4 +109,95 @@ body {
   --amber-step: #F59E0B;
   --lime-step: #4D7C0F;
   --mint-step: #008A6E;
+
+  /* Gradients */
+  --brand-grad-from: #0a2540;
+  --brand-grad-to: #2b6cb0;
+
+  --sky-grad-from: #e9f2ff;
+  --sky-grad-to: #ffffff;
+
+  --mint-grad-from: #10b981;
+  --mint-grad-to: #34d399;
+
+  --violet-grad-from: #8b5cf6;
+  --violet-grad-to: #6d28d9;
+
+  --rose-grad-from: #ff4d6d;
+  --rose-grad-to: #e11d48;
+
+  --amber-grad-from: #f59e0b;
+  --amber-grad-to: #d97706;
+
+  /* Subtle elevated shadow */
+  --elevate: 0 10px 25px rgba(10, 37, 64, .16), 0 4px 10px rgba(10, 37, 64, .10);
+  --elevate-strong: 0 14px 32px rgba(10, 37, 64, .18), 0 6px 16px rgba(10, 37, 64, .12);
+}
+
+
+/* Utility: soft glass surface */
+.glass {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Utility: gradient borders (via background-clip trick) */
+.gradient-border {
+  position: relative;
+  background: linear-gradient(to left, var(--sky-grad-from), var(--sky-grad-to));
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 1rem;
+  /* match rounded-2xl */
+  background: linear-gradient(135deg, var(--violet-grad-from), var(--mint-grad-from), var(--sky-ring));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  border: none;
+  pointer-events: none;
+}
+
+/* Glows for timeline nodes */
+.glow-mint {
+  box-shadow: 0 0 0 6px rgba(16, 185, 129, .18), 0 0 24px rgba(16, 185, 129, .35);
+}
+
+.glow-violet {
+  box-shadow: 0 0 0 6px rgba(139, 92, 246, .18), 0 0 24px rgba(109, 40, 217, .35);
+}
+
+/* Pulse for current step */
+@keyframes pulseSoft {
+  0% {
+    transform: scale(1);
+    opacity: .9;
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: .9;
+  }
+}
+
+.pulse-soft {
+  animation: pulseSoft 1.8s ease-in-out infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-soft {
+    animation: none;
+  }
 }
