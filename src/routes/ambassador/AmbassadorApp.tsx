@@ -73,14 +73,6 @@ export function AmbassadorApp() {
             <Route path="teenagers" element={<TeenagersPage />} />
             <Route path="packages" element={<PackagesPage />} />
             <Route path="profile" element={<ProfilePage />} />
-            <Route
-              path="shipments"
-              element={
-                <div className="rounded-2xl border border-sky-200 bg-white/80 p-6 text-slate-700">
-                  در دست ساخت…
-                </div>
-              }
-            />
           </Routes>
         </main>
       </div>

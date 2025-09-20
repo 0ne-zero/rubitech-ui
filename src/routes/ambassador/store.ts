@@ -13,7 +13,7 @@ export type Profile = {
 export function useAmbassadorData() {
   const [profile, setProfile] = React.useState<Profile>({
     name: 'زهرا محمدی', nationalId: '0012345678', dob: '1383-03-21', city: 'تهران', region: 'استان تهران', org: 'Rubitech',
-    email: { value: 'zahra@example.com', verified: true }, phone: { value: '+989121234567', verified: true },
+    email: { value: 'zahra@example.com', verified: true }, phone: { value: '+989121234567', verified: false},
     notify: { email: true, sms: true },
     kyc: { status: 'approved', front: null, back: null, selfie: null, note: '' }
   });
