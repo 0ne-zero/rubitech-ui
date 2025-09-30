@@ -215,3 +215,12 @@ html {
     scroll-behavior: auto;
   }
 }
+
+/* Keep viewport width stable when scrollbars appear/disappear */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* When modal is open, you already set --sbw on <html>.
+   You may also choose to add a visual hint or other layout tweaks here. */
+html.modal-open {}

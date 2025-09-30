@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 // Keep these external imports exactly as requested
 import { partners, Partner } from "../data/partners";
@@ -12,8 +13,11 @@ import {
 } from "../icons";
 import { faqs } from "@/data/faq";
 
+// ⬇️ If your modal lives in another file, import it. If you inlined the modal in this file, remove this import.
+import { AuthModalLikeImage } from "@/components/landing/AuthModal";
+
 /**
- * Rubitech — Single-file Landing Page (Updated per spec)
+ * Rubitech — Single-file Landing Page (Updated per spec, with Auth modal trigger)
  */
 
 
@@ -67,7 +71,7 @@ type DividerProps = { variant?: "brand" | "subtle" | "dotted"; className?: strin
 export const SectionDivider = ({ variant = "brand", className = "" }: DividerProps) => {
     if (variant === "dotted") return <hr className={`mx-auto my-6 h-0 border-0 border-t-2 border-dotted border-slate-300/80 w-full max-w-7xl ${className}`} />;
     if (variant === "subtle") return <hr className={`mx-auto my-6 h-px w/full max-w-7xl bg-gradient-to-l from-transparent via-slate-200 to-transparent ${className}`} />;
-    return <div aria-hidden="true" className={`mx-auto my-6 h-auto md:h-[2px] w-full max-w-7xl rounded-full bg-gradient-to-l from-[var(--green)] via-slate-200 to-[var(--brand)] ${className}`} />;
+    return <div aria-hidden="true" className={`mx-auto mt-10 mb-4 h-auto md:h-[2px] w-full max-w-7xl rounded-full bg-gradient-to-l from-[var(--green)] via-slate-200 to-[var(--brand)] ${className}`} />;
 };
 
 
@@ -100,15 +104,20 @@ type CTAButtonProps = {
     iconLeft?: React.ReactNode;
     target?: "_blank" | "_self" | "_parent" | "_top";
     rel?: string;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>; // NEW
 };
+
 const CTAButton: React.FC<CTAButtonProps> = ({
-    href, children, className = "", colorClass = "bg-emerald-500 hover:bg-emerald-600 ring-emerald-500/35", ariaLabel, iconLeft, target, rel
+    href, children, className = "",
+    colorClass = "bg-emerald-500 hover:bg-emerald-600 ring-emerald-500/35",
+    ariaLabel, iconLeft, target, rel, onClick
 }) => (
     <a
         href={href}
         target={target}
         rel={rel}
         aria-label={ariaLabel}
+        onClick={onClick} // NEW
         className={cx(
             "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-white text-base md:text-lg font-bold ring-1 ring-inset transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
             colorClass, className
@@ -264,11 +273,6 @@ const CompactFlowItem: React.FC<CompactFlowItemProps> = ({
                         <span className="inline-grid h-8 w-8 place-items-center rounded-full bg-white ring-1 ring-slate-200 text-[16px] font-extrabold text-slate-800">
                             {step}
                         </span>
-                        {/* {Icon ? (
-                            <span className="grid h-8 w-8 place-items-center rounded-lg bg-white ring-1 ring-slate-200">
-                                <Icon className="h-5 w-5 text-slate-700" />
-                            </span>
-                        ) : null} */}
                         <h3 className={`text-base md:text-lg font-extrabold text-slate-800`}>{title}</h3>
                     </header>
                     <p className="mt-2 mr-10 text-sm md:text-[18px] font-medium leading-relaxed text-slate-800">{description}</p>
@@ -427,7 +431,7 @@ const SkipLink = () => (
 /* -------------------------------------------------------------------------- */
 /* Header (bigger items; taller)                                              */
 /* -------------------------------------------------------------------------- */
-function HeaderB() {
+function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [active, setActive] = useState<string>("hero");
@@ -514,6 +518,8 @@ function HeaderB() {
     return (
         <header
             ref={headerRef}
+            style={{ paddingInlineEnd: "var(--sbw, 0px)" }}   // ← add this line
+
             className={cx(
                 "fixed inset-x-0 top-0 z-50 text-white transition",
                 scrolled ? "backdrop-blur-md bg-slate-900/55 ring-1 ring-white/10" : "bg-transparent"
@@ -541,12 +547,14 @@ function HeaderB() {
 
                     {/* Right actions */}
                     <div className="flex items-center gap-2">
-                        <a
-                            href="/login"
+                        {/* Desktop: open Auth modal */}
+                        <button
+                            type="button"
+                            onClick={onOpenAuth}
                             className="hidden sm:inline-flex rounded-xl border border-white/35 px-3.5 py-2 text-[15px] font-extrabold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                         >
                             ورود
-                        </a>
+                        </button>
 
                         {/* Mobile menu button */}
                         <button
@@ -580,7 +588,14 @@ function HeaderB() {
                                 {s.label}
                             </a>
                         ))}
-                        <a href="/login" className={cx(navLink, "border border-white/35 text-center mt-2")} onClick={() => setOpen(false)}>ورود</a>
+                        {/* Mobile: open Auth modal */}
+                        <button
+                            type="button"
+                            onClick={() => { setOpen(false); onOpenAuth(); }}
+                            className={cx(navLink, "border border-white/35 text-center mt-2")}
+                        >
+                            ورود
+                        </button>
                     </nav>
                 </div>
             </Container>
@@ -592,7 +607,7 @@ function HeaderB() {
 /* -------------------------------------------------------------------------- */
 /* Hero (aligned + spaced; divider removed)                                    */
 /* -------------------------------------------------------------------------- */
-function HeroB() {
+function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement> }) {
     return (
         <Section id="hero" className="relative overflow-hidden p-0">
             {/* Background image + overlay */}
@@ -651,6 +666,7 @@ function HeroB() {
                             <div className="mt-8 flex flex-col gap-4 sm:flex-row justify-center">
                                 <CTAButton
                                     href={site.donationUrl}
+                                    target="_blank"
                                     className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-4 md:py-5"
                                     colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
                                     iconLeft={<IconHeartHand className="h-7 w-7" />}
@@ -661,6 +677,7 @@ function HeroB() {
 
                                 <CTAButton
                                     href={site.ambassadorRegistrationUrl}
+                                    onClick={onAmbassadorClick}
                                     className="w-full sm:w-auto flex-1 text-center whitespace-nowrap"
                                     colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35"
                                     iconLeft={<IconShield className="h-7 w-7" />}
@@ -1212,7 +1229,9 @@ export function FinalCTA_B() {
 }
 
 
-export function FinalCTA_C() {
+export function FinalCTA_C({
+    onAmbassadorClick,
+}: { onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement> }) {
     const steps = useMemo(() => ([
         ["۱", "آغاز شما", "bg-white/10", "text-white"],
         ["۲", "روبیتک", "bg-white/10", "text-white"],
@@ -1237,7 +1256,7 @@ export function FinalCTA_C() {
 
                     <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
                         <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
-                        <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-white/20" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
+                        <CTAButton href={site.ambassadorRegistrationUrl} onClick={onAmbassadorClick} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-white/20" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-white/20" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
 
@@ -1413,7 +1432,7 @@ function Footer() {
 
                     {/* Left column: copyright */}
                     <div className="text-xs md:text-sm text-slate-500">
-                        © {new Date().getFullYear()} روبیتک — همهٔ حقوق محفوظ است
+                        © {new Date().getFullYear()} روبیتک — کلیه حقوق محفوظ است
                     </div>
                 </div>
             </Container>
@@ -1427,6 +1446,8 @@ function Footer() {
 /* Page                                                                        */
 /* -------------------------------------------------------------------------- */
 export default function Landing() {
+    const [authOpen, setAuthOpen] = useState(false);
+
     useEffect(() => {
         const els = Array.from(document.querySelectorAll<HTMLElement>('section[id]'));
         const write = () => {
@@ -1444,6 +1465,15 @@ export default function Landing() {
             ro.disconnect();
             window.removeEventListener("resize", write);
         };
+    }, []);
+
+    // Deep-link: open modal on /login or #login
+    useEffect(() => {
+        const path = typeof window !== "undefined" ? window.location.pathname : "";
+        const hash = typeof window !== "undefined" ? window.location.hash : "";
+        if (path === "/login" || hash === "#login") {
+            setAuthOpen(true);
+        }
     }, []);
 
     useEffect(() => {
@@ -1515,20 +1545,37 @@ export default function Landing() {
         };
     }, []);
 
+    const handleAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+        // Let users open in new tab/window if they want
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
 
+        const token = (() => { try { return localStorage.getItem("token"); } catch { return null; } })();
+        if (token) {
+            e.preventDefault();
+            const panelUrl = `${import.meta.env.BASE_URL}dashboard/ambassador`;
+            window.location.assign(panelUrl);
+        } else {
+            e.preventDefault();
+            setAuthOpen(true);
+        }
+    };
     return (
         <main id="main-content" dir="rtl" lang="fa" className="bg-white text-slate-900" style={{ fontFamily: 'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif' }}>
             <SkipLink />
-            <HeaderB />
-            <HeroB />
+            <HeaderB onOpenAuth={() => setAuthOpen(true)} />
+            <HeroB onAmbassadorClick={handleAmbassadorClick} />
             <Solution />
             <SocialProof />
             <Differentiation />
             <FAQ />
             {/* <FinalCTA_B /> */}
-            <FinalCTA_C />
+            <FinalCTA_C onAmbassadorClick={handleAmbassadorClick} />
+
             <Footer />
             <BackToTop />
+
+            {/* Auth Modal mount point */}
+            <AuthModalLikeImage open={authOpen} onClose={() => setAuthOpen(false)} />
         </main>
     );
 }
