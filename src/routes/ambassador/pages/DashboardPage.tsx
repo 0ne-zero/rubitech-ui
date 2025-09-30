@@ -5,7 +5,7 @@ import {
   AlertTriangle,
   UserPlus,
   ClipboardList,
-  Package,
+  Package as PackageIcon,
   Truck,
   Home,
   ChevronLeft,
@@ -15,11 +15,13 @@ import {
   Hash,
   QrCode,
   X,
-  TentIcon,
+  Laptop,
+  FileWarning,
 } from "lucide-react";
 
-import { useAmbassadorData } from "../store";
 import { StatusBadge } from "@/components/ambassador/StatusBadge";
+import { api, type Ambassador, type Teenager, type Package, type DashboardStats } from "@/services/api";
+import { useCached } from "@/hooks/useCached";
 
 /* ----------------------------- UI Primitives ----------------------------- */
 
@@ -36,28 +38,28 @@ function StatCard({
 }) {
   const tones = {
     success: {
-      bg: "bg-gradient-to-br from-white to-[var(--mint-ring)]",
+      bg: "bg-white",
       ring: "ring-[var(--mint-ring)]",
       text: "text-[var(--mint-strong)]",
-      chip: "bg-gradient-to-br from-[var(--mint-grad-from)] to-[var(--mint-grad-to)] text-white",
+      chip: "bg-[var(--mint-strong)] text-white",
     },
     warning: {
-      bg: "bg-gradient-to-br from-white to-[var(--amber-ring)]",
+      bg: "bg-white",
       ring: "ring-[var(--amber-ring)]",
       text: "text-[var(--amber-strong)]",
-      chip: "bg-gradient-to-br from-[var(--amber-grad-from)] to-[var(--amber-grad-to)] text-white",
+      chip: "bg-[var(--amber-strong)] text-white",
     },
     info: {
-      bg: "bg-gradient-to-br from-white to-[var(--sky)]",
+      bg: "bg-white",
       ring: "ring-[var(--sky-ring)]",
       text: "text-[var(--brand)]",
-      chip: "bg-gradient-to-br from-[var(--brand-grad-from)] to-[var(--brand-grad-to)] text-white",
+      chip: "bg-[var(--brand)] text-white",
     },
     default: {
-      bg: "bg-gradient-to-br from-[var(--gray-tint)] to-white",
+      bg: "bg-white",
       ring: "ring-[var(--gray-ring)]",
       text: "text-[var(--text)]",
-      chip: "bg-white text-[var(--text-weak)]",
+      chip: "bg-slate-100 text-[var(--text-weak)]",
     },
   }[tone];
 
@@ -98,12 +100,12 @@ export function SectionCard({
 }) {
   const wrap =
     tone === "warning"
-      ? "from-[var(--amber-ring)] to-[var(--amber-ring)] ring-[var(--amber-ring)]"
-      : "from-[var(--sky)] to-white ring-[var(--sky-ring)]";
+      ? "ring-[var(--amber-ring)]"
+      : "ring-[var(--sky-ring)]";
 
   return (
     <section
-      className={`rounded-2xl ring-1 bg-gradient-to-l ${wrap} p-0 shadow-sm`}
+      className={`rounded-2xl ring-1 ${wrap} bg-white p-0 shadow-sm`}
       style={{ boxShadow: "var(--elevate)" }}
     >
       <div className="px-5 pt-5 pb-3">
@@ -124,67 +126,29 @@ export function SectionCard({
   );
 }
 
-function ChecklistItem({
-  ok,
-  label,
-  value,
-}: {
-  ok: boolean;
-  label: string;
-  value?: string | number;
-}) {
-  return (
-    <li
-      className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 transition border ${ok
-        ? "border-[var(--mint-ring)] bg-gradient-to-l from-[var(--mint-tint)] to-white"
-        : "border-[var(--amber-ring)] bg-gradient-to-l from-[var(--amber-tint)] to-white"
-        }`}
-      style={{ boxShadow: "var(--elevate)" }}
-    >
-      <div className="flex items-center gap-2">
-        {ok ? (
-          <CheckCircle2 className="text-[var(--mint-strong)]" size={18} aria-hidden />
-        ) : (
-          <AlertTriangle className="text-[var(--amber-strong)]" size={18} aria-hidden />
-        )}
-        <span
-          className={`text-sm font-semibold ${ok ? "text-[var(--mint-strong)]" : "text-[var(--amber-strong)]"
-            }`}
-        >
-          {label}
-        </span>
-      </div>
-      {value !== undefined && (
-        <span className={`${ok ? "text-[var(--mint-strong)]" : "text-[var(--amber-strong)]"} text-xs`}>
-          {value}
-        </span>
-      )}
-    </li>
-  );
-}
-
 /* ------------------------------ Helpers ---------------------------------- */
 
+/** Backend stages: reviewing | packaging | shipping | delivered */
 const STEPS = [
-  { key: "approved", label: "تأیید درخواست", icon: <CheckCircle2 size={16} /> },
-  { key: "packaging", label: "بسته‌بندی", icon: <Package size={16} /> },
+  { key: "reviewing", label: "در حال بررسی", icon: <CheckCircle2 size={16} /> },
+  { key: "packaging", label: "بسته‌بندی", icon: <PackageIcon size={16} /> },
   { key: "shipping", label: "ارسال", icon: <Truck size={16} /> },
   { key: "delivered", label: "تحویل", icon: <Home size={16} /> },
 ] as const;
 
-function getActiveIndex(status?: string | null) {
-  const i = STEPS.findIndex((s) => s.key === status);
+function getActiveIndex(stage?: string | null) {
+  const i = STEPS.findIndex((s) => s.key === stage);
   return i < 0 ? null : i;
 }
 
-function statusToBadgeTone(status?: string | null): "success" | "warning" | "info" | "default" {
-  switch (status) {
+function statusToBadgeTone(stage?: string | null): "success" | "warning" | "info" | "default" {
+  switch (stage) {
     case "delivered":
       return "success";
     case "shipping":
     case "packaging":
       return "info";
-    case "approved":
+    case "reviewing":
       return "warning";
     default:
       return "default";
@@ -207,126 +171,96 @@ function formatDate(input?: string | number | Date) {
   }
 }
 
-/* --------------------------- Latest Package Brief ------------------------ */
-
-function MiniProgress({ current }: { current: number }) {
-  return (
-    <div className="relative mt-4">
-      <div className="h-2 w-full rounded-full bg-gradient-to-l from-[var(--gray-ring)] to-[var(--sky-ring)]" />
-      <div
-        className="absolute inset-y-0 right-0 h-2 rounded-full bg-gradient-to-l from-[var(--violet-grad-from)] via-[var(--mint-grad-from)] to-[var(--sky-ring)] shadow-md"
-        style={{ width: `${((current + 1) / STEPS.length) * 100}%` }}
-        aria-hidden
-      />
-      <div className="mt-3 grid grid-cols-4 gap-2 text-[10px] text-[var(--text-weak)]">
-        {STEPS.map((s, i) => (
-          <span
-            key={s.key}
-            className={`flex items-center gap-1 ${i <= current ? "font-extrabold text-[var(--brand)]" : ""}`}
-          >
-            {s.icon}
-            {s.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function LatestPackageBrief({ latest }: { latest: any | null }) {
-  const active = getActiveIndex(latest?.status ?? null);
-  const statusTone = statusToBadgeTone(latest?.status);
-
-  if (!latest || active === null) {
-    return (
-      <div className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--gray-ring)] bg-gradient-to-l from-[var(--gray-tint)] to-white px-4 py-4">
-        <div className="text-sm text-[var(--text-weak)]">هنوز درخواستی ثبت نکرده‌اید.</div>
-        <Link
-          to="/ambassador/packages"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-l from-[var(--rose-grad-from)] to-[var(--rose-grad-to)] px-3 py-2 text-xs font-extrabold text-white hover:opacity-95 transition"
-          aria-label="رفتن به صفحه درخواست‌ها برای ثبت درخواست"
-        >
-          ثبت اولین درخواست
-          <ArrowRTL size={14} />
-        </Link>
-      </div>
-    );
-  }
-
-  const code = latest?.code ?? latest?.id ?? "—";
-  const createdAt = formatDate(latest?.createdAt);
-  const updatedAt = formatDate(latest?.updatedAt);
-  const eta = latest?.eta ? formatDate(latest?.eta) : "—";
-  const itemsCount = latest?.itemsCount ?? latest?.items?.length ?? "—";
-
-  return (
-    <div className="rounded-2xl p-4 gradient-border relative overflow-hidden">
-      <div className="relative rounded-2xl ring-1 ring-white/40 bg-gradient-to-l from-[var(--sky-grad-from)] to-[var(--sky-grad-to)] p-4 glass">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge label={STEPS[active].label} tone={statusTone as any} />
-              <span className="inline-flex items-center gap-1 rounded-lg border border-white/40 bg-white/70 px-2.5 py-1 text-xs text-[var(--text-weak)] glass">
-                <Hash size={14} /> کد:{" "}
-                <span className="font-extrabold text-[var(--brand)]">{code}</span>
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-lg border border-white/40 bg-white/70 px-2.5 py-1 text-xs text-[var(--text-weak)] glass">
-                <ClipboardList size={14} /> اقلام:{" "}
-                <span className="font-extrabold text-[var(--brand)]">{itemsCount}</span>
-              </span>
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-[var(--text-weak)] sm:grid-cols-3">
-              <div className="inline-flex items-center gap-1"><Clock size={14} /> ثبت: {createdAt}</div>
-              <div className="inline-flex items-center gap-1"><Clock size={14} /> بروزرسانی: {updatedAt}</div>
-              <div className="inline-flex items-center gap-1"><Truck size={14} /> ETA: {eta}</div>
-            </div>
-          </div>
-          <div className="shrink-0">
-            <Link
-              to="/ambassador/packages"
-              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-extrabold text-white bg-gradient-to-l from-[var(--brand-grad-from)] to-[var(--brand-grad-to)] hover:opacity-95"
-              aria-label="مشاهده جزئیات بیشتر در صفحه درخواست‌ها"
-            >
-              مشاهده جزئیات
-              <ArrowRTL size={16} />
-            </Link>
-          </div>
-        </div>
-        <MiniProgress current={active} />
-      </div>
-    </div>
-  );
-}
-
 /* --------------------------------- Page --------------------------------- */
 
 export function DashboardPage() {
-  const { profile, teenagers, packages: packages } = useAmbassadorData();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  // ---- Cached reads with keys ----
+  const {
+    data: me,
+    loading: loadingMe,
+    error: errMe,
+  } = useCached<Ambassador>(api.CACHE_KEYS.me.ambassador, api.getMeAmbassador);
+
+  const {
+    data: stats,
+    loading: loadingStats,
+    error: errStats,
+  } = useCached<DashboardStats | null>(
+    api.CACHE_KEYS.dashboard.stats,
+    async () => {
+      try { return await api.getDashboardStats(); }
+      catch { return null; } // dashboard optional
+    }
+  );
+
+  const {
+    data: teens,
+    loading: loadingTeens,
+    error: errTeens,
+  } = useCached<Teenager[]>(api.CACHE_KEYS.teenagers.list, api.listTeenagers);
+
+  const {
+    data: packsRaw,
+    loading: loadingPacks,
+    error: errPacks,
+  } = useCached<Package[]>(
+    api.CACHE_KEYS.packages.list,
+    async () => {
+      const { items } = await api.listPackages();
+      return items;
+    }
+  );
+
+  const loading = loadingMe || loadingStats || loadingTeens || loadingPacks;
+  const err = errMe || errStats || errTeens || errPacks || null;
+
+  // Sort packages newest first, memoized
+  const packs = useMemo<Package[]>(
+    () =>
+      (packsRaw ?? []).slice().sort((a, b) => {
+        const ad = new Date(a.requested_at).getTime();
+        const bd = new Date(b.requested_at).getTime();
+        return bd - ad;
+      }),
+    [packsRaw]
+  );
 
   const verified =
-    profile.email.verified &&
-    profile.phone.verified &&
-    profile.kyc.status === "approved";
+    Boolean(me?.email_verified) &&
+    Boolean(me?.phone_number_verified) &&
+    Boolean(me?.verified_by_rubitech);
 
-  const consented = useMemo(() => teenagers.filter((t) => t.consent).length, [teenagers]);
+  const totalTeens = stats?.total_teenagers ?? (teens?.length ?? 0);
+  const totalPackages = stats?.total_packages ?? (packs?.length ?? 0);
+  const totalReports = stats?.total_reports ?? 0;
 
-  // Status cards
-  const totalTeens = teenagers.length;
-  const totalPackages = packages.length;
-  const incidents = 0;
-
-  // Latest package (assuming newest is first in packages)
-  const latestRequest = packages?.[0] ?? null;
+  // Latest package after sorting (newest first)
+  const latest = packs?.[0] ?? null;
+  const active = getActiveIndex(latest?.stage ?? null);
 
   // Gates for quick-start actions
   const canAddTeens = verified;
-  const canRequestPackage = verified && consented >= 5;
+  const canRequestPackage = verified && totalTeens >= 5;
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   return (
     <div dir="rtl" className="mx-auto space-y-6">
+      {/* ---------- Loading / Error ---------- */}
+      {loading && (
+        <div className="rounded-2xl ring-1 ring-[var(--gray-ring)] bg-white p-4 text-sm text-[var(--text-weak)]">
+          در حال بارگذاری داشبورد...
+        </div>
+      )}
+      {err && !loading && (
+        <div className="rounded-2xl ring-1 ring-[var(--amber-ring)] bg-white p-4 text-sm text-[var(--amber-strong)] flex items-center gap-2">
+          <AlertTriangle size={18} />
+          {String(err)}
+        </div>
+      )}
+
       {/* ---------- Warning Gate (Only when NOT verified) ---------- */}
-      {!verified && (
+      {!verified && !loading && (
         <SectionCard
           tone="warning"
           title={
@@ -336,12 +270,14 @@ export function DashboardPage() {
               <StatusBadge label="نیاز به احراز هویت" tone="warning" />
             </div>
           }
-          subtitle="ابتدا احراز هویت خود را تکمیل کنید. سپس می‌توانید نوجوانان را ثبت‌نام کرده، در نهایت میتوانید بسته‌ای را درخواست کنید."
+          subtitle="ابتدا احراز هویت خود را تکمیل کنید. سپس می‌توانید نوجوانان را ثبت‌نام کرده و در نهایت بسته‌ای را درخواست کنید."
         >
           <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* STEP 1 — Verify */}
-            <li className="rounded-xl border border-transparent ring-1 ring-[var(--rose-ring)] bg-gradient-to-br from-[var(--rose-tint)] to-white px-3 py-3"
-              style={{ boxShadow: "var(--elevate)" }}>
+            <li
+              className="rounded-xl border border-transparent ring-1 ring-[var(--rose-ring)] bg-white px-3 py-3"
+              style={{ boxShadow: "var(--elevate)" }}
+            >
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 text-[var(--rose-strong)] text-sm font-extrabold">
                   <ShieldCheck size={18} />
@@ -349,7 +285,7 @@ export function DashboardPage() {
                 </div>
                 <Link
                   to="/ambassador/profile"
-                  className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold bg-gradient-to-l from-[var(--rose-grad-from)] to-[var(--rose-grad-to)] text-white hover:opacity-95 transition"
+                  className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold bg-[var(--rose-strong)] text-white hover:opacity-95 transition"
                   aria-label="رفتن به پروفایل برای احراز هویت"
                 >
                   شروع
@@ -364,8 +300,8 @@ export function DashboardPage() {
             {/* STEP 2 — Teens */}
             <li
               className={`rounded-xl border border-transparent ring-1 px-3 py-3 ${canAddTeens
-                ? "ring-[var(--sky-ring)] bg-gradient-to-br from-[var(--sky)] to-white"
-                : "ring-[var(--gray-ring)] bg-gradient-to-br from-[var(--gray-tint)] to-white opacity-80"
+                ? "ring-[var(--sky-ring)] bg-white"
+                : "ring-[var(--gray-ring)] bg-white opacity-80"
                 }`}
               style={{ boxShadow: "var(--elevate)" }}
             >
@@ -376,10 +312,10 @@ export function DashboardPage() {
                   مرحله ۲: ثبت‌نام نوجوانان
                 </div>
                 <Link
-                  to="/ambassador/teens"
+                  to="/ambassador/teenagers"
                   className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold transition ${canAddTeens
-                    ? "text-white bg-gradient-to-l from-[var(--brand-grad-from)] to-[var(--brand-grad-to)] hover:opacity-95"
-                    : "bg-white/60 text-[var(--text-weak)] cursor-not-allowed pointer-events-none glass"
+                    ? "text-white bg-[var(--brand)] hover:opacity-95"
+                    : "bg-white text-[var(--text-weak)] cursor-not-allowed pointer-events-none"
                     }`}
                   aria-disabled={!canAddTeens}
                   tabIndex={canAddTeens ? 0 : -1}
@@ -396,8 +332,8 @@ export function DashboardPage() {
             {/* STEP 3 — Request Package */}
             <li
               className={`rounded-xl border border-transparent ring-1 px-3 py-3 ${canRequestPackage
-                ? "ring-[var(--mint-ring)] bg-gradient-to-br from-[var(--mint-tint)] to-white"
-                : "ring-[var(--gray-ring)] bg-gradient-to-br from-[var(--gray-tint)] to-white opacity-80"
+                ? "ring-[var(--mint-ring)] bg-white"
+                : "ring-[var(--gray-ring)] bg-white opacity-80"
                 }`}
               style={{ boxShadow: "var(--elevate)" }}
             >
@@ -409,9 +345,9 @@ export function DashboardPage() {
                 </div>
                 <Link
                   to="/ambassador/packages"
-                  className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold transition ${canRequestPackage
-                    ? "text-white bg-gradient-to-l from-[var(--mint-grad-from)] to-[var(--mint-grad-to)] hover:opacity-95"
-                    : "bg-white/60 text-[var(--text-weak)] cursor-not-allowed pointer-events-none glass"
+                  className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabود transition ${canRequestPackage
+                    ? "text-white bg-[var(--mint-strong)] hover:opacity-95"
+                    : "bg-white text-[var(--text-weak)] cursor-not-allowed pointer-events-none"
                     }`}
                   aria-disabled={!canRequestPackage}
                   tabIndex={canRequestPackage ? 0 : -1}
@@ -429,197 +365,154 @@ export function DashboardPage() {
       )}
 
       {/* ---------- Status Cards ---------- */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard label="نوجوانان ثبت‌نام شده" value={totalTeens} icon={<UserPlus size={20} />} tone="info" />
         <StatCard label="درخواست‌های ثبت‌شده" value={totalPackages} icon={<ClipboardList size={20} />} tone="success" />
-        <StatCard label="حوادث گزارش‌شده" value={incidents} icon={<AlertTriangle size={20} />} tone="warning" />
+        <StatCard label="کل لپ‌تاپ‌ها" value={stats?.total_laptops ?? "—"} icon={<Laptop size={20} />} tone="default" />
+        <StatCard label="گزارش‌ها / حوادث" value={totalReports} icon={<FileWarning size={20} />} tone="warning" />
       </div>
 
-      {/* ---------- Latest Package – Vertical Timeline (refreshed visuals) ---------- */}
-      {(() => {
-        const latest = packages?.[0] ?? null;
-        const active = getActiveIndex(latest?.status ?? null);
-        const currentLabel = active !== null ? STEPS[active].label : "—";
+      {/* ---------- Latest Package – Vertical Timeline ---------- */}
+      <SectionCard
+        title="وضعیت آخرین بسته"
+        subtitle="خلاصه و مراحل پردازش"
+        footer={
+          <div className="flex items-center gap-2">
+            <Link
+              to="/ambassador/packages"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-extrabold text-white bg-slate-900 hover:opacity-95"
+            >
+              بسته‌ها
+              <ChevronLeft size={16} />
+            </Link>
+          </div>
+        }
+      >
+        {latest && active !== null ? (
+          <div className="space-y-6">
+            {/* ID / status header */}
+            <div
+              className="rounded-2xl ring-1 ring-[var(--sky-ring)] bg-white px-4 py-3"
+              style={{ boxShadow: "var(--elevate)" }}
+            >
+              <div className="flex items-center gap-3 text-sm">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white bg-slate-900 ring-1 ring-white/40">
+                  <Hash size={18} />
+                </span>
+                <div className="min-w-0">
+                  <div className="text-[14px] text-[var(--text-weak)]">شناسه بسته</div>
+                  <div className="text-lg font-extrabold tracking-tight text-[var(--brand)] truncate">
+                    {latest.id ?? "—"}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        const fmt = (d?: string | number | Date) =>
-          d
-            ? new Intl.DateTimeFormat("fa-IR", {
-              year: "numeric",
-              month: "short",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            }).format(new Date(d))
-            : "—";
+            {/* Vertical timeline */}
+            <ol className="relative pr-12">
+              {/* spine */}
+              <span
+                className="pointer-events-none absolute right-6 top-2 bottom-2 w-[2.5px] rounded-full bg-[var(--gray-ring)]"
+                aria-hidden
+              />
+              <div className="space-y-4">
+                {STEPS.map((s, idx) => {
+                  const isDone = idx < active;
+                  const isCurrent = idx === active;
 
-        const InfoCard = ({
-          icon,
-          label,
-          value,
-        }: {
-          icon: React.ReactNode;
-          label: string;
-          value: React.ReactNode;
-        }) => (
-          <div className="flex items-center gap-2 rounded-xl border border-white/50 bg-white/70 px-3 py-2 glass ring-1 ring-[var(--gray-ring)]">
-            <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--gray-tint)] to-white ring-1 ring-[var(--gray-ring)]">
-              {icon}
-            </span>
-            <div className="min-w-0">
-              <div className="text-[14px] text-[var(--text-weak)]">{label}</div>
-              <div className="text-sm font-extrabold text-[var(--brand)] truncate">{value}</div>
+                  const nodeBase =
+                    "absolute -right-[10px] top-2 flex h-12 w-12 items-center justify-center rounded-full ring-1";
+                  const nodeColor = isDone
+                    ? "text-white bg-[var(--mint-strong)] ring-transparent"
+                    : isCurrent
+                      ? "text-[var(--mint-strong)] bg-[var(--mint-tint)] ring-[var(--mint-ring)]"
+                      : "text-[var(--text-weak)] bg-white ring-[var(--gray-ring)] border border-dashed";
+
+                  const cardTone = isDone
+                    ? "ring-[var(--mint-ring)] bg-[var(--mint-tint)]"
+                    : isCurrent
+                      ? "ring-[var(--mint-ring)] bg-white"
+                      : "ring-[var(--gray-ring)] bg-white";
+
+                  const titleColor = isDone
+                    ? "text-[var(--mint-strong)] font-semibold"
+                    : isCurrent
+                      ? "text-[var(--mint-strong)] font-extrabold"
+                      : "text-[var(--text-weak)]";
+
+                  return (
+                    <li key={s.key} className="relative pr-6">
+                      {/* node */}
+                      <span className={`${nodeBase} ${nodeColor}`} aria-hidden>
+                        {s.icon}
+                      </span>
+
+                      {/* card */}
+                      <div className="pr-6">
+                        <div
+                          className={`rounded-xl border border-transparent ring-1 ${cardTone} px-4 py-3 shadow-sm`}
+                          style={{ boxShadow: "var(--elevate)" }}
+                        >
+                          <div className={`text-sm flex items-center gap-2 ${titleColor}`}>
+                            {s.label}
+                          </div>
+
+                          <div
+                            className={`mt-1 text-xs ${isCurrent
+                              ? "text-[var(--mint-strong)]"
+                              : isDone
+                                ? "text-[var(--text-weak)]"
+                                : "text-[var(--text-weak)]"
+                              }`}
+                          >
+                            {isCurrent ? "در حال انجام..." : isDone ? "تکمیل شد" : "در صف انجام"}
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </div>
+            </ol>
+
+            {/* Info cards + CTA */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 items-center">
+              <InfoCard icon={STEPS[active].icon} label="وضعیت" value={STEPS[active].label} />
+              <InfoCard icon={<PackageIcon size={16} />} label="نوجوانان" value={latest.requested_teenagers_count ?? (latest.teenager_ids?.length ?? "—")} />
+              <InfoCard icon={<Laptop size={16} />} label="لپ‌تاپ‌های درخواستی" value={latest.requested_laptops_count ?? "—"} />
+              <InfoCard icon={<Clock size={16} />} label="ثبت" value={formatDate(latest.requested_at)} />
+
+              {latest.stage !== "delivered" && (
+                <div className="col-span-2 mt-2 md:col-span-2 flex justify-start">
+                  <button
+                    onClick={() => setShowConfirmModal(true)}
+                    className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-extrabold text-white bg-[var(--mint-strong)] hover:opacity-95"
+                  >
+                    <QrCode size={16} />
+                    تایید دریافت
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        );
-
-        return (
-          <SectionCard
-            title="وضعیت آخرین بسته"
-            subtitle="خلاصه و مراحل پردازش"
-            footer={
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/ambassador/packages"
-                  className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-extrabold text-white bg-slate-900 ring-slate-900/10 hover:opacity-95"
-                >
-                  بسته‌ها
-                  <ChevronLeft size={16} />
-                </Link>
-              </div>
-            }
-          >
-            {latest && active !== null ? (
-              <div className="space-y-6">
-                {/* ID / status header */}
-                <div className="rounded-2xl ring-1 ring-[var(--sky-ring)] bg-gradient-to-l from-[var(--sky)] to-white px-4 py-3 glass"
-                  style={{ boxShadow: "var(--elevate)" }}>
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl text-white bg-gradient-to-br from-[var(--brand-grad-from)] to-[var(--brand-grad-to)] ring-1 ring-white/40">
-                      <Hash size={18} />
-                    </span>
-                    <div className="min-w-0">
-                      <div className="text-[14px] text-[var(--text-weak)]">شناسه بسته</div>
-                      <div className="text-lg font-extrabold tracking-tight text-[var(--brand)] truncate">
-                        {latest.id ?? "—"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Vertical timeline with refined spacing + state colors */}
-                <ol className="relative pr-12">
-                  {/* spine */}
-                  <span
-                    className="pointer-events-none absolute right-6 top-2 bottom-2 w-[2.5px] rounded-full bg-[var(--gray-ring)]"
-                    aria-hidden
-                  />
-                  <div className="space-y-4">
-                    {STEPS.map((s, idx) => {
-                      const isDone = idx < active;
-                      const isCurrent = idx === active;
-                      const isFuture = idx > active;
-
-                      /* ---------- Node styles ---------- */
-                      const nodeBase =
-                        "absolute -right-[10px] top-2 flex h-12 w-12 items-center justify-center rounded-full ring-1";
-                      const nodeColor = isDone
-                        ? "text-white bg-gradient-to-br from-[var(--mint-grad-from)] to-[var(--mint-grad-to)] ring-transparent glow-mint"
-                        : isCurrent
-                          ? // semi green: light bg + mint ring + mint text
-                          "text-[var(--mint-strong)] bg-[var(--mint-tint)] ring-[var(--mint-ring)] pulse-soft"
-                          : // future: hollow with dashed ring
-                          "text-[var(--text-weak)] bg-white ring-[var(--gray-ring)] border border-dashed";
-
-                      /* ---------- Card styles ---------- */
-                      const cardTone = isDone
-                        ? "ring-[var(--mint-ring)] bg-gradient-to-l from-[var(--mint-tint)] to-white"
-                        : isCurrent
-                          ? "ring-[var(--mint-ring)] bg-white"
-                          : "ring-[var(--gray-ring)] bg-white/70";
-                      const titleColor = isDone
-                        ? "text-[var(--mint-strong)] font-semibold"
-                        : isCurrent
-                          ? "text-[var(--mint-strong)] font-extrabold"
-                          : "text-[var(--text-weak)]";
-
-                      return (
-                        <li key={s.key} className="relative pr-6">
-                          {/* node */}
-                          <span className={`${nodeBase} ${nodeColor}`} aria-hidden>
-                            {s.icon}
-                          </span>
-
-                          {/* card */}
-                          <div className="pr-6">
-                            <div
-                              className={`rounded-xl border border-transparent ring-1 ${cardTone} px-4 py-3 shadow-sm`}
-                              style={{ boxShadow: "var(--elevate)" }}
-                            >
-                              <div className={`text-sm flex items-center gap-2 ${titleColor}`}>
-
-                                {s.label}
-                              </div>
-
-                              <div
-                                className={`mt-1 text-xs ${isCurrent
-                                  ? "text-[var(--mint-strong)]"
-                                  : isDone
-                                    ? "text-[var(--text-weak)]"
-                                    : "text-[var(--text-weak)]"
-                                  }`}
-                              >
-                                {isCurrent ? "در حال انجام..." : isDone ? "تکمیل شد" : "در صف انجام"}
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </div>
-                </ol>
-
-
-                {/* Info cards + CTA */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 items-center">
-                  <InfoCard icon={STEPS[active].icon} label="وضعیت" value={currentLabel} />
-                  <InfoCard icon={<Package size={16} />} label="اقلام" value={latest.quantity ?? "—"} />
-                  <InfoCard icon={<Clock size={16} />} label="ثبت" value={fmt(latest.createdAt)} />
-                  {/* <InfoCard icon={<Truck size={16} />} label="ETA" value={fmt(latest.eta)} /> */}
-
-                  {latest.status !== "delivered" && (
-                    <div className="col-span-2 md:col-span-2 flex justify-end">
-                      <button
-                        onClick={() => setShowConfirmModal(true)}
-                        className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-extrabold text-white bg-gradient-to-l from-[var(--mint-grad-from)] to-[var(--mint-grad-to)] hover:opacity-95"
-                      >
-                        <QrCode size={16} />
-                        تایید دریافت
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            ) : (
-              <div className="flex items-center justify-between gap-3 rounded-2xl ring-1 ring-[var(--gray-ring)] bg-gradient-to-l from-[var(--gray-tint)] to-white px-4 py-4">
-                <div className="text-sm text-[var(--text-weak)]">هنوز درخواستی ثبت نکرده‌اید.</div>
-                <Link
-                  to="/ambassador/packages"
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-l from-[var(--brand-grad-from)] to-[var(--brand-grad-to)] px-3 py-2 text-xs font-extrabold text-white hover:opacity-95"
-                >
-                  ثبت اولین درخواست
-                  <ChevronLeft size={14} />
-                </Link>
-              </div>
-            )}
-          </SectionCard>
-        );
-      })()}
+        ) : (
+          <div className="flex items-center justify-between gap-3 rounded-2xl ring-1 ring-[var(--gray-ring)] bg-white px-4 py-4">
+            <div className="text-sm text-[var(--text-weak)]">هنوز درخواستی ثبت نکرده‌اید.</div>
+            <Link
+              to="/ambassador/packages"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3 py-2 text-xs font-extrabold text-white hover:opacity-95"
+            >
+              ثبت اولین درخواست
+              <ChevronLeft size={14} />
+            </Link>
+          </div>
+        )}
+      </SectionCard>
 
       {/* ---------- Confirm Delivery Modal ---------- */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md rounded-2xl bg-gradient-to-br from-white to-[var(--gray-tint)] p-6 shadow-xl ring-1 ring-[var(--gray-ring)]">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl ring-1 ring-[var(--gray-ring)]">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-[var(--brand)]">تایید دریافت بسته</h2>
               <button onClick={() => setShowConfirmModal(false)} aria-label="بستن">
@@ -640,7 +533,7 @@ export function DashboardPage() {
                 onClick={() => {
                   setShowConfirmModal(false);
                 }}
-                className="px-4 py-2 text-sm rounded-xl text-white bg-gradient-to-l from-[var(--mint-grad-from)] to-[var(--mint-grad-to)] hover:opacity-95"
+                className="px-4 py-2 text-sm rounded-xl text-white bg-[var(--mint-strong)] hover:opacity-95"
               >
                 متوجه شدم
               </button>
@@ -648,6 +541,29 @@ export function DashboardPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* -------- Small local component: InfoCard -------- */
+function InfoCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-[var(--gray-ring)] bg-white px-3 py-2">
+      <span className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 ring-1 ring-[var(--gray-ring)]">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <div className="text-[14px] text-[var(--text-weak)]">{label}</div>
+        <div className="text-sm font-extrabold text-[var(--brand)] truncate">{value}</div>
+      </div>
     </div>
   );
 }

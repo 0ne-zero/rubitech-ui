@@ -1,6 +1,6 @@
 import React from "react";
 
-type Tone = "success" | "warning" | "info" | "danger" | "neutral";
+export type Tone = "success" | "warning" | "info" | "danger" | "neutral";
 
 interface StatusBadgeProps {
   label: string;
