@@ -16,11 +16,11 @@ export default function App() {
   return (
     <Routes>
       {/* Ambassador panel WITHOUT site header/footer */}
-      <Route path={`${import.meta.env.BASE_URL}ambassador/*`} element={<AmbassadorApp />} />
+      <Route path={`${import.meta.env.BASE_URL}dashboard/ambassador/*`} element={<AmbassadorApp />} />
 
       {/* Everything else uses the site layout */}
       <Route element={<SiteLayout />}>
-        <Route path={`${import.meta.env.BASE_URL}/`} element={<HomePage />} />
+        <Route path={`${import.meta.env.BASE_URL}`} element={<HomePage />} />
       </Route>
     </Routes>
   );
