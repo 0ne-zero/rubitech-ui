@@ -1,10 +1,19 @@
-import { Partner } from "../types/common";
+import React from "react";
+export type IconLike = React.ComponentType<{ className?: string }>;
 
-export const partners: readonly Partner[] = [
+export type Partner = {
+  logoUrl: string;
+  name: string;
+  description: string;
+  url: string;
+};
+
+
+export const partners: Partner[] = [
   {
     logoUrl: `${import.meta.env.BASE_URL}/images/logos/rubikamp.jpg`,
     name: "روبیکمپ",
-    description: "بورسیه و فراهم‌سازی مسیر رشد برای نوجوانان شایسته.",
+    description: "بورسیه و فراهم‌سازی مسیر رشد برای نوجوانان بااستعداد.",
     url: "https://rubikamp.org/?utm_source=rubitech",
   },
   {
