@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { StatusBadge } from "@/components/ambassador/StatusBadge";
-import { useAmbassadorData } from "../store";
+import { StatusBadge, Tone } from "@/components/ambassador/StatusBadge";
+import { useCached } from "@/hooks/useCached";
+import { api, type Ambassador, type Teenager, type Package as ApiPackage, type PackageStage, CACHE_KEYS } from "@/services/api";
 import {
   Package as PackageIcon,
   Search,
@@ -19,46 +20,13 @@ import {
   Save,
 } from "lucide-react";
 
-/* ----------------------------- Types & Utils ----------------------------- */
-
-type PkgStatus =
-  | "draft"
-  | "submitted"
-  | "review"
-  | "approved"
-  | "rejected"
-  | "shipped"
-  | "delivered";
-
-type Pkg = {
-  id: string;
-  quantity: number; // تعداد بسته
-  teens: number; // تعداد نوجوان
-  createdAt: string; // fa-IR date
-  status: PkgStatus;
-  teenIds?: string[];
-};
-
-type Teen = {
-  id: string;
-  name: string;
-  dob: string;
-  city: string;
-  region: string;
-  school: string;
-  guardian: string;
-  guardianPhone: string;
-  talent: string;
-  consent: boolean;
-  status: "draft" | "submitted" | "review" | "approved" | "rejected";
-};
+/* ----------------------------- Utils ----------------------------- */
 
 function cn(...xs: Array<string | false | null | undefined>) {
   return xs.filter(Boolean).join(" ");
 }
 function toEnDigits(str = "") {
-  const fa = "۰۱۲۳۴۵۶۷۸۹",
-    ar = "٠١٢٣٤٥٦٧٨٩";
+  const fa = "۰۱۲۳۴۵۶۷۸۹", ar = "٠١٢٣٤٥٦٧٩";
   return String(str).replace(/[۰-۹٠-٩]/g, (d) => {
     const iFa = fa.indexOf(d);
     if (iFa > -1) return String(iFa);
@@ -67,102 +35,15 @@ function toEnDigits(str = "") {
     return d;
   });
 }
-function jalaliAge(j: string): string {
-  if (!j) return "—";
-  const m = j.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+function gregorianAge(yyyyMmDd: string | null | undefined): string {
+  if (!yyyyMmDd) return "—";
+  const m = yyyyMmDd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return "—";
-  const jy = parseInt(m[1], 10);
-  const gy = jy + 621; // rough conversion
+  const by = parseInt(m[1], 10);
   const now = new Date().getFullYear();
-  return String(Math.max(0, now - gy));
+  return String(Math.max(0, now - by));
 }
-
-/* ----------------------------- Status labels/tones ----------------------------- */
-
-function pkgStatusLabel(s: PkgStatus) {
-  return s === "approved"
-    ? "تأیید شد"
-    : s === "review"
-      ? "در حال بررسی"
-      : s === "submitted"
-        ? "ارسال شد"
-        : s === "rejected"
-          ? "رد شد"
-          : s === "shipped"
-            ? "ارسال شد (لجستیک)"
-            : s === "delivered"
-              ? "تحویل شد"
-              : "پیش‌نویس";
-}
-function pkgStatusTone(
-  s: PkgStatus
-): "success" | "warning" | "danger" | "info" | "neutral" {
-  return s === "approved" || s === "delivered"
-    ? "success"
-    : s === "review"
-      ? "warning"
-      : s === "submitted" || s === "shipped"
-        ? "info"
-        : s === "rejected"
-          ? "danger"
-          : "neutral";
-}
-function statusProgress(s: PkgStatus) {
-  switch (s) {
-    case "draft":
-      return 10;
-    case "submitted":
-      return 30;
-    case "review":
-      return 55;
-    case "approved":
-      return 75;
-    case "shipped":
-      return 90;
-    case "delivered":
-    case "rejected":
-      return 100;
-    default:
-      return 0;
-  }
-}
-
-/* ----------------------------- "Latest-like" brief helpers ----------------------------- */
-/** Steps like Dashboard */
-const STEPS = [
-  { key: "approved", label: "تأیید درخواست", icon: <Check size={16} /> },
-  { key: "packaging", label: "بسته‌بندی", icon: <PackageIcon size={16} /> },
-  { key: "shipping", label: "ارسال", icon: <Truck size={16} /> },
-  { key: "delivered", label: "تحویل", icon: <Calendar size={16} /> },
-] as const;
-
-/** Map package status to the dashboard-like steps index */
-function getActiveIndexForPkg(status: PkgStatus): number | null {
-  // Before approval (submitted/review/draft) -> still pre-steps
-  if (status === "submitted" || status === "review" || status === "draft")
-    return null;
-  if (status === "approved") return 0;
-  if (status === "shipped") return 2;
-  if (status === "delivered") return 3;
-  if (status === "rejected") return 0; // terminal but show at start
-  return null;
-}
-function statusToBadgeToneForSteps(
-  status?: string | null
-): "success" | "warning" | "info" | "default" {
-  switch (status) {
-    case "delivered":
-      return "success";
-    case "shipping":
-    case "packaging":
-      return "info";
-    case "approved":
-      return "warning";
-    default:
-      return "default";
-  }
-}
-function formatFaDate(input?: string | number | Date) {
+function formatFaDate(input?: string | number | Date | null) {
   if (!input) return "—";
   try {
     const d = new Date(input);
@@ -177,21 +58,80 @@ function formatFaDate(input?: string | number | Date) {
     return String(input);
   }
 }
+
+/* ----------------------------- Stage labels/tones ----------------------------- */
+
+const STAGE_STEPS = [
+  { key: "reviewing", label: "در حال بررسی", icon: <Check size={16} /> },
+  { key: "packaging", label: "بسته‌بندی", icon: <PackageIcon size={16} /> },
+  { key: "shipping", label: "ارسال", icon: <Truck size={16} /> },
+  { key: "delivered", label: "تحویل شده", icon: <Calendar size={16} /> },
+] as const;
+
+function stageLabel(s?: PackageStage | null) {
+  switch (s) {
+    case "reviewing": return "در حال بررسی";
+    case "packaging": return "بسته‌بندی";
+    case "shipping": return "ارسال";
+    case "delivered": return "تحویل شده";
+    default: return "—";
+  }
+}
+function stageTone(
+  s?: PackageStage | null
+): Tone {
+  switch (s) {
+    case "delivered": return "success";
+    case "shipping":
+    case "packaging": return "info";
+    case "reviewing": return "warning";
+    default: return "neutral";
+  }
+}
+function stageProgress(s?: PackageStage | null) {
+  switch (s) {
+    case "reviewing": return 25;
+    case "packaging": return 50;
+    case "shipping": return 75;
+    case "delivered": return 100;
+    default: return 0;
+  }
+}
+function stageIndex(s?: PackageStage | null): number | null {
+  switch (s) {
+    case "reviewing": return 0;
+    case "packaging": return 1;
+    case "shipping": return 2;
+    case "delivered": return 3;
+    default: return null;
+  }
+}
+function statusToBadgeToneForSteps(
+  s?: PackageStage | null
+): "success" | "warning" | "info" | "default" {
+  switch (s) {
+    case "delivered": return "success";
+    case "shipping":
+    case "packaging": return "info";
+    case "reviewing": return "warning";
+    default: return "default";
+  }
+}
+
 function MiniProgress({ current }: { current: number }) {
   return (
     <div className="relative mt-4">
       <div className="h-2 w-full rounded-full bg-gradient-to-l from-[var(--gray-ring)] to-[var(--sky-ring)]" />
       <div
         className="absolute inset-y-0 right-0 h-2 rounded-full bg-gradient-to-l from-[var(--violet-grad-from)] via-[var(--mint-grad-from)] to-[var(--sky-ring)] shadow-md"
-        style={{ width: `${((current + 1) / STEPS.length) * 100}%` }}
+        style={{ width: `${((current + 1) / STAGE_STEPS.length) * 100}%` }}
         aria-hidden
       />
       <div className="mt-3 grid grid-cols-4 gap-2 text-[10px] text-[var(--text-weak)]">
-        {STEPS.map((s, i) => (
+        {STAGE_STEPS.map((s, i) => (
           <span
             key={s.key}
-            className={`flex items-center gap-1 ${i <= current ? "font-extrabold text-[var(--brand)]" : ""
-              }`}
+            className={`flex items-center gap-1 ${i <= current ? "font-extrabold text-[var(--brand)]" : ""}`}
           >
             {s.icon}
             {s.label}
@@ -202,7 +142,7 @@ function MiniProgress({ current }: { current: number }) {
   );
 }
 
-/* ----------------------------- Primitives (Teen-page style) ----------------------------- */
+/* ----------------------------- Primitives ----------------------------- */
 
 function SectionCard({
   title,
@@ -350,7 +290,7 @@ function HeaderControls({
   );
 }
 
-/* ----------------------------- Cards Grid (3-in-row) ----------------------------- */
+/* ----------------------------- Cards Grid ----------------------------- */
 
 function PackageCard({
   p,
@@ -358,12 +298,15 @@ function PackageCard({
   onCancel,
   teenNameLookup,
 }: {
-  p: Pkg;
+  p: ApiPackage;
   onOpen: () => void;
   onCancel: () => void;
-  teenNameLookup: (id: string) => string | undefined;
+  teenNameLookup: (id: number) => string | undefined;
 }) {
-  const prog = statusProgress(p.status);
+  const prog = stageProgress(p.stage);
+  const teensCount = p.requested_teenagers_count ?? (p.teenager_ids?.length ?? 0);
+  const qty = p.requested_laptops_count ?? teensCount ?? 0;
+
   return (
     <div
       className="relative rounded-2xl p-4 transition hover:shadow-lg ring-1 ring-slate-200 bg-white/95 cursor-pointer"
@@ -383,18 +326,18 @@ function PackageCard({
           </div>
           <div className="text-xs text-slate-600 mt-0.5 flex items-center gap-1">
             <Calendar size={14} className="text-slate-400" />
-            {p.createdAt || "—"}
+            {formatFaDate(p.requested_at)}
           </div>
         </div>
-        <StatusBadge label={pkgStatusLabel(p.status)} tone={pkgStatusTone(p.status)} />
+        <StatusBadge label={stageLabel(p.stage)} tone={stageTone(p.stage)} />
       </div>
 
       <div className="mt-3 grid grid-cols-3 text-sm text-slate-600">
         <div>
-          تعداد: <span className="text-slate-800">{p.quantity ?? 5}</span>
+          تعداد: <span className="text-slate-800">{qty}</span>
         </div>
         <div>
-          نوجوانان: <span className="text-slate-800">{p.teens ?? 5} نفر</span>
+          نوجوانان: <span className="text-slate-800">{teensCount} نفر</span>
         </div>
         <div className="truncate">
           شناسه: <span className="text-slate-800">{p.id}</span>
@@ -402,10 +345,10 @@ function PackageCard({
       </div>
 
       {/* teen pills (first 3) */}
-      {!!p.teenIds?.length && (
+      {!!p.teenager_ids?.length && (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {p.teenIds.slice(0, 3).map((tid) => {
-            const name = teenNameLookup(tid) || tid;
+          {p.teenager_ids.slice(0, 3).map((tid) => {
+            const name = teenNameLookup(tid) || String(tid);
             const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("");
             return (
               <span
@@ -419,8 +362,8 @@ function PackageCard({
               </span>
             );
           })}
-          {p.teenIds.length > 3 && (
-            <span className="text-[11px] text-slate-500">+{p.teenIds.length - 3}</span>
+          {(p.teenager_ids?.length ?? 0) > 3 && (
+            <span className="text-[11px] text-slate-500">+{(p.teenager_ids!.length) - 3}</span>
           )}
         </div>
       )}
@@ -430,10 +373,7 @@ function PackageCard({
         <div className="mb-1 text-[11px] text-slate-500">پیشرفت</div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
           <div
-            className={cn(
-              "h-full rounded-full transition-all",
-              p.status === "rejected" ? "bg-rose-400" : "bg-emerald-500"
-            )}
+            className={cn("h-full rounded-full transition-all", p.stage === "delivered" ? "bg-emerald-500" : "bg-emerald-500")}
             style={{ width: `${prog}%` }}
           />
         </div>
@@ -450,7 +390,7 @@ function PackageCard({
         >
           مشاهده جزئیات
         </button>
-        {(p.status === "submitted" || p.status === "review") && (
+        {p.stage === "reviewing" && (
           <button
             onClick={onCancel}
             className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-sm border border-rose-200 text-white bg-[var(--rose)] hover:bg-[var(--rose-strong)]"
@@ -464,17 +404,18 @@ function PackageCard({
   );
 }
 
-/* ----------------------------- Select Teens (for creating/attaching) ----------------------------- */
+/* ----------------------------- Select Teens ----------------------------- */
 
 function TeenPick({
   t,
   checked,
   onToggle,
 }: {
-  t: Teen;
+  t: Teenager;
   checked: boolean;
   onToggle: () => void;
 }) {
+  const name = t.full_name ?? `#${t.id}`;
   return (
     <label
       className={cn(
@@ -487,9 +428,9 @@ function TeenPick({
           <User2 size={16} />
         </div>
         <div>
-          <div className="font-medium text-slate-900">{t.name}</div>
+          <div className="font-medium text-slate-900">{name}</div>
           <div className="text-[11px] text-slate-600">
-            سن: {jalaliAge(t.dob)} • {t.school}
+            سن: {gregorianAge(t.date_of_birth || "")}
           </div>
         </div>
       </div>
@@ -501,15 +442,61 @@ function TeenPick({
 /* ----------------------------- Main Page ----------------------------- */
 
 export function PackagesPage() {
-  const { profile, teenagers = [], packages = [], setPackages } =
-    useAmbassadorData() as {
-      profile: any;
-      teenagers: Teen[];
-      packages: Pkg[];
-      setPackages: React.Dispatch<React.SetStateAction<Pkg[]>>;
-    };
+  // Load data via cache-aware hook
+  const { data: me } = useCached<Ambassador>(CACHE_KEYS.me.ambassador, api.getMeAmbassador);
+  const { data: teensData } = useCached<Teenager[]>(CACHE_KEYS.teenagers.list, api.listTeenagers);
+  const { data: packagesCached } = useCached<ApiPackage[]>(CACHE_KEYS.packages.list, () => api.listPackages().then((r) => r.items));
 
-  const isVerified = profile?.kyc?.status === "approved";
+  const teenagers = teensData ?? [];
+  const [packages, setPackages] = useState<ApiPackage[]>(packagesCached ?? []);
+
+  // --- compute locked & usable teenagers for "new package" flow ---
+  const teenIdsLocked = useMemo(() => {
+    const s = new Set<number>();
+    (packages || []).forEach((p) => (p.teenager_ids || []).forEach((id) => s.add(id)));
+    return s;
+  }, [packages]);
+
+  const usableTeens = useMemo(
+    () => (teenagers || []).filter((t) => !teenIdsLocked.has(t.id)),
+    [teenagers, teenIdsLocked]
+  );
+
+  const usableTeenIdsSet = useMemo(
+    () => new Set(usableTeens.map((t) => t.id)),
+    [usableTeens]
+  );
+  // ---------------------------------------------------------------------
+
+  // Detail edit (attach/edit teens)
+  const [editTeens, setEditTeens] = useState(false);
+  const [editTeenIds, setEditTeenIds] = useState<number[]>([]);
+
+  // Currently opened package
+  const [selectedPkg, setSelectedPkg] = useState<ApiPackage | null>(null);
+
+  // --- NEW: compute editable teens for edit modal (free + current package teens)
+  const editableTeens = useMemo(() => {
+    if (!selectedPkg) return [] as Teenager[];
+    const allowed = new Set<number>(usableTeens.map((t) => t.id));
+    (selectedPkg.teenager_ids || []).forEach((id) => allowed.add(id));
+    return (teenagers || []).filter((t) => allowed.has(t.id));
+  }, [selectedPkg, usableTeens, teenagers]);
+
+  const editableTeenIdsSet = useMemo(
+    () => new Set(editableTeens.map((t) => t.id)),
+    [editableTeens]
+  );
+  // ---------------------------------------------------------------------
+
+  // Sync from cache when it arrives first time
+  useEffect(() => {
+    if (packagesCached && packages.length === 0) {
+      setPackages(packagesCached);
+    }
+  }, [packagesCached]);
+
+  const isVerified = !!me?.verified_by_rubitech;
   const hasFiveTeens = teenagers.length >= 5;
 
   const unmet: Array<{ text: string; href: string; cta: string }> = [];
@@ -528,97 +515,84 @@ export function PackagesPage() {
 
   const [query, setQuery] = useState("");
   const [openCreate, setOpenCreate] = useState(false);
-  const [selectedPkg, setSelectedPkg] = useState<Pkg | null>(null);
 
-  // Create flow (no contract)
-  const [selTeenIds, setSelTeenIds] = useState<string[]>([]);
+  // Create flow
+  const [selTeenIds, setSelTeenIds] = useState<number[]>([]);
 
-  // Detail edit (attach/edit teens)
-  const [editTeens, setEditTeens] = useState(false);
-  const [editTeenIds, setEditTeenIds] = useState<string[]>([]);
-
-  const teenNameLookup = (id: string) =>
-    teenagers.find((t) => t.id === id)?.name;
+  const teenNameLookup = (id: number) =>
+    teenagers.find((t) => t.id === id)?.full_name;
 
   // Sync editable teen ids when opening a package
   useEffect(() => {
     if (selectedPkg) {
       setEditTeens(false);
-      setEditTeenIds(selectedPkg.teenIds ? [...selectedPkg.teenIds] : []);
+      setEditTeenIds(selectedPkg.teenager_ids ? [...selectedPkg.teenager_ids] : []);
     }
   }, [selectedPkg]);
 
-  // Filter list like teenagers page
+  // Filter list
   const list = useMemo(() => {
     const q = toEnDigits(query.trim().toLowerCase());
     let arr = packages || [];
     if (!q) return arr;
     return arr.filter((p) => {
       const idMatch = toEnDigits(String(p.id)).toLowerCase().includes(q);
-      const teenNames =
-        (p.teenIds || []).map((tid) => teenNameLookup(tid) || "").join(" ");
+      const teenNames = (p.teenager_ids || [])
+        .map((tid) => teenNameLookup(tid) || "")
+        .join(" ");
       return idMatch || teenNames.toLowerCase().includes(q);
     });
   }, [packages, query, teenagers]);
 
-  function openView(p: Pkg) {
+  function openView(p: ApiPackage) {
     setSelectedPkg(p);
   }
 
-  function withdraw(pkgId: string) {
-    setPackages((prev) =>
-      (prev || []).map((p) =>
-        p.id === pkgId && (p.status === "submitted" || p.status === "review")
-          ? {
-            ...p,
-            status: "rejected",
-          }
-          : p
-      )
-    );
-    setSelectedPkg((s) =>
-      s?.id === pkgId ? ({ ...(s as Pkg), status: "rejected" } as Pkg) : s
-    );
+  async function withdraw(pkgId: number) {
+    // Backend doesn't have "reject" action; use delete as "withdraw"
+    await api.deletePackage(pkgId);
+    setPackages((prev) => (prev || []).filter((p) => p.id !== pkgId));
+    setSelectedPkg((s) => (s?.id === pkgId ? null : s));
   }
 
-  function createPackage() {
-    if (selTeenIds.length !== 5) return;
-    const id = `د-${Math.floor(100 + Math.random() * 900)}`;
-    const createdAt = new Date().toLocaleDateString("fa-IR");
-    const item: Pkg = {
-      id,
-      quantity: 5,
-      teens: 5,
-      createdAt,
-      status: "submitted",
-      teenIds: selTeenIds.slice(0, 5),
-    };
-    setPackages((prev) => [item, ...(prev || [])]);
+  async function createPackage() {
+    if (selTeenIds.length !== 5 || !me?.id) return;
+    // Safety: ensure all chosen teens are still usable at the moment of submit
+    if (!selTeenIds.every((id) => usableTeenIdsSet.has(id))) return;
+
+    const created = await api.createPackage({
+      ambassador_id: me.id,
+      teenager_ids: selTeenIds.slice(0, 5),
+    });
+    setPackages((prev) => [created, ...(prev || [])]);
     setOpenCreate(false);
     setSelTeenIds([]);
   }
 
-  const canCreate = selTeenIds.length === 5;
+  // Enforce usable teen IDs for creation
+  const canCreate =
+    selTeenIds.length === 5 &&
+    selTeenIds.every((id) => usableTeenIdsSet.has(id)) &&
+    !!me?.id;
 
   // Save teens attachment from details modal
   const canAttachSave =
     editTeenIds.length === 5 &&
     !!selectedPkg &&
-    ["draft", "submitted", "review"].includes(selectedPkg.status);
+    selectedPkg.stage === "reviewing" &&
+    editTeenIds.every((id) => editableTeenIdsSet.has(id));
 
-  function saveAttachedTeens() {
+  async function saveAttachedTeens() {
     if (!selectedPkg) return;
-    if (editTeenIds.length !== 5) return;
+    if (!canAttachSave) return;
+    const updated = await api.updatePackage(selectedPkg.id, {
+      teenager_ids: [...editTeenIds],
+      requested_teenagers_count: 5,
+    });
     setPackages((prev) =>
-      (prev || []).map((p) =>
-        p.id === selectedPkg.id
-          ? { ...p, teenIds: [...editTeenIds], teens: editTeenIds.length }
-          : p
-      )
+      (prev || []).map((p) => (p.id === selectedPkg.id ? updated : p))
     );
-    setSelectedPkg((p) =>
-      p ? { ...p, teenIds: [...editTeenIds], teens: editTeenIds.length } : p
-    );
+    setSelectedPkg(updated);
     setEditTeens(false);
   }
 
@@ -670,7 +644,7 @@ export function PackagesPage() {
           />
         </div>
 
-        {/* Cards like teenagers page, 3 in a row */}
+        {/* Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {list.map((p) => (
             <PackageCard
@@ -690,7 +664,7 @@ export function PackagesPage() {
         </div>
       </SectionCard>
 
-      {/* Create modal (no contract confirmation) */}
+      {/* Create modal */}
       <Modal
         open={openCreate}
         onClose={() => {
@@ -726,31 +700,37 @@ export function PackagesPage() {
         }
       >
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {teenagers.map((t) => {
-              const checked = selTeenIds.includes(t.id);
-              return (
-                <TeenPick
-                  key={t.id}
-                  t={t}
-                  checked={checked}
-                  onToggle={() =>
-                    setSelTeenIds((prev) =>
-                      checked
-                        ? prev.filter((x) => x !== t.id)
-                        : prev.length < 5
-                          ? [...prev, t.id]
-                          : prev
-                    )
-                  }
-                />
-              );
-            })}
-          </div>
+          {usableTeens.length === 0 ? (
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+              هیچ نوجوان قابل انتخابی وجود ندارد. برخی نوجوانان شما در بسته‌های دیگر هستند.
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {usableTeens.map((t) => {
+                const checked = selTeenIds.includes(t.id);
+                return (
+                  <TeenPick
+                    key={t.id}
+                    t={t}
+                    checked={checked}
+                    onToggle={() =>
+                      setSelTeenIds((prev) =>
+                        checked
+                          ? prev.filter((x) => x !== t.id)
+                          : prev.length < 5
+                            ? [...prev, t.id]
+                            : prev
+                      )
+                    }
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </Modal>
 
-      {/* View (details) modal — with "Latest-like" brief & connected teens (editable) */}
+      {/* View (details) modal */}
       <Modal
         open={!!selectedPkg}
         onClose={() => setSelectedPkg(null)}
@@ -759,8 +739,8 @@ export function PackagesPage() {
             <span className="inline-flex items-center gap-2">
               پرونده بسته — {selectedPkg.id}
               <StatusBadge
-                label={pkgStatusLabel(selectedPkg.status)}
-                tone={pkgStatusTone(selectedPkg.status)}
+                label={stageLabel(selectedPkg.stage)}
+                tone={stageTone(selectedPkg.stage)}
               />
             </span>
           ) : (
@@ -773,21 +753,20 @@ export function PackagesPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs text-slate-500">
                 <Calendar size={14} />
-                {selectedPkg.createdAt || "—"}
+                {formatFaDate(selectedPkg.requested_at)}
               </div>
               <div className="flex items-center gap-2">
-                {(selectedPkg.status === "submitted" ||
-                  selectedPkg.status === "review") && (
-                    <button
-                      onClick={() => {
-                        if (confirm("لغو این درخواست؟")) withdraw(selectedPkg.id);
-                      }}
-                      className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold border border-rose-200 text-rose-700 hover:bg-rose-50"
-                    >
-                      لغو
-                      <Trash2 size={16} />
-                    </button>
-                  )}
+                {selectedPkg.stage === "reviewing" && (
+                  <button
+                    onClick={() => {
+                      if (confirm("لغو این درخواست؟")) withdraw(selectedPkg.id);
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold border border-rose-200 text-rose-700 hover:bg-rose-50"
+                  >
+                    لغو
+                    <Trash2 size={16} />
+                  </button>
+                )}
                 <button
                   onClick={() => setSelectedPkg(null)}
                   className="px-4 py-2 rounded-xl border border-slate-300 text-sm"
@@ -801,17 +780,12 @@ export function PackagesPage() {
       >
         {selectedPkg && (
           <div className="space-y-4">
-            {/* ---------- Brief header like Dashboard ---------- */}
+            {/* ---------- Brief header ---------- */}
             {(() => {
-              const stepIndex = getActiveIndexForPkg(selectedPkg.status);
-              const hasSteps = stepIndex !== null;
-              const currentLabel =
-                hasSteps && stepIndex! >= 0
-                  ? STEPS[stepIndex!].label
-                  : "در انتظار تأیید";
-              const currentKey =
-                hasSteps && stepIndex! >= 0 ? STEPS[stepIndex!].key : null;
-              const tone = statusToBadgeToneForSteps(currentKey);
+              const sIdx = stageIndex(selectedPkg.stage);
+              const hasSteps = sIdx !== null;
+              const currentLabel = hasSteps && sIdx! >= 0 ? STAGE_STEPS[sIdx!].label : "—";
+              const tone = statusToBadgeToneForSteps(selectedPkg.stage);
 
               return (
                 <div
@@ -832,22 +806,25 @@ export function PackagesPage() {
                           <span className="inline-flex items-center gap-1 rounded-lg border border-white/40 bg-white/70 px-2.5 py-1 text-xs text-[var(--text-weak)] glass">
                             <ClipboardList size={14} /> اقلام:{" "}
                             <span className="font-extrabold text-[var(--brand)]">
-                              {selectedPkg.quantity ?? "—"}
+                              {selectedPkg.requested_laptops_count ??
+                                selectedPkg.requested_teenagers_count ??
+                                selectedPkg.teenager_ids?.length ??
+                                "—"}
                             </span>
                           </span>
                         </div>
                         <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-[var(--text-weak)] sm:grid-cols-3">
                           <div className="inline-flex items-center gap-1">
-                            <Clock size={14} /> ثبت: {formatFaDate(selectedPkg.createdAt)}
+                            <Clock size={14} /> ثبت: {formatFaDate(selectedPkg.requested_at)}
                           </div>
                         </div>
                       </div>
                     </div>
                     {hasSteps ? (
-                      <MiniProgress current={stepIndex!} />
+                      <MiniProgress current={sIdx!} />
                     ) : (
                       <div className="mt-3 text-[11px] text-[var(--text-weak)]">
-                        این درخواست هنوز در مرحله «ثبت/بررسی» است و به مراحل ارسال وارد نشده.
+                        این درخواست هنوز در مرحله «بررسی» است.
                       </div>
                     )}
                   </div>
@@ -855,7 +832,7 @@ export function PackagesPage() {
               );
             })()}
 
-            {/* ---------- Details grid (no history, no guide) ---------- */}
+            {/* ---------- Details grid ---------- */}
             <div className="grid gap-4 md:grid-cols-5">
               {/* Left: metadata */}
               <div className="md:col-span-2 space-y-3">
@@ -868,16 +845,19 @@ export function PackagesPage() {
                     <dt className="text-slate-500">شناسه</dt>
                     <dd className="text-slate-800">{selectedPkg.id}</dd>
                     <dt className="text-slate-500">تاریخ ایجاد</dt>
-                    <dd className="text-slate-800">{selectedPkg.createdAt || "—"}</dd>
+                    <dd className="text-slate-800">{formatFaDate(selectedPkg.requested_at)}</dd>
                     <dt className="text-slate-500">تعداد بسته</dt>
-                    <dd className="text-slate-800">{selectedPkg.quantity ?? 5}</dd>
-                    <dt className="text-slate-500">نوجوانان</dt>
-                    <dd className="text-slate-800">{selectedPkg.teens ?? 5} نفر</dd>
+                    <dd className="text-slate-800">
+                      {selectedPkg.requested_laptops_count ??
+                        selectedPkg.requested_teenagers_count ??
+                        selectedPkg.teenager_ids?.length ??
+                        "—"}
+                    </dd>
                     <dt className="text-slate-500">وضعیت</dt>
                     <dd className="text-slate-800">
                       <StatusBadge
-                        label={pkgStatusLabel(selectedPkg.status)}
-                        tone={pkgStatusTone(selectedPkg.status)}
+                        label={stageLabel(selectedPkg.stage)}
+                        tone={stageTone(selectedPkg.stage)}
                       />
                     </dd>
                   </dl>
@@ -886,13 +866,8 @@ export function PackagesPage() {
                     <div className="mb-1 text-[11px] text-slate-500">پیشرفت</div>
                     <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
                       <div
-                        className={cn(
-                          "h-full rounded-full transition-all",
-                          selectedPkg.status === "rejected"
-                            ? "bg-rose-400"
-                            : "bg-emerald-500"
-                        )}
-                        style={{ width: `${statusProgress(selectedPkg.status)}%` }}
+                        className="h-full rounded-full transition-all bg-emerald-500"
+                        style={{ width: `${stageProgress(selectedPkg.stage)}%` }}
                       />
                     </div>
                   </div>
@@ -908,7 +883,7 @@ export function PackagesPage() {
                       نوجوانان متصل
                     </div>
                     <div className="flex items-center gap-2">
-                      {["draft", "submitted", "review"].includes(selectedPkg.status) && (
+                      {selectedPkg.stage === "reviewing" && (
                         !editTeens ? (
                           <button
                             onClick={() => setEditTeens(true)}
@@ -922,7 +897,7 @@ export function PackagesPage() {
                             <button
                               onClick={() => {
                                 setEditTeens(false);
-                                setEditTeenIds(selectedPkg.teenIds ? [...selectedPkg.teenIds] : []);
+                                setEditTeenIds(selectedPkg.teenager_ids ? [...selectedPkg.teenager_ids] : []);
                               }}
                               className="inline-flex items-center gap-1 rounded-xl px-3 py-1.5 text-xs border border-slate-300"
                             >
@@ -947,11 +922,11 @@ export function PackagesPage() {
                   </div>
 
                   {!editTeens ? (
-                    selectedPkg.teenIds?.length ? (
+                    selectedPkg.teenager_ids?.length ? (
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {selectedPkg.teenIds.map((tid) => {
+                        {selectedPkg.teenager_ids.map((tid) => {
                           const t = teenagers.find((x) => x.id === tid);
-                          const name = t?.name || tid;
+                          const name = t?.full_name || String(tid);
                           const initials = name
                             .split(" ")
                             .slice(0, 2)
@@ -967,7 +942,7 @@ export function PackagesPage() {
                               </span>
                               {name}
                               <span className="ms-1 rounded-md bg-white px-1.5 py-0.5 text-[11px] text-slate-500 ring-1 ring-slate-200">
-                                {jalaliAge(t?.dob || "")} سال
+                                {gregorianAge(t?.date_of_birth || "")} سال
                               </span>
                             </span>
                           );
@@ -976,18 +951,17 @@ export function PackagesPage() {
                     ) : (
                       <div className="mt-2 text-sm text-slate-600">
                         هنوز نوجوانی متصل نشده است.
-                        {["draft", "submitted", "review"].includes(selectedPkg.status) &&
-                          teenagers.length >= 5 && (
-                            <>
-                              {" "}
-                              <button
-                                onClick={() => setEditTeens(true)}
-                                className="text-sky-700 hover:underline text-sm"
-                              >
-                                اتصال ۵ نوجوان
-                              </button>
-                            </>
-                          )}
+                        {selectedPkg.stage === "reviewing" && teenagers.length >= 5 && (
+                          <>
+                            {" "}
+                            <button
+                              onClick={() => setEditTeens(true)}
+                              className="text-sky-700 hover:underline text-sm"
+                            >
+                              اتصال ۵ نوجوان
+                            </button>
+                          </>
+                        )}
                       </div>
                     )
                   ) : (
@@ -1006,7 +980,7 @@ export function PackagesPage() {
                         </div>
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-                        {teenagers.map((t) => {
+                        {editableTeens.map((t) => {
                           const checked = editTeenIds.includes(t.id);
                           return (
                             <TeenPick
