@@ -18,7 +18,7 @@ const BOX: Record<NonNullable<BrandLogoProps["size"]>, string> = {
     xs: "h-8  w-8",
     sm: "h-10 w-11",
     md: "h-12 w-14",
-    lg: "h-14 w-14",
+    lg: "h-30 w-30",
 };
 
 // Sensible defaults per size (can override with fillPct)
@@ -26,7 +26,7 @@ const FILL_DEFAULT: Record<NonNullable<BrandLogoProps["size"]>, number> = {
     xs: 0.92,
     sm: 0.94,
     md: 0.96,
-    lg: 0.96,
+    lg: 1,
 };
 
 export function BrandLogo({
@@ -54,8 +54,7 @@ export function BrandLogo({
                 <img
                     src={logoPng}
                     alt={alt}
-                    width={512}
-                    height={512}
+
                     loading={priority ? "eager" : "lazy"}
                     decoding="async"
                     className="block object-contain select-none pointer-events-none -translate-y-10"
