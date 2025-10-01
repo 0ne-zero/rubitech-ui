@@ -1075,8 +1075,7 @@ function PartnerConveyor({ items }: { items: any[] }) {
                 style={{ width: EDGE_FADE_W }}
             />
             <div
-                className="pointer-events-none absolute inset-y-0 left-0 bg-gradient-to-r from-white to-transparent"
-                style={{ width: EDGE_FADE_W }}
+                className="pointer-events-none absolute inset-y-0 left-0 z-10"
             />
 
             {/* moving track — LTR so new items always enter from the RIGHT on an RTL page */}

@@ -43,8 +43,8 @@ function RoleIcon({ role }: { role: Role }) {
 }
 
 const ROLE_OPTIONS: Array<{ key: Role; title: string; desc: string; bullets: string[] }> = [
+    // { key: "stakeholder", title: "حامی", desc: "پشتیبانی و تامین منابع", bullets: ["مدیریت کمک‌ها و فاکتورها", "گزارش‌دهی شفاف", "پیگیری تاثیر"] },
     { key: "ambassador", title: "سفیر", desc: "معرفی و مدیریت نوجوانان", bullets: ["مدیریت پروفایل نوجوانان", "بارگذاری مدارک و تاییدیه‌ها", "پیگیری وضعیت‌ها"] },
-    { key: "stakeholder", title: "حامی", desc: "پشتیبانی و تامین منابع", bullets: ["مدیریت کمک‌ها و فاکتورها", "گزارش‌دهی شفاف", "پیگیری تاثیر"] },
 ];
 
 function useArrowNav({ value, onChange }: { value: Role | null; onChange: (r: Role) => void }) {
