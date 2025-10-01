@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 // Keep these external imports exactly as requested
 import { partners, Partner } from "../data/partners";
-import { testimonials } from "../data/testimonials";
+import { testimonials, teenager_testimonials } from "../data/testimonials";
 import { NAV_SECTIONS } from "@/data/sections";
 import { site } from "../config/site";
 
@@ -1019,6 +1019,33 @@ function SocialProof() {
                         <div className="text-sm text-slate-600">به‌زودی تجربه‌های افراد منتشر می‌شوند.</div>
                     )}
                 </div>
+
+                <div className="mt-12">
+                    <div className="mb-5 flex items-center justify-between">
+                        <div className="inline-flex items-center gap-2 font-extrabold text-sm md:text-base text-[var(--brand)]">
+                            <IconUsers className="h-6 w-6" />
+                            <span>نوجوانان روبیتک</span>
+                        </div>
+                    </div>
+                    {hasTestimonials ? (
+                        <div className="grid gap-6 md:grid-cols-2">
+                            {teenager_testimonials.map((t: any, i: number) => (
+                                <TestimonialCard
+                                    key={t?.name ?? i}
+                                    name={t?.name}
+                                    title={t?.title}
+                                    quote={t?.quote}
+                                    img={t?.img}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-sm text-slate-600">به‌زودی تجربه‌های افراد منتشر می‌شوند.</div>
+                    )}
+                </div>
+
+
+
             </Container>
             <SectionDivider />
         </Section>
