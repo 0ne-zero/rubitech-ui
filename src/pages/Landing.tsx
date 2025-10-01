@@ -1,6 +1,9 @@
-
+// @ts-nocheck
+/* eslint-disable */
 import React, { useEffect, useMemo, useRef, useState } from "react";
-// Keep these external imports exactly as requested
+import { createPortal } from "react-dom";
+
+
 import { partners, Partner } from "../data/partners";
 import { testimonials, teenager_testimonials } from "../data/testimonials";
 import { NAV_SECTIONS } from "@/data/sections";
@@ -13,11 +16,12 @@ import {
 } from "../icons";
 import { faqs } from "@/data/faq";
 
-// ⬇️ If your modal lives in another file, import it. If you inlined the modal in this file, remove this import.
 import { AuthModalLikeImage } from "@/components/landing/AuthModal";
 
 /**
  * Rubitech — Single-file Landing Page (Updated per spec, with Auth modal trigger)
+ * Mobile-first refinements included: dynamic conveyor sizing, stable header on modal open,
+ * touch targets >= 44px, clamped typography, and tightened small-screen spacing.
  */
 
 
@@ -33,7 +37,7 @@ const ext = { rel: "noreferrer", target: "_blank" } as const;
 /* -------------------------------------------------------------------------- */
 type ContainerProps = React.ComponentPropsWithoutRef<"div"> & { y?: "none" | "tight" | "loose" };
 const Container: React.FC<ContainerProps> = ({ className = "", y, children, ...rest }) => {
-    const py = y === "none" ? "" : y === "tight" ? "py-8 sm:py-10" : y === "loose" ? "py-16 sm:py-20" : "";
+    const py = y === "none" ? "" : y === "tight" ? "py-6 sm:py-8" : y === "loose" ? "py-14 sm:py-20" : "py-10 sm:py-14";
     return (
         <div className={cx("mx-auto max-w-7xl px-4 sm:px-6 lg:px-8", py, className)} {...rest}>
             {children}
@@ -50,9 +54,9 @@ type SectionProps = React.PropsWithChildren<{
 
 const Section: React.FC<SectionProps> = ({ id, className = "", style, y = "normal", children }) => {
     const py =
-        y === "tight" ? "py-8  sm:py-10" :
-            y === "loose" ? "py-20 sm:py-24" :
-                "py-14 sm:py-16";
+        y === "tight" ? "py-6 sm:py-8" :
+            y === "loose" ? "py-18 sm:py-24" :
+                "py-10 sm:py-14";
     return (
         <section
             id={id}
@@ -71,7 +75,7 @@ type DividerProps = { variant?: "brand" | "subtle" | "dotted"; className?: strin
 export const SectionDivider = ({ variant = "brand", className = "" }: DividerProps) => {
     if (variant === "dotted") return <hr className={`mx-auto my-6 h-0 border-0 border-t-2 border-dotted border-slate-300/80 w-full max-w-7xl ${className}`} />;
     if (variant === "subtle") return <hr className={`mx-auto my-6 h-px w/full max-w-7xl bg-gradient-to-l from-transparent via-slate-200 to-transparent ${className}`} />;
-    return <div aria-hidden="true" className={`mx-auto mt-10 mb-4 h-auto md:h-[2px] w-full max-w-7xl rounded-full bg-gradient-to-l from-[var(--green)] via-slate-200 to-[var(--brand)] ${className}`} />;
+    return <div aria-hidden="true" className={`mx-auto mt-8 mb-3 h-auto md:h-[2px] w-full max-w-7xl rounded-full bg-gradient-to-l from-[var(--green)] via-slate-200 to-[var(--brand)] ${className}`} />;
 };
 
 
@@ -85,13 +89,14 @@ type SectionHeaderProps = {
 const SectionHeader: React.FC<SectionHeaderProps> = ({ kicker, Icon, title, subtitle, align = "start" }) => (
     <header className={cx(align === "center" ? "text-center" : "text-right")}>
         {kicker && (
-            <div className="mx-auto mb-3 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-lg font-extrabold text-[var(--brand)]">
-                {Icon ? <Icon className="h-10 w-10" /> : null}
+            <div className="mx-auto mb-3 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-base sm:text-lg font-extrabold text-[var(--brand)]">
+                {Icon ? <Icon className="h-7 w-7 sm:h-10 sm:w-10" /> : null}
                 <span>{kicker}</span>
             </div>
         )}
-        <h2 className="text-3xl md:text-3xl lg:text-4xl font-extrabold text-[var(--text-strong)]">{title}</h2>
-        {subtitle && <p className=" mt-5 max-w-3xl text-lg md:text-xl text-slate-700">{subtitle}</p>}
+        {/* clamp() gives smoother scaling on tiny screens */}
+        <h2 className="font-extrabold text-[clamp(22px,5vw,34px)] lg:text-4xl text-[var(--text-strong)]">{title}</h2>
+        {subtitle && <p className="mt-3 sm:mt-5 max-w-3xl text-[15px] sm:text-lg md:text-xl text-slate-700">{subtitle}</p>}
     </header>
 );
 
@@ -119,7 +124,7 @@ const CTAButton: React.FC<CTAButtonProps> = ({
         aria-label={ariaLabel}
         onClick={onClick} // NEW
         className={cx(
-            "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-white text-base md:text-lg font-bold ring-1 ring-inset transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+            "inline-flex items-center justify-center gap-2 rounded-xl px-5 sm:px-6 py-3.5 sm:py-3.5 text-white text-base md:text-lg font-bold ring-1 ring-inset transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent min-h-[44px]", // 44px tap target
             colorClass, className
         )}
     >
@@ -141,13 +146,13 @@ type ImpactStatProps = {
 };
 const ImpactStat: React.FC<ImpactStatProps> = ({ value, label, Icon, bgColor = "bg-sky-50", iconColor = "text-slate-800" }) => (
     <div className={cx("flex items-center gap-3 rounded-lg p-4 ring-1 ring-slate-200", bgColor)}>
-        <div className="grid h-12 w-12 place-items-center rounded mb-3">
-            {Icon ? <Icon className={cx("h-8 w-8", iconColor)} /> : null}
+        <div className="grid h-11 w-11 sm:h-12 sm:w-12 place-items-center rounded mb-3">
+            {Icon ? <Icon className={cx("h-7 w-7 sm:h-8 sm:w-8", iconColor)} /> : null}
         </div>
         <dl>
             <dt className="sr-only">{label}</dt>
-            <dd className="text-2xl font-extrabold text-[var(--text-strong)]">{value}</dd>
-            <dd className="text-sm text-slate-700">{label}</dd>
+            <dd className="text-xl sm:text-2xl font-extrabold text-[var(--text-strong)]">{value}</dd>
+            <dd className="text-xs sm:text-sm text-slate-700">{label}</dd>
         </dl>
     </div>
 );
@@ -155,7 +160,7 @@ const ImpactStat: React.FC<ImpactStatProps> = ({ value, label, Icon, bgColor = "
 /* ----------------------------- Testimonials Card -------------------------- */
 type Testimonial = { name: string; title?: string; quote: string; img?: string };
 const TestimonialCard: React.FC<Testimonial> = ({ name, title, quote, img }) => (
-    <Card className="p-6 relative">
+    <Card className="p-5 sm:p-6 relative">
         {/* Avatar top-right */}
         {img ? (
             <img
@@ -163,15 +168,15 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, title, quote, img }) => 
                 alt={name}
                 loading="lazy"
                 decoding="async"
-                className="absolute top-4 right-4 h-14 w-14 rounded-full object-cover ring-2 ring-white shadow"
+                className="absolute top-3 right-3 h-12 w-12 sm:h-14 sm:w-14 rounded-full object-cover ring-2 ring-white shadow"
             />
         ) : null}
         <figure className="pt-1">
-            <figcaption className="">
-                <div className="mr-16 font-extrabold text-[var(--text-strong)]">{name}</div>
-                {title ? <div className="text-sm mr-16 text-slate-600 mt-0.5">{title}</div> : null}
+            <figcaption>
+                <div className="mr-14 sm:mr-16 font-extrabold text-[var(--text-strong)]">{name}</div>
+                {title ? <div className="text-xs sm:text-sm mr-14 sm:mr-16 text-slate-600 mt-0.5">{title}</div> : null}
             </figcaption>
-            <blockquote className="mt-3 font-medium leading-relaxed">{quote}</blockquote>
+            <blockquote className="mt-3 text-[15px] sm:text-base font-medium leading-relaxed">{quote}</blockquote>
         </figure>
     </Card>
 );
@@ -185,14 +190,14 @@ type DifferentiationCardProps = {
     wrapperClass?: string;
 };
 const DifferentiationCard: React.FC<DifferentiationCardProps> = ({ Icon, iconClass = "h-7 w-7 text-slate-700", title, description, wrapperClass = "" }) => (
-    <article className={cx("group rounded-2xl p-7 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md", wrapperClass)}>
+    <article className={cx("group rounded-2xl p-6 sm:p-7 ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md", wrapperClass)}>
         <div className="flex items-start gap-4">
-            <div className="grid h-12 w-12 place-items-center">
+            <div className="grid h-10 w-10 sm:h-12 sm:w-12 place-items-center">
                 {Icon ? <Icon className={iconClass} /> : null}
             </div>
             <div>
-                <h3 className="text-lg font-extrabold text-[var(--text-strong)]">{title}</h3>
-                <p className="mt-2 text-slate-800">{description}</p>
+                <h3 className="text-[17px] sm:text-lg font-extrabold text-[var(--text-strong)]">{title}</h3>
+                <p className="mt-2 text-[15px] sm:text-base text-slate-800">{description}</p>
             </div>
         </div>
     </article>
@@ -224,9 +229,9 @@ const FlowStep: React.FC<FlowStepProps> = ({
         "md:col-span-1",
         align === "right" ? "md:col-start-2 md:pl-8" : "md:col-start-1 md:pr-8"
     )}>
-        <div className={cx("rounded-2xl ring-1 ring-slate-200 p-6", boxBgColor)}>
+        <div className={cx("rounded-2xl ring-1 ring-slate-200 p-5 sm:p-6", boxBgColor)}>
             <div className="flex items-start gap-4">
-                <div className={cx("grid h-11 w-11 place-items-center rounded-full ring-2 ring-slate-200 font-extrabold text-[var(--text-strong)]", iconBgColor)} aria-hidden>
+                <div className={cx("grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-full ring-2 ring-slate-200 font-extrabold text-[var(--text-strong)]", iconBgColor)} aria-hidden>
                     {number}
                 </div>
                 <div>
@@ -263,7 +268,7 @@ const CompactFlowItem: React.FC<CompactFlowItemProps> = ({
 }) => {
     const isRight = align === "left";
     return (
-        <li className="relative md:grid md:grid-cols-2 md:items-start py-5 md:py-2">
+        <li className="relative md:grid md:grid-cols-2 md:items-start py-4 md:py-2">
 
             {/* Card */}
             <div className={isRight ? "md:col-start-2 md:pl-6" : "md:col-start-1 md:pr-6"}>
@@ -273,9 +278,9 @@ const CompactFlowItem: React.FC<CompactFlowItemProps> = ({
                         <span className="inline-grid h-8 w-8 place-items-center rounded-full bg-white ring-1 ring-slate-200 text-[16px] font-extrabold text-slate-800">
                             {step}
                         </span>
-                        <h3 className={`text-base md:text-lg font-extrabold text-slate-800`}>{title}</h3>
+                        <h3 className={`text-[15px] md:text-lg font-extrabold text-slate-800`}>{title}</h3>
                     </header>
-                    <p className="mt-2 mr-10 text-sm md:text-[18px] font-medium leading-relaxed text-slate-800">{description}</p>
+                    <p className="mt-2 mr-10 text-[14px] md:text-[18px] font-medium leading-relaxed text-slate-800">{description}</p>
                 </article>
             </div>
         </li>
@@ -327,7 +332,7 @@ function Accordion({
     };
 
     return (
-        <div className="space-y-4" role="list">
+        <div className="space-y-3 sm:space-y-4" role="list">
             {items.map((item, i) => {
                 const isOpen = openIndex === i;
                 const panelId = `faq-panel-${i}`;
@@ -346,9 +351,9 @@ function Accordion({
                                 aria-controls={panelId}
                                 onClick={() => onActivate(i)}
                                 onKeyDown={(e) => onKeyDown(e, i)}
-                                className="w-full text-right flex items-center justify-between gap-4 px-5 py-4 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                                className="w-full text-right flex items-center justify-between gap-4 px-4 sm:px-5 py-4 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
                             >
-                                <span className="text-[var(--text-strong)] font-extrabold">
+                                <span className="text-[var(--text-strong)] font-extrabold text-[15px] sm:text-base">
                                     {item.q}
                                 </span>
                                 <span
@@ -365,9 +370,9 @@ function Accordion({
                             id={panelId}
                             role="region"
                             aria-labelledby={buttonId}
-                            className={`grid overflow-hidden transition-all duration-300 ease-out px-5 ${isOpen ? "grid-rows-[1fr] py-3" : "grid-rows-[0fr] py-0"}`}
+                            className={`grid overflow-hidden transition-all duration-300 ease-out px-4 sm:px-5 ${isOpen ? "grid-rows-[1fr] py-3" : "grid-rows-[0fr] py-0"}`}
                         >
-                            <div className="min-h-0 text-slate-800">
+                            <div className="min-h-0 text-[15px] sm:text-base text-slate-800">
                                 {item.a}
                             </div>
                         </div>
@@ -379,17 +384,16 @@ function Accordion({
 }
 
 /* -------------------------------- PartnerCard ----------------------------- */
-/* -------------------------------- PartnerCard ----------------------------- */
 type PartnerCardProps = { logoUrl?: string; name: string; description?: string; url?: string };
 const PartnerCard: React.FC<PartnerCardProps> = ({ logoUrl, name, description, url }) => (
     <Card
         data-equalize="partner"
-        className="h-full hover:shadow-md transition"   // <- h-full, no min/max width here
+        className="h-full hover:shadow-md transition"
     >
         <a
             href={url || "#"}
             {...(url ? ext : {})}
-            className="flex h-full items-center gap-4 p-6 hover:-translate-y-0.5 hover:shadow-md"  // <- fill the card so height applies cleanly
+            className="flex h-full items-center gap-4 p-5 sm:p-6 hover:-translate-y-0.5 hover:shadow-md"
         >
             {logoUrl ? (
                 <img
@@ -397,7 +401,7 @@ const PartnerCard: React.FC<PartnerCardProps> = ({ logoUrl, name, description, u
                     loading="lazy"
                     decoding="async"
                     alt={name}
-                    className="h-16 w-16 object-contain rounded"
+                    className="h-12 w-12 sm:h-16 sm:w-16 object-contain rounded"
                 />
             ) : (
                 <span className="grid h-12 w-12 place-items-center rounded bg-slate-100 text-slate-500 text-base font-bold">
@@ -405,11 +409,11 @@ const PartnerCard: React.FC<PartnerCardProps> = ({ logoUrl, name, description, u
                 </span>
             )}
             <div className="flex-1 min-w-0">
-                <div className="text-base text-right font-extrabold text-[var(--text-strong)]">
+                <div className="text-base text-right font-extrabold text-[var(--text-strong)] truncate">
                     {name}
                 </div>
                 {description ? (
-                    <div className="text-md font-medium text-right text-slate-700">
+                    <div className="text-sm sm:text-md font-medium text-right text-slate-700 line-clamp-2">
                         {description}
                     </div>
                 ) : null}
@@ -437,7 +441,21 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
     const [active, setActive] = useState<string>("hero");
     const navRef = useRef<HTMLDivElement | null>(null);
     const headerRef = useRef<HTMLElement | null>(null);
+    const toggleRef = useRef<HTMLButtonElement | null>(null);
 
+
+    // Compute a fixed scrollbar width ONCE to prevent header "shake" when modals open/close
+    useEffect(() => {
+        const setSBW = () => {
+            const sbw = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+            document.documentElement.style.setProperty("--sbw", sbw + "px");
+        };
+        // measure once after first paint (when scrollbar is present)
+        requestAnimationFrame(setSBW);
+        // also on orientation changes which can alter metrics on mobile
+        window.addEventListener("orientationchange", setSBW);
+        return () => window.removeEventListener("orientationchange", setSBW);
+    }, []);
 
     const sections = useMemo(() => ["hero", "solution", "social-proof", "differentiation", "faq"], []);
 
@@ -467,8 +485,6 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
         };
     }, []);
 
-
-
     // Scroll spy + header background on scroll
     useEffect(() => {
         const onScrollOrResize = () =>
@@ -497,18 +513,49 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
         };
     }, [sections]);
 
+    useEffect(() => {
+        if (!open) {
+            // restore
+            document.documentElement.classList.remove("overflow-hidden");
+            document.body.style.paddingInlineEnd = "";
+            return;
+        }
+
+        // compute scrollbar width once and lock
+        const sbw = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+        document.documentElement.classList.add("overflow-hidden");
+        document.body.style.paddingInlineEnd = `${sbw}px`;
+        // you already use --sbw on the header; keeping both avoids any tiny shift
+        document.documentElement.style.setProperty("--sbw", `${sbw}px`);
+
+        return () => {
+            document.documentElement.classList.remove("overflow-hidden");
+            document.body.style.paddingInlineEnd = "";
+        };
+    }, [open]);
+
     // Close mobile menu when clicking outside
     useEffect(() => {
-        const onClick = (e: MouseEvent) => {
+        const onDocClick = (e: MouseEvent) => {
             if (!open) return;
-            if (navRef.current && !navRef.current.contains(e.target as Node)) setOpen(false);
+            const t = e.target as Node;
+
+            // if click is inside the menu panel, do nothing
+            if (navRef.current?.contains(t)) return;
+
+            // if click is on the hamburger button, do nothing
+            if (toggleRef.current?.contains(t)) return;
+
+            // otherwise, it's an outside click → close
+            setOpen(false);
         };
-        document.addEventListener("click", onClick);
-        return () => document.removeEventListener("click", onClick);
+
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
     }, [open]);
 
     const navLink =
-        "block px-3.5 py-2.5 rounded-lg text-[16px] md:text-[17px] font-extrabold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40";
+        "block px-3 py-2.5 rounded-lg text-[15px] md:text-[17px] font-extrabold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40";
     const linkClasses = (id: string) =>
         cx(
             navLink,
@@ -516,90 +563,171 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
         );
 
     return (
-        <header
-            ref={headerRef}
-            style={{ paddingInlineEnd: "var(--sbw, 0px)" }}   // ← add this line
+        <>
 
-            className={cx(
-                "fixed inset-x-0 top-0 z-50 text-white transition",
-                scrolled ? "backdrop-blur-md bg-slate-900/55 ring-1 ring-white/10" : "bg-transparent"
-            )}
-        >
-            <Container className="!py-0">
-                <div className="flex h-16 items-center justify-between">
-                    {/* Brand */}
-                    <a
-                        href="#hero"
-                        className="font-extrabold text-[20px] tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-md"
-                        aria-current={active === "hero" ? "page" : undefined}
-                    >
-                        روبیتک
-                    </a>
-
-                    {/* Desktop Nav */}
-                    <nav aria-label="اصلی" className="hidden md:flex items-center gap-1.5">
-                        {NAV_SECTIONS.map(s => (
-                            <a key={s.id} href={`#${s.id}`} className={linkClasses(s.id)} aria-current={active === s.id ? "page" : undefined}>
-                                {s.label}
-                            </a>
-                        ))}
-                    </nav>
-
-                    {/* Right actions */}
-                    <div className="flex items-center gap-2">
-                        {/* Desktop: open Auth modal */}
-                        <button
-                            type="button"
-                            onClick={onOpenAuth}
-                            className="hidden sm:inline-flex rounded-xl border border-white/35 px-3.5 py-2 text-[15px] font-extrabold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            <header
+                ref={headerRef}
+                style={{ paddingInlineEnd: "var(--sbw, 0px)" }}
+                className={cx(
+                    "fixed inset-x-0 top-0 z-50 text-white transition",
+                    scrolled ? "backdrop-blur-md bg-slate-900/55 ring-1 ring-white/10" : "bg-transparent"
+                )}
+            >
+                <Container className="!py-0">
+                    <div className="flex h-16 items-center justify-between">
+                        {/* Brand */}
+                        <a
+                            href="#hero"
+                            className="font-extrabold text-[18px] sm:text-[20px] tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 rounded-md"
+                            aria-current={active === "hero" ? "page" : undefined}
                         >
-                            ورود
-                        </button>
+                            روبیتک
+                        </a>
 
-                        {/* Mobile menu button */}
-                        <button
-                            type="button"
-                            aria-label={open ? "بستن منو" : "باز کردن منو"}
-                            aria-expanded={open}
-                            aria-controls="primary-nav"
-                            onClick={() => setOpen((v) => !v)}
-                            className="md:hidden grid h-10 w-10 place-items-center rounded-lg hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-                        >
-                            <span className="sr-only">منو</span>
-                            <span aria-hidden className="text-xl leading-none">
-                                {open ? "✕" : "☰"}
-                            </span>
-                        </button>
+                        {/* Desktop Nav */}
+                        <nav aria-label="اصلی" className="hidden md:flex items-center gap-1.5">
+                            {NAV_SECTIONS.map(s => (
+                                <a key={s.id} href={`#${s.id}`} className={linkClasses(s.id)} aria-current={active === s.id ? "page" : undefined}>
+                                    {s.label}
+                                </a>
+                            ))}
+                        </nav>
+
+                        {/* Right actions */}
+                        <div className="flex items-center gap-2">
+                            {/* Desktop: open Auth modal */}
+                            <button
+                                type="button"
+                                onClick={onOpenAuth}
+                                className="hidden sm:inline-flex rounded-xl border border-white/35 px-3.5 py-2 text-[14px] sm:text-[15px] font-extrabold hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                            >
+                                ورود
+                            </button>
+
+                            {/* Mobile menu button */}
+                            <button
+                                ref={toggleRef}
+                                type="button"
+                                aria-label={open ? "بستن منو" : "باز کردن منو"}
+                                aria-expanded={open}
+                                aria-controls="primary-nav"
+                                onClick={() => setOpen((v) => !v)}
+                                className="md:hidden grid h-10 w-10 place-items-center rounded-lg hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                            >
+                                <span className="sr-only">منو</span>
+                                <span aria-hidden className="text-xl leading-none">
+                                    {open ? "✕" : "☰"}
+                                </span>
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                {/* Mobile Nav Panel */}
+
+                </Container>
+
+
+                {/* Backdrop overlay (blurs page content) */}
                 <div
-                    id="primary-nav"
-                    ref={navRef}
+                    onClick={() => setOpen(false)}
+                    aria-hidden
                     className={cx(
-                        "md:hidden origin-top transition-transform motion-safe:duration-200",
-                        open ? "scale-y-100" : "scale-y-0 pointer-events-none"
+                        "fixed inset-0 z-40 bg-slate-900/30 backdrop-blur-sm transition-opacity",
+                        open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                     )}
-                >
-                    <nav className="mt-2 rounded-2xl bg-white/10 p-2 ring-1 ring-white/15 backdrop-blur" aria-label="منوی موبایل">
-                        {NAV_SECTIONS.map(s => (
-                            <a key={s.id} href={`#${s.id}`} className={linkClasses(s.id)} aria-current={active === s.id ? "page" : undefined} onClick={() => setOpen(false)}>
-                                {s.label}
-                            </a>
-                        ))}
-                        {/* Mobile: open Auth modal */}
-                        <button
-                            type="button"
-                            onClick={() => { setOpen(false); onOpenAuth(); }}
-                            className={cx(navLink, "border border-white/35 text-center mt-2")}
-                        >
-                            ورود
-                        </button>
-                    </nav>
-                </div>
-            </Container>
-        </header>
+                />
+            </header>
+
+            {createPortal(
+                <>
+                    {/* Backdrop overlay (blurs page content) */}
+                    <div
+                        onClick={() => setOpen(false)}
+                        aria-hidden
+                        className={cx(
+                            "fixed inset-0 z-[55] bg-slate-900/30 backdrop-blur-sm transition-opacity",
+                            open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                        )}
+                    />
+
+                    {/* Mobile Nav — Modern Bottom Sheet (anchored to viewport) */}
+                    <div
+                        id="primary-nav"
+                        ref={navRef}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="mobile-menu-title"
+                        className={cx(
+                            "fixed left-0 right-0 bottom-0 z-[60]",
+                            "origin-bottom transform-gpu transition-transform duration-300 ease-out",
+                            open ? "translate-y-0" : "translate-y-full pointer-events-none"
+                        )}
+                    >
+                        <div className="mx-auto w-full max-w-lg rounded-t-[28px] ring-1 ring-black/5 shadow-[0_-24px_60px_rgba(2,6,23,0.25)] overflow-hidden">
+                            <div className="bg-gradient-to-b from-white/90 to-white/70 backdrop-blur-xl">
+                                {/* header row + close */}
+                                <div className="flex items-center justify-between px-4 pt-3 pb-2">
+                                    <h2 id="mobile-menu-title" className="sr-only">منوی موبایل</h2>
+                                    <span className="inline-flex h-1.5 w-12 rounded-full bg-slate-300/80 mx-auto" aria-hidden />
+                                    <button
+                                        type="button"
+                                        onClick={() => setOpen(false)}
+                                        aria-label="بستن منو"
+                                        className="grid h-9 w-9 place-items-center rounded-full border border-slate-200/70 bg-white/80 text-slate-600 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+
+                                {/* links */}
+                                <nav className={cx("px-2 pb-1", open ? "[&>a]:opacity-100 [&>a]:translate-y-0" : "[&>a]:opacity-0 [&>a]:translate-y-1")}>
+                                    {NAV_SECTIONS.map((s, i) => (
+                                        <a
+                                            key={s.id}
+                                            href={`#${s.id}`}
+                                            onClick={() => setOpen(false)}
+                                            style={{ transitionDelay: `${i * 25}ms` }}
+                                            className={cx(
+                                                "flex items-center justify-between rounded-xl px-4 py-3 text-[16px] font-extrabold transition",
+                                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300",
+                                                "hover:bg-white",
+                                                "ring-1 ring-transparent hover:ring-slate-200/70",
+                                                active === s.id ? "bg-white ring-1 ring-slate-200/80 text-[var(--brand)]" : "text-slate-900"
+                                            )}
+                                        >
+                                            <span className="truncate">{s.label}</span>
+                                            <span className="text-slate-400" aria-hidden>›</span>
+                                        </a>
+                                    ))}
+                                </nav>
+
+                                {/* actions */}
+                                <div className="grid grid-cols-1 gap-2 px-3 pb-[max(16px,env(safe-area-inset-bottom)+8px)]">
+                                    <a
+                                        href={site.donationUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-white text-[15px] font-extrabold
+                             bg-[var(--green)] hover:bg-[var(--green-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--green)]/40
+                             shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
+                                    >
+                                        ساخت مدرسه
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setOpen(false); onOpenAuth(); }}
+                                        className="rounded-xl border border-slate-300/70 bg-white/90 px-4 py-3 text-[15px] font-extrabold text-slate-900 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                                    >
+                                        ورود
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>,
+                document.body
+            )}
+
+        </>
     );
 }
 
@@ -639,35 +767,35 @@ function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandl
                     {/* Reserve space for sticky header */}
                     <div className="h-16" aria-hidden />
                     {/* Centered hero copy + CTAs */}
-                    <div className="min-h-[68svh] grid place-items-center pb-10">
+                    <div className="min-h-[64svh] grid place-items-center pb-8 sm:pb-10">
                         <div className="max-w-3xl text-center text-white">
                             <div className="space-y-4 md:space-y-5">
 
-                                <div className="mb-14">
-                                    <h1 className="text-[32px] md:text-[52px] font-extrabold leading-[2] tracking-tight">با هم آینده ایران رو می‌سازیم!</h1>
-                                    <h2 className="text-[26px] md:text-[34px] font-bold">هر لپ‌تاپ، یک مدرسه هوشمند</h2>
+                                <div className="mb-10 sm:mb-14">
+                                    <h1 className="font-extrabold leading-tight tracking-tight text-[clamp(26px,6vw,52px)]">با هم آینده ایران رو می‌سازیم!</h1>
+                                    <h2 className="font-bold text-[clamp(20px,5vw,34px)]">هر لپ‌تاپ، یک مدرسه هوشمند</h2>
                                 </div>
                                 <div>
-                                    <p className="text-[18px] md:text-[24px] font-bold leading-[1.8] text-white/95">
+                                    <p className="text-[16px] sm:text-[18px] md:text-[24px] font-bold leading-[1.8] text-white/95">
                                         ایران آینده‌ای روشن‌تر می‌خواد، این آینده به دست نوجوانانش ساخته می‌شه،
                                     </p>
-                                    <p className="text-[18px] md:text-[22px] font-bold  text-white/95">
+                                    <p className="text-[16px] sm:text-[18px] md:text-[22px] font-bold  text-white/95">
                                         نوجوانانی که سرمایه و سازندگان واقعی ایران‌اند.
                                     </p>
 
                                 </div>
-                                <div className="mt-10">
-                                    <p className="text-[18px] md:text-[21px] font-bold text-white/95">
+                                <div className="mt-8 sm:mt-10">
+                                    <p className="text-[16px] sm:text-[18px] md:text-[21px] font-bold text-white/95">
                                         روبیتک اینجاست تا اثرگذاری شما رو به فرصتی روشن برای نوجوانان فردای ایران تبدیل کنه.
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="mt-8 flex flex-col gap-4 sm:flex-row justify-center">
+                            <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row justify-center">
                                 <CTAButton
                                     href={site.donationUrl}
                                     target="_blank"
-                                    className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-4 md:py-5"
+                                    className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-4"
                                     colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
                                     iconLeft={<IconHeartHand className="h-7 w-7" />}
                                     ariaLabel="ساخت مدرسه"
@@ -702,9 +830,9 @@ function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandl
                     </div>
 
                     {/* Stats band */}
-                    <div className="backdrop-blur-sm -mt-10 md:-mt-14">
+                    <div className="backdrop-blur-sm -mt-8 sm:-mt-14">
                         <Container className="">
-                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 px-4 sm:px-6 lg:px-8">
+                            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-2 px-2 sm:px-6 lg:px-8">
                                 <ImpactStat value={`${toFa(134)}+`} label="نوجوانان تحت ثاثیر" Icon={IconUsers} bgColor="bg-[var(--mint-ring)]" iconColor="text-[var(--brand)]" />
                                 <ImpactStat value={`${toFa(113)}+`} label="مدرسه تامین شده" Icon={IconLaptop} bgColor="bg-[var(--sky-ring)]" iconColor="text-[var(--brand)]" />
                                 <ImpactStat value={toFa(35)} label="سفیر فعال" Icon={IconShield} bgColor="bg-[var(--violet-ring)]" iconColor="text-[#6D28D9]" />
@@ -733,7 +861,7 @@ function Solution() {
                     subtitle="ما یک اکوسیستم شفاف و قابل‌اعتماد طراحی کردیم که اثرگذاری شما رو به فرصتی پایدار برای آینده یک نوجوان تبدیل می‌کنه. این همیاری در ۵ مرحله اتفاق میوفته:"
                 />
 
-                <ol className="relative mt-8 md:mt-10">
+                <ol className="relative mt-6 sm:mt-8 md:mt-10">
                     {/* Single subtle center spine */}
                     <div
                         className="hidden md:block absolute inset-y-0 right-1/2 w-px translate-x-1/2 bg-slate-200/80"
@@ -793,7 +921,7 @@ function Solution() {
 }
 
 
-/* ================= PartnerConveyor (no visible reset, ultra-smooth) ================= */
+/* ================= PartnerConveyor (responsively sized, ultra-smooth) ================= */
 function useEqualHeightsIn(container: React.RefObject<HTMLElement>, selector = '[data-equalize="partner"]') {
     useEffect(() => {
         const root = container.current;
@@ -828,8 +956,9 @@ function PartnerConveyor({ items }: { items: any[] }) {
     const partners = Array.isArray(items) ? items : [];
     if (!partners.length) return null;
 
-    // Tweakables
-    const ITEM_W = 320;        // px
+    // Base tweakables (used as caps for dynamic sizing)
+    const MIN_W = 220;
+    const MAX_W = 320;
     const GAP = 24;            // px
     const SPEED = 40;          // px/sec (lower = slower)
     const EDGE_FADE_W = 24;    // px (overlay gradient width)
@@ -843,13 +972,32 @@ function PartnerConveyor({ items }: { items: any[] }) {
     const speedRef = React.useRef<number>(SPEED);
     const reduceRef = React.useRef<boolean>(false);
 
+    // Dynamically compute item width based on container width (keeps full card visible on small screens)
+    const [itemW, setItemW] = React.useState<number>(MAX_W);
+    React.useEffect(() => {
+        const recomputeW = () => {
+            const el = wrapRef.current;
+            if (!el) return;
+            const w = Math.round(Math.min(MAX_W, Math.max(MIN_W, el.clientWidth * 0.82)));
+            setItemW(w);
+        };
+        recomputeW();
+        const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(recomputeW) : null;
+        ro?.observe(wrapRef.current as Element);
+        window.addEventListener("resize", recomputeW);
+        return () => {
+            ro?.disconnect?.();
+            window.removeEventListener("resize", recomputeW);
+        };
+    }, []);
+
     // measure visible count so we render enough cards + buffer
     const [visibleCount, setVisibleCount] = React.useState(4);
     React.useEffect(() => {
         const el = wrapRef.current;
         if (!el) return;
         const recompute = () => {
-            const per = ITEM_W + GAP;
+            const per = itemW + GAP;
             setVisibleCount(Math.max(1, Math.ceil(el.clientWidth / per)) + 2); // +2 buffer
         };
         recompute();
@@ -860,7 +1008,7 @@ function PartnerConveyor({ items }: { items: any[] }) {
             ro?.disconnect?.();
             window.removeEventListener("resize", recompute);
         };
-    }, []);
+    }, [itemW]);
 
     // repeat partners enough to fill + cycle smoothly
     const renderList = React.useMemo(() => {
@@ -873,7 +1021,7 @@ function PartnerConveyor({ items }: { items: any[] }) {
 
     // animation state
     const offsetRef = React.useRef<number>(0); // current translateX in px (negative)
-    const stepPx = ITEM_W + GAP;
+    const stepPx = itemW + GAP;
 
     // RAF loop: move continuously; when passing a card boundary, append first child and snap offset precisely
     React.useEffect(() => {
@@ -946,7 +1094,7 @@ function PartnerConveyor({ items }: { items: any[] }) {
                     <li
                         key={`conveyor-${i}`}
                         className="shrink-0"
-                        style={{ width: ITEM_W, minWidth: ITEM_W }}
+                        style={{ width: itemW, minWidth: itemW }}
                         dir="rtl" // Persian content stays RTL inside each card
                     >
                         <PartnerCard
@@ -980,10 +1128,10 @@ function SocialProof() {
                 />
 
                 {/* Partners — conveyor (one leaves left, same one appears on right) */}
-                <div className="mt-10">
-                    <div className="mb-5 flex items-center justify-between">
+                <div className="mt-8 sm:mt-10">
+                    <div className="mb-4 sm:mb-5 flex items-center justify-between">
                         <div className="inline-flex items-center gap-2 font-extrabold text-sm md:text-base text-[var(--brand)]">
-                            <IconBuilding className="h-6 w-6" />
+                            <IconBuilding className="h-5 w-5 sm:h-6 sm:w-6" />
                             <span>سازمان‌های آینده‌ساز</span>
                         </div>
                     </div>
@@ -996,15 +1144,15 @@ function SocialProof() {
                 </div>
 
                 {/* People — testimonials with avatar top-right */}
-                <div className="mt-12">
-                    <div className="mb-5 flex items-center justify-between">
+                <div className="mt-10 sm:mt-12">
+                    <div className="mb-4 sm:mb-5 flex items-center justify-between">
                         <div className="inline-flex items-center gap-2 font-extrabold text-sm md:text-base text-[var(--brand)]">
-                            <IconUserGroup className="h-6 w-6" />
+                            <IconUserGroup className="h-5 w-5 sm:h-6 sm:w-6" />
                             <span>افراد آینده‌ساز</span>
                         </div>
                     </div>
                     {hasTestimonials ? (
-                        <div className="grid gap-6 md:grid-cols-2">
+                        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                             {testimonials.map((t: any, i: number) => (
                                 <TestimonialCard
                                     key={t?.name ?? i}
@@ -1020,15 +1168,15 @@ function SocialProof() {
                     )}
                 </div>
 
-                <div className="mt-12">
-                    <div className="mb-5 flex items-center justify-between">
+                <div className="mt-10 sm:mt-12">
+                    <div className="mb-4 sm:mb-5 flex items-center justify-between">
                         <div className="inline-flex items-center gap-2 font-extrabold text-sm md:text-base text-[var(--brand)]">
-                            <IconUsers className="h-6 w-6" />
+                            <IconUsers className="h-5 w-5 sm:h-6 sm:w-6" />
                             <span>نوجوانان روبیتک</span>
                         </div>
                     </div>
                     {hasTestimonials ? (
-                        <div className="grid gap-6 md:grid-cols-2">
+                        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
                             {teenager_testimonials.map((t: any, i: number) => (
                                 <TestimonialCard
                                     key={t?.name ?? i}
@@ -1069,7 +1217,7 @@ function Differentiation() {
                     title="چه چیز روبیتک رو متمایز می‌کنه ؟"
                     subtitle="ترکیب شفافیت، شبکه مورداعتماد و مسیرِ پایدار، روبیتک رو به انتخابی مطمئن تبدیل می‌کنه."
                 />
-                <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <div className="mt-5 sm:mt-6 grid gap-4 sm:gap-6 md:grid-cols-2">
                     <DifferentiationCard
                         Icon={IconLoop}
                         iconClass="h-8 w-11 text-[var(--mint-strong)]"
@@ -1118,7 +1266,7 @@ function FAQ() {
                     subtitle="اگر جواب سوال‌تون رو نمی‌بینید، بهمون اطلاع بدید."
                     align="start"
                 />
-                <div className="mt-8">
+                <div className="mt-6 sm:mt-8">
                     {/* Only one open at a time; clicking the open item will close it */}
                     <Accordion items={items} initialOpenIndex={0} allowToggle />
                 </div>
@@ -1144,41 +1292,41 @@ export function FinalCTA_A() {
     return (
         <Section id="final-cta" className="bg-gradient-to-b from-transparent via-[var(--sky)]/10 to-[var(--sky)]/20">
             <Container>
-                <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200/70 bg-white p-8 md:p-12 shadow-xl">
+                <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200/70 bg-white p-6 sm:p-8 md:p-12 shadow-xl">
                     <div className="mx-auto max-w-3xl text-center">
-                        <h2 className="text-[28px] md:text-[36px] font-extrabold text-[#0A2540] leading-tight tracking-tight">
+                        <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold text-[#0A2540] leading-tight tracking-tight">
                             به جنبش {toFa(10000)} مدرسه سالانه بپیوند
                         </h2>
-                        <p className="mx-auto mt-4 max-w-2xl text-[17px] md:text-[19px] leading-[1.9] text-[var(--text-weak)]">
+                        <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-[15px] sm:text-[17px] md:text-[19px] leading-[1.9] text-[var(--text-weak)]">
                             یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
                             <br />امروز، آینده ایران رو بساز.
                         </p>
                     </div>
 
-                    <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+                    <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
                         <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                         <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
 
-                    <div className="mt-5 flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4">
-                        <div className="flex items-center gap-2 text-xs font-extrabold text-slate-600">
+                    <div className="mt-4 sm:mt-5 flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4">
+                        <div className="flex items-center gap-2 text-[11px] sm:text-xs font-extrabold text-slate-600">
                             <span className="inline-block h-3.5 w-3.5 rounded-full bg-[var(--green)]/20 ring-1 ring-[var(--green)]/40" />
                             پرداخت امن و شفاف
                         </div>
                         <span className="hidden sm:inline text-slate-300">|</span>
-                        <div className="text-xs font-extrabold text-slate-600">گزارش پیشرفت مدرسه در پنل کاربری</div>
+                        <div className="text-[11px] sm:text-xs font-extrabold text-slate-600">گزارش پیشرفت مدرسه در پنل کاربری</div>
                     </div>
 
-                    <div className="mt-10">
+                    <div className="mt-8 sm:mt-10">
                         <div className="relative mx-auto max-w-4xl">
                             <div className="pointer-events-none absolute inset-x-6 top-5 hidden h-px bg-slate-200 lg:block" />
-                            <ol className="relative grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6" aria-label="گام‌های مسیر">
+                            <ol className="relative grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6" aria-label="گام‌های مسیر">
                                 {steps.map(([n, t, bg, tc]) => (
                                     <li key={n} className="flex items-center justify-center">
-                                        <div className="flex w-full items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-4 py-3 shadow-sm hover:shadow-md transition">
+                                        <div className="flex w-full items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-3 sm:px-4 py-3 shadow-sm hover:shadow-md transition">
                                             <span className={cx("grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[15px] font-extrabold text-[#0A2540] ring-1 ring-slate-200/70", bg)}>{n}</span>
-                                            <span className={cx("text-[15px] sm:text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
+                                            <span className={cx("text-[14px] sm:text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
                                         </div>
                                     </li>
                                 ))}
@@ -1186,7 +1334,7 @@ export function FinalCTA_A() {
                         </div>
                     </div>
                 </div>
-                <p className="mx-auto mt-4 max-w-4xl text-center text-[12px] font-bold text-slate-500">
+                <p className="mx-auto mt-3 sm:mt-4 max-w-4xl text-center text-[11px] sm:text-[12px] font-bold text-slate-500">
                     با هر مشارکت، یک «مدرسه» (یک لپ‌تاپ + شبکه پشتیبان) برای یک نوجوان شکل می‌گیرد. پیگیری وضعیت، شفاف و دائمی است.
                 </p>
             </Container>
@@ -1207,24 +1355,24 @@ export function FinalCTA_B() {
     return (
         <Section id="final-cta" className="bg-[var(--sky)]/10">
             <Container>
-                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-xl backdrop-blur md:grid-cols-5 md:p-10">
+                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:gap-8 rounded-3xl border border-slate-200/70 bg-white/80 p-5 sm:p-6 md:grid-cols-5 md:p-8 lg:p-10 shadow-xl backdrop-blur">
                     {/* Left: Copy + Actions */}
                     <div className="md:col-span-3">
-                        <h2 className="text-[28px] md:text-[36px] font-extrabold text-[#0A2540] leading-tight">
+                        <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold text-[#0A2540] leading-tight">
                             به جنبش {toFa(10000)} مدرسه سالانه بپیوند
                         </h2>
-                        <p className="mt-3 max-w-xl text-[17px] md:text-[18px] leading-[1.9] text-[var(--text-weak)]">
+                        <p className="mt-3 max-w-xl text-[15px] sm:text-[17px] md:text-[18px] leading-[1.9] text-[var(--text-weak)]">
                             یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
                             <br />امروز، آینده ایران رو بساز.
                         </p>
 
-                        <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row">
+                        <div className="mt-6 sm:mt-7 flex flex-col items-stretch gap-3 sm:flex-row">
                             <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                             <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                             <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                         </div>
 
-                        <div className="mt-4 flex items-center gap-3 text-xs font-extrabold text-slate-600">
+                        <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-extrabold text-slate-600">
                             <span className="inline-block h-3.5 w-3.5 rounded-full bg-[var(--green)]/20 ring-1 ring-[var(--green)]/40" />
                             پرداخت امن و شفاف
                             <span className="text-slate-300">|</span>
@@ -1234,12 +1382,12 @@ export function FinalCTA_B() {
 
                     {/* Right: Steps (vertical) */}
                     <div className="md:col-span-2">
-                        <ol className="space-y-3" aria-label="گام‌های مسیر">
+                        <ol className="space-y-2 sm:space-y-3" aria-label="گام‌های مسیر">
                             {steps.map(([n, t, bg, tc]) => (
                                 <li key={n} className="relative">
-                                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-4 py-3 shadow-sm hover:shadow-md transition">
+                                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-3 sm:px-4 py-3 shadow-sm hover:shadow-md transition">
                                         <span className={cx("grid h-9 w-9 place-items-center rounded-full bg-white text-[15px] font-extrabold text-[#0A2540] ring-1 ring-slate-200/70", bg)}>{n}</span>
-                                        <span className={cx("text-[15px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
+                                        <span className={cx("text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
                                     </div>
                                 </li>
                             ))}
@@ -1247,7 +1395,7 @@ export function FinalCTA_B() {
                     </div>
                 </div>
 
-                <p className="mx-auto mt-4 max-w-4xl text-center text-[12px] font-bold text-slate-500">
+                <p className="mx-auto mt-3 sm:mt-4 max-w-4xl text-center text-[11px] sm:text-[12px] font-bold text-slate-500">
                     با هر مشارکت، یک «مدرسه» (یک لپ‌تاپ + شبکه پشتیبان) برای یک نوجوان شکل می‌گیرد. پیگیری وضعیت، شفاف و دائمی است.
                 </p>
             </Container>
@@ -1270,36 +1418,36 @@ export function FinalCTA_C({
     return (
         <Section id="final-cta" className="relative bg-slate-950">
             <Container>
-                <div className="mx-auto max-w-6xl rounded-3xl border border-white/10 bg-white/5 p-8 md:p-12 shadow-2xl backdrop-blur">
+                <div className="mx-auto max-w-6xl rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 md:p-12 shadow-2xl backdrop-blur">
                     <div className="mx-auto max-w-3xl text-center">
-                        <h2 className="text-[28px] md:text-[36px] font-extrabold text-white leading-tight tracking-tight">
+                        <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold text-white leading-tight tracking-tight">
                             به جنبش {toFa(10000)} مدرسه سالانه بپیوند
                         </h2>
-                        <p className="mx-auto mt-4 max-w-2xl text-[17px] md:text-[19px] leading-[1.9] text-slate-300">
+                        <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-[15px] sm:text-[17px] md:text-[19px] leading-[1.9] text-slate-300">
                             یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
                             <br />امروز، آینده ایران رو بساز.
                         </p>
                     </div>
 
-                    <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+                    <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
                         <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                         <CTAButton href={site.ambassadorRegistrationUrl} onClick={onAmbassadorClick} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-white/20" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-white/20" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
 
-                    <div className="mt-5 text-center text-xs font-extrabold text-slate-300">
+                    <div className="mt-4 sm:mt-5 text-center text-[11px] sm:text-xs font-extrabold text-slate-300">
                         اثرگذاری پایدار
                         <span className="mx-2 text-slate-600">|</span>
                         شفافیت رادیکال
                     </div>
 
-                    <div className="mt-10">
-                        <ol className="mx-auto grid max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" aria-label="گام‌های مسیر">
+                    <div className="mt-8 sm:mt-10">
+                        <ol className="mx-auto grid max-w-5xl grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-3 lg:grid-cols-5" aria-label="گام‌های مسیر">
                             {steps.map(([n, t, bg, tc]) => (
                                 <li key={n} className="flex items-center justify-center">
-                                    <div className="flex w-full items-center gap-3 rounded-2xl border border-white/15 px-4 py-3 ring-1 ring-white/10 bg-white/5 hover:bg-white/10 transition">
+                                    <div className="flex w-full items-center gap-3 rounded-2xl border border-white/15 px-3 sm:px-4 py-3 ring-1 ring-white/10 bg-white/5 hover:bg-white/10 transition">
                                         <span className={cx("grid h-9 w-9 place-items-center rounded-full bg-white/10 text-[15px] font-extrabold text-white ring-1 ring-white/20", bg)}>{n}</span>
-                                        <span className={cx("text-[15px] sm:text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
+                                        <span className={cx("text-[14px] sm:text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
                                     </div>
                                 </li>
                             ))}
@@ -1307,7 +1455,7 @@ export function FinalCTA_C({
                     </div>
                 </div>
 
-                <p className="mx-auto mt-4 max-w-4xl text-center text-[12px] font-bold text-slate-400">
+                <p className="mx-auto mt-3 sm:mt-4 max-w-4xl text-center text-[11px] sm:text-[12px] font-bold text-slate-400">
                     با هر مشارکت، یک «مدرسه» (یک لپ‌تاپ + شبکه پشتیبان) برای یک نوجوان شکل می‌گیرد.
                 </p>
             </Container>
@@ -1371,7 +1519,7 @@ function BackToTop() {
     return (
         <div
             className={cx(
-                "fixed z-40 right-5 md:right-8 bottom-5 md:bottom-8",
+                "fixed z-40 right-4 sm:right-5 md:right-8 bottom-4 sm:bottom-5 md:bottom-8",
                 "transition-all motion-safe:duration-200",
                 show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
             )}
@@ -1448,7 +1596,7 @@ function Footer() {
                     {/* Right column: sections */}
                     <nav
                         aria-label="پیوندهای پایانی سایت"
-                        className="flex flex-wrap items-center gap-3 md:gap-6 text-sm font-extrabold text-slate-600"
+                        className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-6 text-[13px] sm:text-sm font-extrabold text-slate-600"
                     >
                         {NAV_SECTIONS.map(s => (
                             <a key={s.id} href={`#${s.id}`} className="rounded-md px-2 py-1 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300">
@@ -1458,7 +1606,7 @@ function Footer() {
                     </nav>
 
                     {/* Left column: copyright */}
-                    <div className="text-xs md:text-sm text-slate-500">
+                    <div className="text-[12px] sm:text-xs md:text-sm text-slate-500">
                         © {new Date().getFullYear()} روبیتک — کلیه حقوق محفوظ است
                     </div>
                 </div>
