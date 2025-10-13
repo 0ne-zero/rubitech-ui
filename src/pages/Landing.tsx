@@ -143,22 +143,8 @@ function DonationChoiceModal({
 }) {
     const panelRef = React.useRef<HTMLDivElement | null>(null);
 
-    // Lock scroll & scrollbar compensation (consistent with HeaderB)
-    React.useEffect(() => {
-        if (!open) {
-            document.documentElement.classList.remove("overflow-hidden");
-            document.body.style.paddingInlineEnd = "";
-            return;
-        }
-        const sbw = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
-        document.documentElement.classList.add("overflow-hidden");
-        document.body.style.paddingInlineEnd = `${sbw}px`;
-        document.documentElement.style.setProperty("--sbw", `${sbw}px`);
-        return () => {
-            document.documentElement.classList.remove("overflow-hidden");
-            document.body.style.paddingInlineEnd = "";
-        };
-    }, [open]);
+
+
 
     // ESC to close
     React.useEffect(() => {
