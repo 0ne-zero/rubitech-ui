@@ -703,7 +703,7 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
                                 {/* actions */}
                                 <div className="grid grid-cols-1 gap-2 px-3 pb-[max(16px,env(safe-area-inset-bottom)+8px)]">
                                     <a
-                                        href={site.donationUrl}
+                                        href={site.donationUrlReymit}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-white text-[15px] font-extrabold
@@ -793,7 +793,7 @@ function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandl
 
                             <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row justify-center">
                                 <CTAButton
-                                    href={site.donationUrl}
+                                    href={site.donationUrlReymit}
                                     target="_blank"
                                     className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-4"
                                     colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
@@ -1303,7 +1303,7 @@ export function FinalCTA_A() {
                     </div>
 
                     <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                        <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
+                        <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                         <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
@@ -1366,7 +1366,7 @@ export function FinalCTA_B() {
                         </p>
 
                         <div className="mt-6 sm:mt-7 flex flex-col items-stretch gap-3 sm:flex-row">
-                            <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
+                            <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                             <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                             <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                         </div>
@@ -1429,7 +1429,7 @@ export function FinalCTA_C({
                     </div>
 
                     <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                        <CTAButton href={site.donationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
+                        <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
                         <CTAButton href={site.ambassadorRegistrationUrl} onClick={onAmbassadorClick} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-white/20" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-white/20" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
