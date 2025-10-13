@@ -1,5 +1,3 @@
-// @ts-nocheck
-/* eslint-disable */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -132,6 +130,122 @@ const CTAButton: React.FC<CTAButtonProps> = ({
         {children}
     </a>
 );
+
+
+
+/* NEW: DonationChoiceModal.tsx (or place above your components in the same file) */
+function DonationChoiceModal({
+    open,
+    onClose,
+}: {
+    open: boolean;
+    onClose: () => void;
+}) {
+    const panelRef = React.useRef<HTMLDivElement | null>(null);
+
+    // Lock scroll & scrollbar compensation (consistent with HeaderB)
+    React.useEffect(() => {
+        if (!open) {
+            document.documentElement.classList.remove("overflow-hidden");
+            document.body.style.paddingInlineEnd = "";
+            return;
+        }
+        const sbw = Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+        document.documentElement.classList.add("overflow-hidden");
+        document.body.style.paddingInlineEnd = `${sbw}px`;
+        document.documentElement.style.setProperty("--sbw", `${sbw}px`);
+        return () => {
+            document.documentElement.classList.remove("overflow-hidden");
+            document.body.style.paddingInlineEnd = "";
+        };
+    }, [open]);
+
+    // ESC to close
+    React.useEffect(() => {
+        if (!open) return;
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [open, onClose]);
+
+    // Click outside to close
+    const onBackdropClick = (e: React.MouseEvent) => {
+        if (!panelRef.current) return;
+        if (!panelRef.current.contains(e.target as Node)) onClose();
+    };
+
+    const go = (url: string) => window.location.replace(url);
+
+    if (!open) return null;
+
+    return createPortal(
+        <>
+            <div
+                className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm"
+                onMouseDown={onBackdropClick}
+                aria-hidden
+            />
+            <div className="fixed inset-0 z-[110] grid place-items-center px-4">
+                <div
+                    ref={panelRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="donation-title"
+                    className="relative w-full max-w-md rounded-3xl border border-slate-200/70 bg-white/95 shadow-2xl ring-1 ring-black/5 backdrop-blur p-5 sm:p-6"
+                >
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close"
+                        className="absolute left-3 top-3 grid h-9 w-9 place-items-center rounded-full border border-slate-200/80 bg-white text-slate-600 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300"
+                    >
+                        ✕
+                    </button>
+
+                    <header className="text-center">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-base font-extrabold text-[var(--brand)] mb-3">
+                            <IconHeartHand className="h-6 w-6" />
+                            <span>ساخت مدرسه</span>
+                        </div>
+                        <h3 id="donation-title" className="font-extrabold text-[clamp(20px,4.5vw,26px)] text-[var(--text-strong)]">
+                            نوع دونیشن رو انتخاب کن
+                        </h3>
+                        <p className="mt-2 text-sm sm:text-[15px] text-slate-700">
+                            با انتخاب روش پرداخت، به صفحه امن پرداخت هدایت می‌شی.
+                        </p>
+                    </header>
+
+                    <div className="mt-5 grid gap-3">
+                        <button
+                            type="button"
+                            onClick={() => go(site.donationUrlReymit)}
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-white text-[15px] font-extrabold ring-1 ring-inset ring-[var(--green)]/35 bg-[var(--green)] hover:bg-[var(--green-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--green)]/40 shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
+                        >
+                            دونیشن ریالی
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => go(site.donationUrlPaypal)}
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-white text-[15px] font-extrabold ring-1 ring-inset ring-[var(--violet)]/35 bg-[var(--violet)] hover:bg-[var(--violet-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--violet)]/40 shadow-[0_8px_20px_rgba(124,58,237,0.25)]"
+                        >
+                            دونیشن دلاری
+                        </button>
+                    </div>
+
+                    <p className="mt-3 text-center text-xs font-bold text-slate-500">
+                        پرداخت امن • گزارش شفاف در پنل کاربری
+                    </p>
+                </div>
+            </div>
+        </>,
+        document.body
+    );
+}
+
+
+
+
+
 
 const Card: React.FC<React.ComponentPropsWithoutRef<"div">> = ({ className = "", children, ...rest }) => (
     <div className={cx("rounded-lg ring-1 ring-slate-200 bg-white/95", className)} {...rest}>{children}</div>
@@ -435,7 +549,7 @@ const SkipLink = () => (
 /* -------------------------------------------------------------------------- */
 /* Header (bigger items; taller)                                              */
 /* -------------------------------------------------------------------------- */
-function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
+function HeaderB({ onOpenAuth, onOpenDonate }: { onOpenAuth: () => void; onOpenDonate: () => void }) {
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [active, setActive] = useState<string>("hero");
@@ -703,12 +817,11 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
                                 {/* actions */}
                                 <div className="grid grid-cols-1 gap-2 px-3 pb-[max(16px,env(safe-area-inset-bottom)+8px)]">
                                     <a
-                                        href={site.donationUrlReymit}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        href="#donate"
+                                        onClick={(e) => { e.preventDefault(); setOpen(false); onOpenDonate(); }}
                                         className="inline-flex items-center justify-center rounded-xl px-4 py-3 text-white text-[15px] font-extrabold
-                             bg-[var(--green)] hover:bg-[var(--green-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--green)]/40
-                             shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
+               bg-[var(--green)] hover:bg-[var(--green-strong)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--green)]/40
+               shadow-[0_8px_20px_rgba(16,185,129,0.25)]"
                                     >
                                         ساخت مدرسه
                                     </a>
@@ -735,7 +848,13 @@ function HeaderB({ onOpenAuth }: { onOpenAuth: () => void }) {
 /* -------------------------------------------------------------------------- */
 /* Hero (aligned + spaced; divider removed)                                    */
 /* -------------------------------------------------------------------------- */
-function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement> }) {
+function HeroB({
+    onAmbassadorClick,
+    onDonateClick,
+}: {
+    onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement>;
+    onDonateClick: React.MouseEventHandler<HTMLAnchorElement>;
+}) {
     return (
         <Section id="hero" className="relative overflow-hidden p-0">
             {/* Background image + overlay */}
@@ -793,8 +912,8 @@ function HeroB({ onAmbassadorClick }: { onAmbassadorClick: React.MouseEventHandl
 
                             <div className="mt-7 sm:mt-8 flex flex-col gap-3 sm:flex-row justify-center">
                                 <CTAButton
-                                    href={site.donationUrlReymit}
-                                    target="_blank"
+                                    href="#donate"
+                                    onClick={onDonateClick}
                                     className="w-full sm:w-auto flex-[1.4] text-center whitespace-nowrap py-4"
                                     colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35"
                                     iconLeft={<IconHeartHand className="h-7 w-7" />}
@@ -1275,137 +1394,13 @@ function FAQ() {
 }
 
 
-
-
-
-
-export function FinalCTA_A() {
-    const steps = useMemo(() => ([
-        ["۱", "آغاز شما", "bg-[var(--rose-ring)]", "text-[var(--rose-step)]"],
-        ["۲", "روبیتک", "bg-[var(--violet-tint)]", "text-[var(--violet-step)]"],
-        ["۳", "دریافت نوجوان", "bg-[var(--amber-tint)]", "text-[var(--amber-step)]"],
-        ["۴", "ساخت آینده", "bg-[var(--lime-tint)]", "text-[var(--lime-step)]"],
-        ["۵", "بورسیه روبیکمپ", "bg-[var(--mint-ring)]", "text-[var(--mint-step)]"],
-    ]), []);
-
-    return (
-        <Section id="final-cta" className="bg-gradient-to-b from-transparent via-[var(--sky)]/10 to-[var(--sky)]/20">
-            <Container>
-                <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200/70 bg-white p-6 sm:p-8 md:p-12 shadow-xl">
-                    <div className="mx-auto max-w-3xl text-center">
-                        <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold text-[#0A2540] leading-tight tracking-tight">
-                            به جنبش {toFa(10000)} مدرسه سالانه بپیوند
-                        </h2>
-                        <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-[15px] sm:text-[17px] md:text-[19px] leading-[1.9] text-[var(--text-weak)]">
-                            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
-                            <br />امروز، آینده ایران رو بساز.
-                        </p>
-                    </div>
-
-                    <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                        <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
-                        <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
-                        <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
-                    </div>
-
-                    <div className="mt-4 sm:mt-5 flex flex-col items-center justify-center gap-2 text-center sm:flex-row sm:gap-4">
-                        <div className="flex items-center gap-2 text-[11px] sm:text-xs font-extrabold text-slate-600">
-                            <span className="inline-block h-3.5 w-3.5 rounded-full bg-[var(--green)]/20 ring-1 ring-[var(--green)]/40" />
-                            پرداخت امن و شفاف
-                        </div>
-                        <span className="hidden sm:inline text-slate-300">|</span>
-                        <div className="text-[11px] sm:text-xs font-extrabold text-slate-600">گزارش پیشرفت مدرسه در پنل کاربری</div>
-                    </div>
-
-                    <div className="mt-8 sm:mt-10">
-                        <div className="relative mx-auto max-w-4xl">
-                            <div className="pointer-events-none absolute inset-x-6 top-5 hidden h-px bg-slate-200 lg:block" />
-                            <ol className="relative grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-6" aria-label="گام‌های مسیر">
-                                {steps.map(([n, t, bg, tc]) => (
-                                    <li key={n} className="flex items-center justify-center">
-                                        <div className="flex w-full items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-3 sm:px-4 py-3 shadow-sm hover:shadow-md transition">
-                                            <span className={cx("grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white text-[15px] font-extrabold text-[#0A2540] ring-1 ring-slate-200/70", bg)}>{n}</span>
-                                            <span className={cx("text-[14px] sm:text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                <p className="mx-auto mt-3 sm:mt-4 max-w-4xl text-center text-[11px] sm:text-[12px] font-bold text-slate-500">
-                    با هر مشارکت، یک «مدرسه» (یک لپ‌تاپ + شبکه پشتیبان) برای یک نوجوان شکل می‌گیرد. پیگیری وضعیت، شفاف و دائمی است.
-                </p>
-            </Container>
-        </Section>
-    );
-}
-
-
-export function FinalCTA_B() {
-    const steps = useMemo(() => ([
-        ["۱", "آغاز شما", "bg-[var(--rose-ring)]", "text-[var(--rose-step)]"],
-        ["۲", "روبیتک", "bg-[var(--violet-tint)]", "text-[var(--violet-step)]"],
-        ["۳", "دریافت نوجوان", "bg-[var(--amber-tint)]", "text-[var(--amber-step)]"],
-        ["۴", "ساخت آینده", "bg-[var(--lime-tint)]", "text-[var(--lime-step)]"],
-        ["۵", "بورسیه روبیکمپ", "bg-[var(--mint-ring)]", "text-[var(--mint-step)]"],
-    ]), []);
-
-    return (
-        <Section id="final-cta" className="bg-[var(--sky)]/10">
-            <Container>
-                <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:gap-8 rounded-3xl border border-slate-200/70 bg-white/80 p-5 sm:p-6 md:grid-cols-5 md:p-8 lg:p-10 shadow-xl backdrop-blur">
-                    {/* Left: Copy + Actions */}
-                    <div className="md:col-span-3">
-                        <h2 className="text-[clamp(22px,5vw,36px)] font-extrabold text-[#0A2540] leading-tight">
-                            به جنبش {toFa(10000)} مدرسه سالانه بپیوند
-                        </h2>
-                        <p className="mt-3 max-w-xl text-[15px] sm:text-[17px] md:text-[18px] leading-[1.9] text-[var(--text-weak)]">
-                            یک لپ‌تاپ آغازِ راه هست: یک جامعه پشتیبان، انقلاب واقعی‌ست!
-                            <br />امروز، آینده ایران رو بساز.
-                        </p>
-
-                        <div className="mt-6 sm:mt-7 flex flex-col items-stretch gap-3 sm:flex-row">
-                            <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-[var(--green)]/35" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
-                            <CTAButton href={site.ambassadorRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-[var(--violet)]/35" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
-                            <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-[var(--amber)]/35" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
-                        </div>
-
-                        <div className="mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-extrabold text-slate-600">
-                            <span className="inline-block h-3.5 w-3.5 rounded-full bg-[var(--green)]/20 ring-1 ring-[var(--green)]/40" />
-                            پرداخت امن و شفاف
-                            <span className="text-slate-300">|</span>
-                            گزارش پیشرفت مدرسه در پنل کاربری
-                        </div>
-                    </div>
-
-                    {/* Right: Steps (vertical) */}
-                    <div className="md:col-span-2">
-                        <ol className="space-y-2 sm:space-y-3" aria-label="گام‌های مسیر">
-                            {steps.map(([n, t, bg, tc]) => (
-                                <li key={n} className="relative">
-                                    <div className="flex items-center gap-3 rounded-2xl border border-slate-200/70 bg-white px-3 sm:px-4 py-3 shadow-sm hover:shadow-md transition">
-                                        <span className={cx("grid h-9 w-9 place-items-center rounded-full bg-white text-[15px] font-extrabold text-[#0A2540] ring-1 ring-slate-200/70", bg)}>{n}</span>
-                                        <span className={cx("text-[14px] md:text-[16px] font-extrabold leading-none", tc)}>{t}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
-                </div>
-
-                <p className="mx-auto mt-3 sm:mt-4 max-w-4xl text-center text-[11px] sm:text-[12px] font-bold text-slate-500">
-                    با هر مشارکت، یک «مدرسه» (یک لپ‌تاپ + شبکه پشتیبان) برای یک نوجوان شکل می‌گیرد. پیگیری وضعیت، شفاف و دائمی است.
-                </p>
-            </Container>
-        </Section>
-    );
-}
-
-
 export function FinalCTA_C({
     onAmbassadorClick,
-}: { onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement> }) {
+    onDonateClick,
+}: {
+    onAmbassadorClick: React.MouseEventHandler<HTMLAnchorElement>;
+    onDonateClick: React.MouseEventHandler<HTMLAnchorElement>;
+}) {
     const steps = useMemo(() => ([
         ["۱", "آغاز شما", "bg-white/10", "text-white"],
         ["۲", "روبیتک", "bg-white/10", "text-white"],
@@ -1429,7 +1424,15 @@ export function FinalCTA_C({
                     </div>
 
                     <div className="mt-7 sm:mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                        <CTAButton href={site.donationUrlReymit} className="w-full sm:w-auto" colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20" iconLeft={<IconHeartHand className="h-7 w-7" />}>ساخت مدرسه</CTAButton>
+                        <CTAButton
+                            href="#donate"
+                            onClick={onDonateClick}
+                            className="w-full sm:w-auto"
+                            colorClass="bg-[var(--green)] hover:bg-[var(--green-strong)] ring-white/20"
+                            iconLeft={<IconHeartHand className="h-7 w-7" />}
+                        >
+                            ساخت مدرسه
+                        </CTAButton>
                         <CTAButton href={site.ambassadorRegistrationUrl} onClick={onAmbassadorClick} className="w-full sm:w-auto" colorClass="bg-[var(--violet)] hover:bg-[var(--violet-strong)] ring-white/20" iconLeft={<IconShield className="h-7 w-7" />}>ثبت‌نام سفیر</CTAButton>
                         <CTAButton href={site.teenagerRegistrationUrl} className="w-full sm:w-auto" colorClass="bg-[var(--amber)] hover:bg-[var(--amber-strong)] ring-white/20" iconLeft={<IconUsers className="h-7 w-7" />} target="_blank" rel="noopener noreferrer">ثبت‌نام نوجوان</CTAButton>
                     </div>
@@ -1621,6 +1624,7 @@ function Footer() {
 /* -------------------------------------------------------------------------- */
 export default function Landing() {
     const [authOpen, setAuthOpen] = useState(false);
+    const [donationOpen, setDonationOpen] = useState(false);
 
     useEffect(() => {
         const els = Array.from(document.querySelectorAll<HTMLElement>('section[id]'));
@@ -1649,6 +1653,12 @@ export default function Landing() {
             setAuthOpen(true);
         }
     }, []);
+
+    const handleDonateClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => { // NEW
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+        e.preventDefault();
+        setDonationOpen(true);
+    };
 
     useEffect(() => {
         const getHeaderH = () =>
@@ -1736,20 +1746,26 @@ export default function Landing() {
     return (
         <main id="main-content" dir="rtl" lang="fa" className="bg-white text-slate-900" style={{ fontFamily: 'IRANYekanX, IRANYekanX FaNum, -apple-system, "Segoe UI", Roboto, Arial, sans-serif' }}>
             <SkipLink />
-            <HeaderB onOpenAuth={() => setAuthOpen(true)} />
-            <HeroB onAmbassadorClick={handleAmbassadorClick} />
+            <HeaderB onOpenAuth={() => setAuthOpen(true)} onOpenDonate={() => setDonationOpen(true)} /> {/* MODIFIED */}
+
+            <HeroB onAmbassadorClick={handleAmbassadorClick} onDonateClick={handleDonateClick} />        {/* MODIFIED */}
+
             <Solution />
             <SocialProof />
             <Differentiation />
             <FAQ />
             {/* <FinalCTA_B /> */}
-            <FinalCTA_C onAmbassadorClick={handleAmbassadorClick} />
+            <FinalCTA_C onAmbassadorClick={handleAmbassadorClick} onDonateClick={handleDonateClick} />   {/* MODIFIED */}
+
 
             <Footer />
             <BackToTop />
 
-            {/* Auth Modal mount point */}
             <AuthModalLikeImage open={authOpen} onClose={() => setAuthOpen(false)} />
+
+            {/* Auth Modal mount point */}
+            <DonationChoiceModal open={donationOpen} onClose={() => setDonationOpen(false)} />            {/* NEW */}
+
         </main>
     );
 }
